@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UAVplatformClass</class>
+ <widget class="QMainWindow" name="UAVplatformClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1125</width>
+    <height>812</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>UAVplatform</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/images/sponsors/icons/plane.ico</normaloff>:/images/sponsors/icons/plane.ico</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1125</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="mProjectMenu">
+    <property name="title">
+     <string>项目(&amp;J)</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="mViewMenu">
+    <property name="title">
+     <string>视图(&amp;V)</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="mLayerMenu">
+    <property name="title">
+     <string>图层(&amp;L)</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="mSettingsMenu">
+    <property name="title">
+     <string>设置(&amp;S)</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="mPosMenu">
+    <property name="title">
+     <string>曝光点预处理(&amp;P)</string>
+    </property>
+   </widget>
+   <addaction name="mProjectMenu"/>
+   <addaction name="mViewMenu"/>
+   <addaction name="mLayerMenu"/>
+   <addaction name="mPosMenu"/>
+   <addaction name="mSettingsMenu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="mActionCustomProjection">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/themes/default/mActionCustomProjection.svg</normaloff>:/images/themes/default/mActionCustomProjection.svg</iconset>
+   </property>
+   <property name="text">
+    <string>自定义坐标参照系(&amp;P)...</string>
+   </property>
+  </action>
+  <action name="mActionOptions">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/themes/default/mActionOptions.svg</normaloff>:/images/themes/default/mActionOptions.svg</iconset>
+   </property>
+   <property name="text">
+    <string>选项(&amp;O)...</string>
+   </property>
+  </action>
+  <action name="mActionNewProject">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/themes/default/mActionFileNew.svg</normaloff>:/images/themes/default/mActionFileNew.svg</iconset>
+   </property>
+   <property name="text">
+    <string>新建(&amp;N)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="mActionSaveMapAsImage">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/themes/default/mActionSaveMapAsImage.png</normaloff>:/images/themes/default/mActionSaveMapAsImage.png</iconset>
+   </property>
+   <property name="text">
+    <string>另存为位图(&amp;I)...</string>
+   </property>
+  </action>
+  <action name="action_P">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/themes/default/mActionProjectProperties.png</normaloff>:/images/themes/default/mActionProjectProperties.png</iconset>
+   </property>
+   <property name="text">
+    <string>项目属性(&amp;P)...</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/images/themes/default/mActionFileExit.png</normaloff>:/images/themes/default/mActionFileExit.png</iconset>
+   </property>
+   <property name="text">
+    <string>退出</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="../Resources/images/images.qrc"/>
+ </resources>
+ <connections/>
+</ui>
