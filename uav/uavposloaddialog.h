@@ -47,12 +47,6 @@ private:
 	// 将内存中POS文件内容输出到原文件
 	bool writePos();
 
-	// 关联相片
-	void linkPhoto();
-
-	// 创建略图
-	void SketchMap();
-
 private:
 	Ui::uavposdialog ui;
 	QgsDelimitedTextFile *mFile;

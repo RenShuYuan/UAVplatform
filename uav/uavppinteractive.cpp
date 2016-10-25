@@ -55,8 +55,9 @@ void uavPPInteractive::createPPlinkage()
 		return;
 
 	QSettings mSetting;
-	QString phtotPath = mSetting.value("/Uav/pos/pathName", "").toString();
-	phtotPath += "/" + mSetting.value("/Uav/pos/lePhotoFolder", "").toString();
+	QString phtotPath = mSetting.value("/Uav/pos/lePosFile", "").toString();
+	phtotPath = QFileInfo(phtotPath).path();
+	phtotPath += "/" + mSetting.value("/Uav/pos/options/lePhotoFolder", "").toString();
 
 	if (!QFileInfo(phtotPath).exists())
 	{
@@ -116,10 +117,10 @@ void uavPPInteractive::initLayerCategorizedSymbolRendererV2()
 	QgsFeatureIterator it = mLayer->getFeatures();
 	while (it.nextFeature(f))
 	{
-		cats << QgsRendererCategoryV2(f.attribute("name"), unlinkedSymbolV2(), "未关联");
+		cats << QgsRendererCategoryV2(f.attribute("相片编号"), unlinkedSymbolV2(), "未关联");
 	}
 
-	mLayer->setRendererV2( new QgsCategorizedSymbolRendererV2("name", cats) );
+	mLayer->setRendererV2( new QgsCategorizedSymbolRendererV2("相片编号", cats) );
 	UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());
 }
 
@@ -144,12 +145,12 @@ void uavPPInteractive::upDataLinkedSymbol()
 		// 根据查找结果进行更新
 		if (-1 == index)
 		{
-			cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), linkedSymbolV2(), "已关联"));
+			cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), linkedSymbolV2(), QString("已关联 "+)));
 		}
 		else
 		{
 			cRenderer->deleteCategory(index);
-			cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), linkedSymbolV2(), "已关联"));
+			cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), unlinkedSymbolV2(), "未关联"));
 		}
 		++it;
 	}

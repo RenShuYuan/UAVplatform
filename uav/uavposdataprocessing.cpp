@@ -2,6 +2,7 @@
 #include "uavmain.h"
 #include "uavcore.h"
 #include "uavprj.h"
+#include "uavinquiredemvalue.h"
 
 #include "qgssinglesymbolrendererv2.h"
 #include "qgscategorizedsymbolrendererv2.h"
@@ -16,12 +17,10 @@
 #include "qgsfeature.h"
 #include "qgscrscache.h"
 #include "sqlite3.h"
-
 #include <QUuid>
 #include <QList>
 #include <QMap>
 #include <QVariant>
-#include <QSettings>
 #include <QString>
 #include <QColor>
 #include <QStringList>
@@ -32,34 +31,11 @@ uavPosDataProcessing::uavPosDataProcessing(QObject *parent)
 	: QObject(parent)
 {
 	this->parent = parent;
-
-	// 获得当前项目的参照坐标系
-	mSourceCrs = UavMain::instance()->mapCanvas()->mapSettings().destinationCrs();
-
 }
 
 uavPosDataProcessing::~uavPosDataProcessing()
 {
 
-}
-
-void uavPosDataProcessing::oneButtonOrganizePosFiles()
-{
-	QSettings mSettings;
-	QgsMessageLog::logMessage("曝光文件一键处理 : \t开始...");
-
-	if (mSettings.value("/Uav/pos/chkFormat", true).toBool())	// 格式整理
-	{
-		autoPosFormat();
-	}
-	if (mSettings.value("/Uav/pos/chkTransform", true).toBool()) // 坐标转换
-	{
-		autoPosTransform();
-	}
-	if (mSettings.value("/Uav/pos/chkSketchMap", true).toBool()) // 创建略图
-	{
-		autoSketchMap();
-	}
 }
 
 void uavPosDataProcessing::setFieldsList( QList< QStringList >& list )
@@ -70,11 +46,12 @@ void uavPosDataProcessing::setFieldsList( QList< QStringList >& list )
 		return;
 	}
 	mFieldsList = list;
+
+
 }
 
 void uavPosDataProcessing::autoPosFormat()
 {
-	QSettings mSettings;
 	QList<int> indexList;
 
 	indexList << mSettings.value("/Uav/pos/fieldsList/cmb1", -1).toInt()
@@ -108,19 +85,12 @@ void uavPosDataProcessing::autoPosFormat()
 	QgsMessageLog::logMessage("曝光点文件格式重构 : \tOK...");
 }
 
-void uavPosDataProcessing::autoPosTransform()
+bool uavPosDataProcessing::autoPosTransform()
 {	
-	// 验证参照坐标系
-	if (!mSourceCrs.isValid())
-	{
-		QgsMessageLog::logMessage("曝光点坐标转换 : \t项目没有指定正确的参照坐标系, 程序已终止...");
-		return;
-	}
-
 	// 创建目标投影
 	if (!createTargetCrs())
 	{
-		return;
+		return false;
 	}
 
 	// 创建转换关系
@@ -128,7 +98,7 @@ void uavPosDataProcessing::autoPosTransform()
 	if (!ct.isInitialised())
 	{
 		QgsMessageLog::logMessage("曝光点坐标转换 : \t创建坐标转换关系失败, 程序已终止...");
-		return;
+		return false;
 	}
 
 	// 开始转换
@@ -141,6 +111,7 @@ void uavPosDataProcessing::autoPosTransform()
 		mFieldsList[i] = list;
 	}
 	QgsMessageLog::logMessage("曝光点坐标转换 : \tOK...");
+	return true;
 }
 
 int uavPosDataProcessing::getCentralMeridian()
@@ -197,7 +168,12 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 	emit startProcess();
 
 	QString layerProperties = "Polygon?";													// 几何类型
-	layerProperties.append(QString( "field=id:integer&field=name:string(50)&" ));			// 添加字段
+	layerProperties.append(QString( "field=id:integer&field=相片编号:string(50)"				// 添加字段
+													"&field=曝光点坐标:string(30)"
+													"&field=Omega:string(10)"
+													"&field=Phi:string(10)"
+													"&field=Kappa:string(10)"
+													"&field=地面分辨率:string(10)&"));
 	layerProperties.append(QString( "index=yes&" ));										// 创建索引
 	layerProperties.append(QString( "memoryid=%1" ).arg( QUuid::createUuid().toString() ));	// 临时编码
 
@@ -222,10 +198,48 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 
 	QgsVectorDataProvider* dateProvider = newLayer->dataProvider();
 
+	// 计算相片地面分辨率
+	uavInquireDemValue dem(this);
+	QList< QgsPoint > pointFirst;
+	QList< qreal > elevations;
+
+	foreach(QStringList list, mFieldsList)
+	{
+		// 取出字段内容
+		QgsPoint point;
+		point.setX(list.at(1).toDouble());
+		point.setY(list.at(2).toDouble());
+		pointFirst.append(point);
+	}
+
+	bool isbl = false;
+	if ( uavInquireDemValue::eOK == dem.inquireElevations(pointFirst, elevations, &srs) )
+	{
+		isbl = true;
+		if (mFieldsList.size() == elevations.size())
+			isbl = true;
+		else 
+			isbl = false;
+	}
+
+	int index = 0;
+	while (index != mFieldsList.size())
+	{
+		qreal elevation = 0.0;
+		QStringList list = mFieldsList.at(index);
+		if (isbl)
+			elevation = elevations.at(index);
+		else
+			elevation = -9999;
+		double resolution = calculateResolution(list.at(3).toDouble(), elevation);
+		list[7] = QString::number(resolution, 'f', 2);
+		mFieldsList[index] = list;
+		++index;
+	}
+
 	// 创建面要素
 	int icount = 0;
 	QgsFeatureList featureList;
-	QSettings mSettings;
 	foreach(QStringList list, mFieldsList)
 	{
 		// 取出字段内容
@@ -242,7 +256,13 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 		// 设置几何要素与属性
 		QgsFeature MyFeature;
 		MyFeature.setGeometry( mGeometry );
-		MyFeature.setAttributes(QgsAttributes() << QVariant(++icount) << QVariant(list.first()));
+		MyFeature.setAttributes(QgsAttributes() << QVariant(++icount)
+												<< QVariant(list.first())
+												<< QVariant(QString(list.at(1)+","+list.at(2)))
+												<< QVariant(list.at(4))
+												<< QVariant(list.at(5))
+												<< QVariant(list.at(6))
+												<< QVariant(list.at(7)));
 		featureList.append(MyFeature);
 	}
 
@@ -277,13 +297,22 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 
 bool uavPosDataProcessing::createTargetCrs()
 {
-	// 检查输入的是否是4中常用的地理坐标系
-	if ( !( (mSourceCrs.authid() == "EPSG:4214") ||	// 北京54
-		(mSourceCrs.authid() == "EPSG:4610") ||		// 西安80
-		(mSourceCrs.authid() == "EPSG:4326") ||		// WGS84
-		(mSourceCrs.authid() == "EPSG:4490") ) )	// CGCS2000
+	// 获得当前曝光点的参照坐标系
+	QString myDefaultCrs = mSettings.value( "/Uav/pos/options/projectDefaultCrs", GEO_EPSG_CRS_AUTHID ).toString();
+	mSourceCrs.createFromOgcWmsCrs( myDefaultCrs );
+
+	// 验证源参照坐标系
+	if (!mSourceCrs.isValid())
 	{
-		QgsMessageLog::logMessage("创建参照坐标系 : \t项目指定的不是正确的常用（北京54、西安80、WGS84、CGCS2000）参照坐标系之一, 程序已终止...");
+		QgsMessageLog::logMessage("曝光点坐标转换 : \t项目没有指定正确的参照坐标系, 程序已终止...");
+		return false;
+	}
+
+	// 检查输入的是否是4种常用的地理坐标系
+	if ( !( (mSourceCrs.authid() == "EPSG:4326") ||		// WGS84
+		(mSourceCrs.authid() == "EPSG:4490") ) )		// CGCS2000
+	{
+		QgsMessageLog::logMessage("创建参照坐标系 : \t项目指定了错误的参照坐标系, 目前仅支持WGS84、CGCS2000, 程序已终止...");
 		return false;
 	}
 
@@ -300,29 +329,7 @@ bool uavPosDataProcessing::createTargetCrs()
 	// 创建WKT格式投影坐标系
 	QString wkt;
 	QString strDescription;
-	if (mSourceCrs.authid() == "EPSG:4214")
-	{
-		wkt = uavPrj::createProj4Beijing1954Gcs(cm);
-
-		//不加带号
-		if (cm>74 && cm<136)
-			strDescription = QString("Beijing 1954 / Gauss-Kruger CM %1E").arg(cm);
-		//加带号
-		if (cm>12 && cm<46)
-			strDescription = QString("Beijing 1954 / Gauss-Kruger zone %1").arg(cm);
-	}
-	else if (mSourceCrs.authid() == "EPSG:4610")
-	{
-		wkt = uavPrj::createProj4Xian1980Gcs(cm);
-
-		//不加带号
-		if (cm>74 && cm<136)
-			strDescription = QString("Xian 1980 / Gauss-Kruger CM %1E").arg(cm);
-		//加带号
-		if (cm>12 && cm<46)
-			strDescription = QString("Xian 1980 / Gauss-Kruger zone %1").arg(cm);
-	}
-	else if (mSourceCrs.authid() == "EPSG:4326")
+	if (mSourceCrs.authid() == "EPSG:4326")
 	{
 		wkt = uavPrj::createProj4Wgs84Gcs(cm);
 
@@ -353,7 +360,7 @@ bool uavPosDataProcessing::createTargetCrs()
 		return false;
 	}
 	
-	QgsMessageLog::logMessage(QString("创建参照坐标系 : \t曝光点中央经线计算为%1, 创建投影参考坐标系成功.").arg(cm));
+	QgsMessageLog::logMessage(QString("创建参照坐标系 : \t曝光点中央经线计算为%1, 创建投影参考坐标系\"%2\"成功.").arg(cm).arg(mTargetCrs.description()));
 
 	// 填充参照坐标系名称列表
 	if (descriptionList.isEmpty())
@@ -399,14 +406,12 @@ QgsCoordinateReferenceSystem& uavPosDataProcessing::targetCrs()
 	return mTargetCrs;
 }
 
-QgsPolygon uavPosDataProcessing::rectangle( const QgsPoint& point, const double& h )
+QgsPolygon uavPosDataProcessing::rectangle( const QgsPoint& point, const double& resolution )
 {
-	// 地面分辨率
-	double gsd = 0.2;
-
-	// 
-	double midx = (3840*gsd) / 2;
-	double midy = (5760*gsd) / 2;
+	int weight = (mSettings.value("/Uav/pos/options/leWidth", "0").toString()).toInt();
+	int height = (mSettings.value("/Uav/pos/options/leHeight", "0").toString()).toInt();
+	double midx = (weight*resolution) / 2;
+	double midy = (height*resolution) / 2;
 
 	QgsPolyline polyline;
 	QgsPolygon polyon;
@@ -426,7 +431,7 @@ bool uavPosDataProcessing::descriptionForDb( QStringList &list )
 	sqlite3_stmt *myPreparedStatement;
 	int           myResult;
 
-	QString databaseFileName = QgsApplication::srsDbFilePath();
+	QString databaseFileName = QDir::currentPath() + "/Resources/srs.db";
 	if ( !QFileInfo( databaseFileName ).exists() )
 	{
 		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t没有找到srs.db, 程序已终止..."));
@@ -470,7 +475,7 @@ bool uavPosDataProcessing::descriptionForDb( QStringList &list )
 
 bool uavPosDataProcessing::descriptionForUserDb( QStringList &list )
 {
-	QString databaseFileName = QgsApplication::qgisUserDbFilePath();
+	QString databaseFileName = QDir::currentPath() + "/Resources/qgis.db";
 	if ( !QFileInfo( databaseFileName ).exists() )
 	{
 		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t没有找到qgis.db, 程序已终止..."));
@@ -523,4 +528,29 @@ bool uavPosDataProcessing::isValid()
 QList< QStringList >* uavPosDataProcessing::fieldsList()
 {
 	return &mFieldsList;
+}
+
+double uavPosDataProcessing::calculateResolution( const double &absoluteHeight, const double &groundHeight )
+{
+	double resolution = 0.0;
+	double elevation = 0.0;
+	double pixelSize = 0.0;
+	double focal = 0.0;
+
+	QString tmp;
+	if (groundHeight == -9999)
+	{
+		tmp = mSettings.value("/Uav/pos/options/leAverageEle", "0").toString();
+		elevation = tmp.toFloat();
+	}
+	else
+		elevation = groundHeight;
+
+	tmp = mSettings.value("/Uav/pos/options/lePixelSize", "0").toString();
+	pixelSize = tmp.toDouble();
+	tmp = mSettings.value("/Uav/pos/options/leFocal", "0").toString();
+	focal = tmp.toDouble();
+	resolution = (absoluteHeight-elevation)*pixelSize/1000/focal;
+
+	return resolution;
 }

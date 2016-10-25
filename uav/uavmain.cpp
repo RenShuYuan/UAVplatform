@@ -189,7 +189,6 @@ UavMain::UavMain(QWidget *parent, Qt::WFlags flags)
 UavMain::~UavMain()
 {
 	QSettings settings;
-	settings.setValue("/Uav/pos/lePosFile", "");
 
 	mMapCanvas->stopRendering();
 
@@ -4068,7 +4067,7 @@ void UavMain::openPosFile()
 
 	upDataPosActions();
 	openMessageLog();
-	QgsMessageLog::logMessage(QString("\n"));
+	QgsMessageLog::logMessage("\n");
 }
 
 void UavMain::posFormat()
@@ -4076,9 +4075,9 @@ void UavMain::posFormat()
 	posdp->autoPosFormat();
 }
 
-void UavMain::posTransform()
+bool UavMain::posTransform()
 {
-	posdp->autoPosTransform();
+	return posdp->autoPosTransform();
 }
 
 void UavMain::posLinkPhoto()
@@ -4100,7 +4099,7 @@ void UavMain::posLinkPhoto()
 	{
 		if (!ppInter->isValid())
 		{
-			QgsMessageLog::logMessage(QString("PP动态联动 : \t 必须在曝光点文件解析成功与航飞略图成功创建时才能启动联动功能, 联动功能启动失败..."));
+			QgsMessageLog::logMessage(QString("PP动态联动 : \t必须在曝光点文件解析成功与航飞略图成功创建时才能启动联动功能, 联动功能启动失败..."));
 			return;
 		}
 
@@ -4124,11 +4123,31 @@ void UavMain::posSketchMap()
 {
 	QgsVectorLayer* layer = posdp->autoSketchMap();
 	ppInter = new uavPPInteractive(this, layer, posdp->fieldsList());
+	addAllToOverview();
 }
 
 void UavMain::posOneButton()
 {
+	QgsMessageLog::logMessage("曝光文件一键处理 : \t开始...");
 
+	QSettings mSettings;
+	if (mSettings.value("/Uav/pos/options/chkFormat", true).toBool())	// 格式整理
+	{
+		posFormat();
+	}
+	if (mSettings.value("/Uav/pos/options/chkTransform", true).toBool()) // 坐标转换
+	{
+		if (!posTransform())
+			return;
+	}
+	if (mSettings.value("/Uav/pos/options/chkSketchMap", true).toBool()) // 创建略图
+	{
+		posSketchMap();
+	}
+	if (mSettings.value("/Uav/pos/options/chkLinkPhoto", true).toBool()) // PP联动
+	{
+		posLinkPhoto();
+	}
 }
 
 void UavMain::posSettings()

@@ -4,8 +4,10 @@
 #include <QObject>
 #include <QList>
 #include <QMap>
+#include "qgscoordinatereferencesystem.h"
+#include "qgspoint.h"
 
-class QPointF;
+class uavOgr;
 class QString;
 class QgsRasterLayer;
 class QgsCoordinateReferenceSystem;
@@ -18,7 +20,10 @@ public:
 	enum ErrorType
 	{
 		eOK,						// 有效
-		eInvalidDefaultDemPath,		// 无效的默认路径
+		eInvalidDefaultDemPath,		// 无效的默认DEM路径
+		eNotSupportCrs,				// 不支持的源参考坐标系
+		eTransformFailed,			// 创建坐标转换关系失败
+		eOther,						// 其他错误
 	};
 
 	uavInquireDemValue(QObject *parent);
@@ -32,7 +37,7 @@ public:
 	*							参考坐标系，将默认使用该函数定义的Crs。
     * @return
     */
-	void setTargetCrs(const QgsCoordinateReferenceSystem& crs);
+	void setSourceCrs(const QgsCoordinateReferenceSystem& crs);
 
 	
 	/**
@@ -57,22 +62,33 @@ public:
 	*							该函数内部将会调用一系列函数来完成高程查询工作。
     * @return
     */
-	uavInquireDemValue::ErrorType inquireElevation(const QPointF& point, qreal& elevation, const QgsCoordinateReferenceSystem* crs = nullptr);
-	uavInquireDemValue::ErrorType inquireElevation(const QList< QPointF >& points, QList< qreal >& elevations, const QgsCoordinateReferenceSystem* crs = nullptr);
+	uavInquireDemValue::ErrorType inquireElevation(const QgsPoint& point, qreal& elevation, const QgsCoordinateReferenceSystem* crs = nullptr);
+	uavInquireDemValue::ErrorType inquireElevations(const QList< QgsPoint >& points, QList< qreal >& elevations, const QgsCoordinateReferenceSystem* crs = nullptr);
 
-private:
+public:
 	/**
-    * @brief                    根据传递的平面坐标计算所涉及的DEM范围
+    * @brief                    将点坐标转换到与DEM相同坐标系
     * @author                   YuanLong
+	* @param pointFirst			转换前的平面坐标（坐标集）
+	* @param pointAfter			转换后的平面坐标（坐标集）
+	* @param crs				传递转换前参考坐标系
     * @return
     */
-	void involved();
+	uavInquireDemValue::ErrorType pointTransform(const QList< QgsPoint >& pointFirst,QList< QgsPoint >& pointAfter, const QgsCoordinateReferenceSystem* crs);
+
+	/**
+    * @brief                    根据坐标计算所涉及的DEM范围
+    * @author                   YuanLong
+    * @param points				坐标集
+    * @return					如果找到有效DEM则返回true
+    */
+	bool involved(const QList< QgsPoint >& points);
 
 	/**
     * @brief                    加载所涉及的DEM数据
     * @author                   YuanLong
 	* @warning					利用involved()计算出的DEM范围，从默认路径（或setDemPath()）
-	*							下加载DEM，并以栅格图层形式存储。
+	*							下加载DEM，并保存其指针。
     * @return
     */
 	void loadDem();
@@ -85,14 +101,22 @@ private:
 	*							将返回坐标对应到DEM上的高程值。
     * @return
     */
-	const qreal& searchElevationValue(const QPointF& point);
+	void searchElevationValues(const QList< QgsPoint >& points, QList< qreal >& elevations);
+
+	/**
+    * @brief                    返回默认DEM文件名称
+    * @author                   YuanLong
+    * @param point				平面坐标
+    * @return					返回通过组合固定格式获得DEM文件名称
+    */
+	QString defaultDemName(const QgsPoint &point);
 
 private:
-	QList< QPointF > mPoints;
+	QList< QgsPoint > mPoints;
 	QString mDefaultDemPath;
 	QString mCustomizeDemPath;
-	QgsCoordinateReferenceSystem mTargetCrs;
-	QMap< QString, QgsRasterLayer* > mRasterLayersMap;
+	QgsCoordinateReferenceSystem mSourceCrs;
+	QMap< QString, uavOgr* > mRasterLayersMap;
 };
 
 #endif // UAVINQUIREDEMVALUE_H

@@ -23,7 +23,6 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QSpacerItem>
-#include <QtGui/QToolButton>
 #include <QtGui/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
@@ -36,18 +35,18 @@ public:
     QVBoxLayout *verticalLayout_3;
     QGridLayout *gridLayout;
     QLabel *label;
-    QLineEdit *lineEdit;
-    QToolButton *toolButton;
     QLabel *label_2;
-    QLineEdit *lineEdit_2;
-    QSpacerItem *horizontalSpacer_3;
-    QLabel *label_3;
     QLineEdit *lineEdit_3;
+    QLineEdit *lineEdit_2;
+    QLabel *label_3;
     QSpacerItem *horizontalSpacer_4;
-    QLabel *label_4;
+    QSpacerItem *horizontalSpacer_3;
     QLineEdit *lineEdit_4;
+    QLabel *label_4;
     QLineEdit *lineEdit_5;
     QSpacerItem *horizontalSpacer_5;
+    QLabel *label_5;
+    QLineEdit *lineEdit_6;
     QGroupBox *groupBox_2;
     QVBoxLayout *verticalLayout_2;
     QGroupBox *groupBox_3;
@@ -71,7 +70,7 @@ public:
     {
         if (uavpossettingdialog->objectName().isEmpty())
             uavpossettingdialog->setObjectName(QString::fromUtf8("uavpossettingdialog"));
-        uavpossettingdialog->resize(345, 380);
+        uavpossettingdialog->resize(405, 402);
         verticalLayout_4 = new QVBoxLayout(uavpossettingdialog);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         groupBox = new QGroupBox(uavpossettingdialog);
@@ -85,53 +84,43 @@ public:
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
 
-        lineEdit = new QLineEdit(groupBox);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-
-        gridLayout->addWidget(lineEdit, 0, 1, 1, 2);
-
-        toolButton = new QToolButton(groupBox);
-        toolButton->setObjectName(QString::fromUtf8("toolButton"));
-
-        gridLayout->addWidget(toolButton, 0, 3, 1, 1);
-
         label_2 = new QLabel(groupBox);
         label_2->setObjectName(QString::fromUtf8("label_2"));
 
         gridLayout->addWidget(label_2, 1, 0, 1, 1);
-
-        lineEdit_2 = new QLineEdit(groupBox);
-        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
-
-        gridLayout->addWidget(lineEdit_2, 1, 1, 1, 2);
-
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout->addItem(horizontalSpacer_3, 1, 3, 1, 1);
-
-        label_3 = new QLabel(groupBox);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-
-        gridLayout->addWidget(label_3, 2, 0, 1, 1);
 
         lineEdit_3 = new QLineEdit(groupBox);
         lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
 
         gridLayout->addWidget(lineEdit_3, 2, 1, 1, 2);
 
+        lineEdit_2 = new QLineEdit(groupBox);
+        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
+
+        gridLayout->addWidget(lineEdit_2, 1, 1, 1, 2);
+
+        label_3 = new QLabel(groupBox);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        gridLayout->addWidget(label_3, 2, 0, 1, 1);
+
         horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         gridLayout->addItem(horizontalSpacer_4, 2, 3, 1, 1);
 
-        label_4 = new QLabel(groupBox);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        gridLayout->addWidget(label_4, 3, 0, 1, 1);
+        gridLayout->addItem(horizontalSpacer_3, 1, 3, 1, 1);
 
         lineEdit_4 = new QLineEdit(groupBox);
         lineEdit_4->setObjectName(QString::fromUtf8("lineEdit_4"));
 
         gridLayout->addWidget(lineEdit_4, 3, 1, 1, 1);
+
+        label_4 = new QLabel(groupBox);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        gridLayout->addWidget(label_4, 3, 0, 1, 1);
 
         lineEdit_5 = new QLineEdit(groupBox);
         lineEdit_5->setObjectName(QString::fromUtf8("lineEdit_5"));
@@ -141,6 +130,16 @@ public:
         horizontalSpacer_5 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         gridLayout->addItem(horizontalSpacer_5, 3, 3, 1, 1);
+
+        label_5 = new QLabel(groupBox);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        gridLayout->addWidget(label_5, 4, 0, 1, 1);
+
+        lineEdit_6 = new QLineEdit(groupBox);
+        lineEdit_6->setObjectName(QString::fromUtf8("lineEdit_6"));
+
+        gridLayout->addWidget(lineEdit_6, 4, 1, 1, 1);
 
 
         verticalLayout_3->addLayout(gridLayout);
@@ -246,10 +245,10 @@ public:
         uavpossettingdialog->setWindowTitle(QApplication::translate("uavpossettingdialog", "Dialog", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QApplication::translate("uavpossettingdialog", "\345\217\202\346\225\260\350\256\276\347\275\256", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("uavpossettingdialog", "\345\235\220\346\240\207\345\217\202\347\205\247\347\263\273", 0, QApplication::UnicodeUTF8));
-        toolButton->setText(QApplication::translate("uavpossettingdialog", "...", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("uavpossettingdialog", "\347\233\270\346\234\272\347\204\246\350\267\235\357\274\210mm\357\274\211", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("uavpossettingdialog", "\345\203\217\345\205\203\345\244\247\345\260\217\357\274\210um\357\274\211 ", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("uavpossettingdialog", "\347\233\270\345\271\205\345\244\247\345\260\217\357\274\210\345\217\257\351\200\211\357\274\211", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("uavpossettingdialog", "\347\233\270\345\271\205\345\244\247\345\260\217\357\274\210\351\253\230\345\256\275\357\274\211", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("uavpossettingdialog", "\346\265\213\345\214\272\345\271\263\345\235\207\351\253\230\347\250\213\357\274\210m\357\274\211", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("uavpossettingdialog", "\346\233\235\345\205\211\347\202\271\344\270\200\351\224\256\345\244\204\347\220\206", 0, QApplication::UnicodeUTF8));
         groupBox_3->setTitle(QString());
         chkFormat->setText(QApplication::translate("uavpossettingdialog", "\346\240\274\345\274\217\346\225\264\347\220\206", 0, QApplication::UnicodeUTF8));

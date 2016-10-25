@@ -2,6 +2,7 @@
 #define POSDATAPROCESSING_H
 
 #include <QObject>
+#include <QSettings>
 #include "qgscoordinatereferencesystem.h"
 #include "qgsgeometry.h"
 
@@ -20,14 +21,11 @@ public:
 
 	QList< QStringList >* fieldsList();
 
-	//! 按照POS对话框设置参数一键整理POS文件
-	void oneButtonOrganizePosFiles();
-
 	// POS格式整理
 	void autoPosFormat();
 
 	// POS坐标转换
-	void autoPosTransform();
+	bool autoPosTransform();
 
 	// 创建略图
 	QgsVectorLayer* autoSketchMap();
@@ -56,15 +54,18 @@ private:
 	bool descriptionForUserDb(QStringList &list);
 
 	// 利用曝光点中心坐标与绝对高程计算相片4个角点的坐标，并构面
-	QgsPolygon rectangle( const QgsPoint& point, const double& h );
+	QgsPolygon rectangle( const QgsPoint& point, const double& resolution );
+
+	// 计算分辨率
+	double calculateResolution(const double &absoluteHeight, const double &groundHeight);
 
 	// 返回源、目标参照坐标系
 	QgsCoordinateReferenceSystem& sourceCrs();
 	QgsCoordinateReferenceSystem& targetCrs();
 
 private:
-
 	QObject *parent;
+	QSettings mSettings;
 	QList< QStringList > mFieldsList;
 	QStringList descriptionList;
 	QStringList descriptionUserList;

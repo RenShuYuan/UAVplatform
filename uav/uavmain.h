@@ -398,7 +398,7 @@ private slots:
 	//! ×Ô¶¨Òå
 	void openPosFile();
 	void posFormat();
-	void posTransform();
+	bool posTransform();
 	void posLinkPhoto();
 	void posSketchMap();
 	void posOneButton();
