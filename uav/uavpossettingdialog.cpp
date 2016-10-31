@@ -9,6 +9,7 @@ uavpossettingdialog::uavpossettingdialog(QWidget *parent)
 	: QDialog(parent)
 {
 	ui.setupUi(this);
+	this->setWindowTitle("设置");
 
 	QSettings settings;
 
@@ -23,16 +24,18 @@ uavpossettingdialog::uavpossettingdialog(QWidget *parent)
 
 	// 参数设置
 	QString strText;
-	strText = settings.value("/Uav/pos/options/leFocal", "").toString();
-	ui.lineEdit_2->setText(strText);
-	strText = settings.value("/Uav/pos/options/lePixelSize", "").toString();
-	ui.lineEdit_3->setText(strText);
-	strText = settings.value("/Uav/pos/options/leHeight", "").toString();
-	ui.lineEdit_4->setText(strText);
-	strText = settings.value("/Uav/pos/options/leWidth", "").toString();
-	ui.lineEdit_5->setText(strText);
-	strText = settings.value("/Uav/pos/options/leAverageEle", "0").toString();
-	ui.lineEdit_6->setText(strText);
+	double tmpDouble = 0.0;
+	int tmpInt = 0;
+	tmpDouble = settings.value("/Uav/pos/options/leFocal", "").toDouble();
+	ui.lineEdit_2->setText(QString::number(tmpDouble, 'f', 9));
+	tmpDouble = settings.value("/Uav/pos/options/lePixelSize", "").toDouble();
+	ui.lineEdit_3->setText(QString::number(tmpDouble, 'f', 3));
+	tmpInt = settings.value("/Uav/pos/options/leHeight", "").toInt();
+	ui.lineEdit_4->setText(QString::number(tmpInt));
+	tmpInt = settings.value("/Uav/pos/options/leWidth", "").toInt();
+	ui.lineEdit_5->setText(QString::number(tmpInt));
+	tmpDouble = settings.value("/Uav/pos/options/leAverageEle", "0").toDouble();
+	ui.lineEdit_6->setText(QString::number(tmpDouble, 'f', 2));
 
 	// 曝光点一键处理 初始化
 	bool blchk;
@@ -64,11 +67,11 @@ void uavpossettingdialog::on_buttonBox_accepted()
 {
 	QSettings settings;
 	settings.setValue( "/Uav/pos/options/projectDefaultCrs", mDefaultCrs.authid() );
-	settings.setValue( "/Uav/pos/options/leFocal", ui.lineEdit_2->text() );
-	settings.setValue( "/Uav/pos/options/lePixelSize", ui.lineEdit_3->text() );
-	settings.setValue( "/Uav/pos/options/leHeight", ui.lineEdit_4->text() );
-	settings.setValue( "/Uav/pos/options/leWidth", ui.lineEdit_5->text() );
-	settings.setValue( "/Uav/pos/options/leAverageEle", ui.lineEdit_6->text() );
+	settings.setValue( "/Uav/pos/options/leFocal", ui.lineEdit_2->text().toDouble() );
+	settings.setValue( "/Uav/pos/options/lePixelSize", ui.lineEdit_3->text().toDouble() );
+	settings.setValue( "/Uav/pos/options/leHeight", ui.lineEdit_4->text().toInt() );
+	settings.setValue( "/Uav/pos/options/leWidth", ui.lineEdit_5->text().toInt() );
+	settings.setValue( "/Uav/pos/options/leAverageEle", ui.lineEdit_6->text().toDouble() );
 	
 	settings.setValue("/Uav/pos/options/chkFormat", ui.chkFormat->isChecked());
 	settings.setValue("/Uav/pos/options/chkTransform", ui.chkTransform->isChecked());

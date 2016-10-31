@@ -61,7 +61,7 @@ QString uavCore::getFolder( const QString &folder, const QString &name )
 	return "";
 }
 
-QStringList uavCore::searchFiles( const QString &path, QStringList &filters, QWidget *parent /*= 0 */, const QString &title /*= "" */  )
+QStringList uavCore::searchFiles( const QString &path, QStringList &filters )
 {
 	QStringList list;
 
@@ -71,36 +71,12 @@ QStringList uavCore::searchFiles( const QString &path, QStringList &filters, QWi
 		return list;
 	}
 
-	//QProgressDialog dialog;
-	//if (parent)
-	//{
-	//	dialog.setParent(parent);
-	//	dialog.setLabelText(title);
-	//	dialog.setWindowTitle(title);
-	//	dialog.setCancelButtonText("È¡Ïû");
-	//	dialog.setMinimum(0);
-	//	dialog.setMaximum(0);
-	//	dialog.setWindowModality(Qt::WindowModal);
-	//	dialog.show();
-	//}
-
 	QDirIterator dir_iterator(path, filters, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
 	while (dir_iterator.hasNext())
 	{
 		dir_iterator.next();
 		QFileInfo file_info = dir_iterator.fileInfo();
 		list.append(file_info.filePath());
-
-		//if (parent)
-		//{
-		//	QApplication::processEvents();
-
-		//	if (dialog.wasCanceled())
-		//	{
-		//		list.clear();
-		//		return list;
-		//	}
-		//}
 	}
 	return list;
 }

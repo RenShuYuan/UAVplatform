@@ -17,8 +17,28 @@ public:
 	uavPosDataProcessing(QObject *parent = nullptr);
 	~uavPosDataProcessing();
 
+	/**
+    * @brief                    返回此类是否有效
+    * @author                   YuanLong
+    * @warning					判断mFieldsList是否为空，该成员变量是
+    *							后续处理的基础
+    * @return					有效则返回true
+    */
 	bool isValid();
 
+	/**
+    * @brief                    检查POS相关参数是否正确
+    * @author                   YuanLong
+    * @return					列表为空表示全部正确，不正确的参数将会返回
+	*							对应的名称
+    */
+	const QStringList checkPosSettings();
+
+	/**
+    * @brief                    返回Pos文件内容
+    * @author                   YuanLong
+    * @return					返回一个指向mFieldsList的指针
+    */
 	QList< QStringList >* fieldsList();
 
 	// POS格式整理
@@ -29,6 +49,9 @@ public:
 
 	// 创建略图
 	QgsVectorLayer* autoSketchMap();
+
+	// 导出Pos文件
+	bool posExport();
 
 signals:
 	void startProcess();

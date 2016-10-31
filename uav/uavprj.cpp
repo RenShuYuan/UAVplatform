@@ -16,6 +16,11 @@ uavPrj::uavPrj()
     CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
 }
 
+uavPrj::~uavPrj()
+{
+	CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", NULL);
+}
+
 const QString uavPrj::getGCSDatum(const QString gcsEPSG)
 {
 

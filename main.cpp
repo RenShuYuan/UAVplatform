@@ -2,6 +2,7 @@
 #include <QtGui/QApplication>
 #include <QTextCodec>
 #include <QSettings>
+#include <QDir>
 #include <QTranslator>
 
 #include "qgsapplication.h"	
@@ -20,9 +21,10 @@ int main(int argc, char *argv[])
 	QCoreApplication::setApplicationName( "uavplatform" );
 
 	QgsApplication a(argc, argv, true);
-	a.setDefaultSvgPaths( QStringList( "../images/svg" ) ); // svg file path
 	a.setWindowIcon( QIcon( "plane.ico" ) );
-	QgsApplication::setPrefixPath( "C:/qgis-2.14.4/dev", true );
+	QgsApplication::setDefaultSvgPaths( QStringList( QDir::currentPath()+"/Resources/images/svg" ) );
+	QgsApplication::setPrefixPath( QDir::currentPath(), true );
+	QgsApplication::init(QDir::currentPath()+"/Resources");
 	QgsApplication::initQgis();
 
 	// 使用翻译文件
@@ -32,6 +34,7 @@ int main(int argc, char *argv[])
 
 	UavMain uav;
 	uav.setWindowState(Qt::WindowMaximized);
+	uav.setWindowTitle("无人机航空影像协同优化软件");
 	uav.show();
 
 	QgsEditorWidgetRegistry::initEditors();

@@ -14,6 +14,7 @@ class uavPrj
 {
 public:
     uavPrj();
+	~uavPrj();
 
     //返回指定的地理坐标系名称
     const QString getGCSDatum(const QString gcsEPSG);

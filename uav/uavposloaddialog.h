@@ -44,9 +44,6 @@ private:
 	// 返回选择的分隔符
 	QString selectedChars();
 
-	// 将内存中POS文件内容输出到原文件
-	bool writePos();
-
 private:
 	Ui::uavposdialog ui;
 	QgsDelimitedTextFile *mFile;

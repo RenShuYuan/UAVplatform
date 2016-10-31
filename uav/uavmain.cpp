@@ -645,6 +645,11 @@ void UavMain::createActions()
 	mPosOneButton->setIcon(uavCore::getThemeIcon("mActionSelect.svg"));
 	connect( mPosOneButton, SIGNAL( triggered() ), this, SLOT( posOneButton() ) );
 
+	mPosExport = new QAction("导出曝光点文件", this);
+	mPosExport->setStatusTip("导出曝光点文件");
+	mPosExport->setIcon(uavCore::getThemeIcon("mActionSharingExport.svg"));
+	connect( mPosExport, SIGNAL( triggered() ), this, SLOT( posExport() ) );
+
 	mPosSettings = new QAction("参数设置", this);
 	mPosSettings->setStatusTip("参数设置");
 	mPosSettings->setIcon(uavCore::getThemeIcon("mActionAtlasSettings.svg"));
@@ -740,6 +745,8 @@ void UavMain::createMenus()
 	ui.mPosMenu->addAction(mPosTransform);
 	ui.mPosMenu->addAction(mPosLinkPhoto);
 	ui.mPosMenu->addAction(mPosSketchMap);
+	ui.mPosMenu->addSeparator();
+	ui.mPosMenu->addAction(mPosExport);
 	ui.mPosMenu->addSeparator();
 	ui.mPosMenu->addAction(mPosSettings);
 
@@ -4047,6 +4054,7 @@ void UavMain::upDataPosActions()
 		mPosLinkPhoto->setEnabled(true);
 		mPosSketchMap->setEnabled(true);
 		mPosOneButton->setEnabled(true);
+		mPosExport->setEnabled(true);
 	}
 	else
 	{
@@ -4055,6 +4063,7 @@ void UavMain::upDataPosActions()
 		mPosLinkPhoto->setEnabled(false);
 		mPosSketchMap->setEnabled(false);
 		mPosOneButton->setEnabled(false);
+		mPosExport->setEnabled(false);
 	}
 }
 
@@ -4068,6 +4077,18 @@ void UavMain::openPosFile()
 	upDataPosActions();
 	openMessageLog();
 	QgsMessageLog::logMessage("\n");
+
+	const QStringList errList = posdp->checkPosSettings();
+	if (!errList.isEmpty())
+	{
+		QString err;
+		foreach (QString str, errList)
+			err += str + "、";
+
+		messageBar()->pushMessage( "曝光点相关参数检查", 
+			QString("程序检测到%1参数设置可能不正确，请确认参数是否已正确初始化。").arg(err), 
+			QgsMessageBar::WARNING, messageTimeout() );
+	}
 }
 
 void UavMain::posFormat()
@@ -4099,6 +4120,9 @@ void UavMain::posLinkPhoto()
 	{
 		if (!ppInter->isValid())
 		{
+			messageBar()->pushMessage( "PP动态联动", 
+				"必须在曝光点文件解析成功与航飞略图成功创建时才能启动联动功能, 联动功能启动失败...",
+				QgsMessageBar::CRITICAL, messageTimeout() );
 			QgsMessageLog::logMessage(QString("PP动态联动 : \t必须在曝光点文件解析成功与航飞略图成功创建时才能启动联动功能, 联动功能启动失败..."));
 			return;
 		}
@@ -4122,12 +4146,26 @@ void UavMain::posLinkPhoto()
 void UavMain::posSketchMap()
 {
 	QgsVectorLayer* layer = posdp->autoSketchMap();
+	if (!layer)
+		return;
 	ppInter = new uavPPInteractive(this, layer, posdp->fieldsList());
 	addAllToOverview();
 }
 
 void UavMain::posOneButton()
 {
+	const QStringList errList = posdp->checkPosSettings();
+	if (!errList.isEmpty())
+	{
+		QString err;
+		foreach (QString str, errList)
+			err += str + "、";
+
+		messageBar()->pushMessage( "曝光点相关参数检查", 
+			QString("程序检测到%1参数设置可能不正确，请确认参数是否已正确初始化。").arg(err), 
+			QgsMessageBar::WARNING, messageTimeout() );
+	}
+
 	QgsMessageLog::logMessage("曝光文件一键处理 : \t开始...");
 
 	QSettings mSettings;
@@ -4148,6 +4186,11 @@ void UavMain::posOneButton()
 	{
 		posLinkPhoto();
 	}
+}
+
+void UavMain::posExport()
+{
+	posdp->posExport();
 }
 
 void UavMain::posSettings()

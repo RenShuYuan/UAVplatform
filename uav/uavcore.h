@@ -24,11 +24,9 @@ public:
 	/** 搜索文件
 	* @param path		搜索该路径及子文件夹
 	* @param filters	过滤器列表
-	* @param parent		若该项不为空则调用进度框
-	* @param title		进度框中显示的字符串
 	* @return			返回搜索到的文件列表
 	*/
-	static QStringList searchFiles( const QString &path, QStringList &filters, QWidget *parent = 0, const QString &title = QString::null );
+	static QStringList searchFiles( const QString &path, QStringList &filters );
 };
 
 #endif

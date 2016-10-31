@@ -70,7 +70,7 @@ uavInquireDemValue::ErrorType uavInquireDemValue::inquireElevations( const QList
 	// 搜索高程值
 	searchElevationValues(pointAfter, elevations);
 
-	QgsMessageLog::logMessage(QString("\t\t匹配完成."));
+	QgsMessageLog::logMessage(QString("\t\t高程匹配完成."));
 
 	return uavInquireDemValue::eOK;
 }
@@ -98,7 +98,7 @@ void uavInquireDemValue::loadDem()
 		if (ogr->isOpen())
 			mRasterLayersMap[it.key()] = ogr;
 		else
-			QgsMessageLog::logMessage(QString("\t\t加载%1失败, 将使用预设的平均高程计算地面分辨率.").arg(path));
+			QgsMessageLog::logMessage(QString("\t\t加载%1失败, 将使用预设的平均高程计算地面分辨率.").arg(QDir::toNativeSeparators(path)));
 		++it;
 	}
 }

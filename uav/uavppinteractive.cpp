@@ -61,42 +61,52 @@ void uavPPInteractive::createPPlinkage()
 
 	if (!QFileInfo(phtotPath).exists())
 	{
-		QgsMessageLog::logMessage(QString("PP动态联动 : \t%1 未指定正确的相片路径, 创建联动关系失败...").arg(phtotPath));
+		UavMain::instance()->messageBar()->pushMessage( "PP动态联动", 
+			QString("%1 未指定正确的相片路径, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)), 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("PP动态联动 : \t%1 未指定正确的相片路径, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)));
 		isLinked = false;
 		return;
 	}
 
 	emit startProcess();
-	QStringList list = uavCore::searchFiles(phtotPath, QStringList() << "*.tif" << "*.jpg", 0, "搜索相片...");
+	QStringList list = uavCore::searchFiles(phtotPath, QStringList() << "*.tif" << "*.jpg");
 	emit stopProcess();
 
 	if (list.isEmpty())
 	{
-		QgsMessageLog::logMessage(QString("PP动态联动 : \t%1 路径下未搜索到tif、jpg格式的航飞相片, 创建联动关系失败...").arg(phtotPath));
+		UavMain::instance()->messageBar()->pushMessage( "PP动态联动", 
+			QString("\t%1 路径下未搜索到tif、jpg格式的航飞相片, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)), 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("PP动态联动 : \t%1 路径下未搜索到tif、jpg格式的航飞相片, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)));
 		isLinked = false;
 		return;
 	}
 	else
-		QgsMessageLog::logMessage(QString("PP动态联动 : \t%1 路径下搜索到%2张相片.").arg(phtotPath).arg(list.size()));
+		QgsMessageLog::logMessage(QString("PP动态联动 : \t%1 路径下搜索到%2张相片.").arg(QDir::toNativeSeparators(phtotPath)).arg(list.size()));
 
-	// 从POS中提取相片名称
+	// 从POS中提取曝光点名称
 	QStringList basePos;
 	foreach (QStringList subList, *mFieldsList)
 		basePos.append(subList.at(0));
 
-	// 填充mPhotoMap
+	matchPosName(list, basePos);
+
+	// 填充mPhotoMap, mPhotoMap[001] = "D:\测试数据\平台处理\photo\001.tif"
 	foreach (QString str, list)
 		mPhotoMap[QFileInfo(str).baseName()] = str;
 	
 	QMap<QString, QString>::iterator it = mPhotoMap.begin();
 	while (it != mPhotoMap.end())
 	{
-		if (!basePos.contains(it.key()))
+		QString key = it.key();
+		if (!basePos.contains(key))
 		{
-			QgsMessageLog::logMessage(QString("PP动态联动 : \t--> %1在曝光点文件中未找到对应记录.").arg(it.key()));
-			mPhotoMap.remove(it.key());
+			QgsMessageLog::logMessage(QString("PP动态联动 : \t||--> 相片:%1在曝光点文件中未找到对应记录.").arg(key));
+			it = mPhotoMap.erase(it);
 		}
-		++it;
+		else
+			++it;
 	}
 
 	QgsMessageLog::logMessage(QString("PP动态联动 : \t成功创建PP联动关系..."));
@@ -117,7 +127,7 @@ void uavPPInteractive::initLayerCategorizedSymbolRendererV2()
 	QgsFeatureIterator it = mLayer->getFeatures();
 	while (it.nextFeature(f))
 	{
-		cats << QgsRendererCategoryV2(f.attribute("相片编号"), unlinkedSymbolV2(), "未关联");
+		cats << QgsRendererCategoryV2(f.attribute("相片编号"), unlinkedSymbolV2(), f.attribute("相片编号").toString());
 	}
 
 	mLayer->setRendererV2( new QgsCategorizedSymbolRendererV2("相片编号", cats) );
@@ -143,18 +153,24 @@ void uavPPInteractive::upDataLinkedSymbol()
 		int index = cRenderer->categoryIndexForValue(QVariant(it.key()));
 
 		// 根据查找结果进行更新
-		if (-1 == index)
-		{
-			cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), linkedSymbolV2(), QString("已关联 "+)));
-		}
-		else
+		 if (-1 != index)
 		{
 			cRenderer->deleteCategory(index);
-			cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), unlinkedSymbolV2(), "未关联"));
+			cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), linkedSymbolV2(), it.key()));
 		}
+		//if (-1 == index)
+		//{
+		//	cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), unlinkedSymbolV2(), QString("未关联")));
+		//}
+		//else
+		//{
+		//	cRenderer->deleteCategory(index);
+		//	cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), linkedSymbolV2(), QString("已关联 %1").arg(it.key())));
+		//}
 		++it;
 	}
 
+	cRenderer->sortByValue();
 	UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());
 	UavMain::instance()->refreshMapCanvas();
 }
@@ -175,23 +191,6 @@ void uavPPInteractive::upDataUnLinkedSymbol()
 	{
 		cRenderer->updateCategorySymbol(i, unlinkedSymbolV2());
 	}
-
-	//foreach (QString str_value, list)
-	//{
-	//	// 在渲染器中查找是否有更新列表中的相片编号
-	//	int index = cRenderer->categoryIndexForValue(QVariant(str_value));
-
-	//	// 根据查找结果进行更新
-	//	if (-1 == index)
-	//	{
-	//		cRenderer->addCategory(QgsRendererCategoryV2(QVariant(str_value), unlinkedSymbolV2(), "未关联"));
-	//	} 
-	//	else
-	//	{
-	//		cRenderer->deleteCategory(index);
-	//		cRenderer->addCategory(QgsRendererCategoryV2(QVariant(str_value), unlinkedSymbolV2(), "未关联"));
-	//	}
-	//}
 
 	UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());
 	UavMain::instance()->refreshMapCanvas();
@@ -252,4 +251,70 @@ void uavPPInteractive::setFieldsList( QList< QStringList >* fieldsList )
 	if (!fieldsList)
 		return;
 	mFieldsList = fieldsList;
+}
+
+void uavPPInteractive::matchPosName(const QStringList& photoList, QStringList& posList)
+{
+	QString photoName;
+	QStringList tmpPosList;
+	QStringList photoNameList;
+	foreach (QString photoPath, photoList)
+		photoNameList.append(QFileInfo(photoPath).baseName());
+	if (photoNameList.isEmpty())
+		return;
+	//for (int i=0; i<posList.size(); ++i)
+	//	tmpPosList.append(posList.at(i));
+	//if (tmpPosList.isEmpty())
+	//	return;
+	tmpPosList = posList;
+
+	QgsMessageLog::logMessage(QString("匹配曝光点名称 : \t开始匹配曝光点与相片名称..."));
+
+	for (int i=0; i<tmpPosList.size(); ++i)
+	{
+		int count = 0;
+		QString posName = tmpPosList.at(i);
+		foreach (const QString tmpPhotoName, photoNameList)
+		{
+			if (tmpPhotoName.contains(posName, Qt::CaseInsensitive))
+			{
+				photoName = tmpPhotoName;
+				++count;
+			}
+		}
+		if (count==0)	// 没匹配到
+		{
+			int i = 0;
+			while (i<posName.size())
+			{
+				if (posName.at(i).isNumber())
+				{
+					if (posName.at(i)==QChar('0'))
+					{
+						posName.remove(i, 1);
+					}
+					else
+						break;
+				}
+				++i;
+			}
+			tmpPosList[i] = posName;
+			--i;
+		}
+		else if (count==1) // 匹配到一个
+		{
+			QgsMessageLog::logMessage(QString("\t\t匹配到曝光点: %1与相片名称: %2符合规则, 已自动更新曝光点名称.").arg(posList.at(i)).arg(photoName));
+			posList[i] = photoName;
+		}
+		else				// 匹配到多个
+		{
+			if (posName.size() < photoName.size())
+			{
+				tmpPosList[i] = posName.insert(0, '0');
+				--i;
+			}
+			else
+				QgsMessageLog::logMessage(QString("\t\t未匹配到曝光点: %1.").arg(posList.at(i)));
+		}
+	}
 }

@@ -402,6 +402,7 @@ private slots:
 	void posLinkPhoto();
 	void posSketchMap();
 	void posOneButton();
+	void posExport();
 	void posSettings();
 
 signals:
@@ -496,6 +497,7 @@ private:
 	QAction *mPosLinkPhoto;
 	QAction *mPosSketchMap;
 	QAction *mPosOneButton;
+	QAction *mPosExport;
 	QAction *mPosSettings;
 
 	QToolBar *mFileToolBar;

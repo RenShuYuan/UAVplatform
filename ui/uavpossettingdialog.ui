@@ -237,6 +237,19 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_2</tabstop>
+  <tabstop>lineEdit_3</tabstop>
+  <tabstop>lineEdit_4</tabstop>
+  <tabstop>lineEdit_5</tabstop>
+  <tabstop>lineEdit_6</tabstop>
+  <tabstop>chkFormat</tabstop>
+  <tabstop>chkTransform</tabstop>
+  <tabstop>chkSketchMap</tabstop>
+  <tabstop>chkLinkPhoto</tabstop>
+  <tabstop>lepPhotoName</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

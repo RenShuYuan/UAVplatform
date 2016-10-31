@@ -18,10 +18,9 @@ uavPosLoadDialog::uavPosLoadDialog(QWidget *parent)
 	mFile( new QgsDelimitedTextFile() )
 {
 	ui.setupUi(this);
+	this->setWindowTitle("加载曝光点文件");
 
 	mSettings = new QSettings;
-
-	//restoreGeometry(mSettings->value( "/Uav/pos/geometry" ).toByteArray());
 	
 	bool blchk = mSettings->value("/Uav/pos/chkComma", false).toBool();
 	ui.chkComma->setChecked(blchk);
@@ -41,11 +40,13 @@ uavPosLoadDialog::uavPosLoadDialog(QWidget *parent)
 
 	blchk = mSettings->value("/Uav/pos/chkClipSpace", true).toBool();
 	ui.chkClipSpace->setChecked(blchk);
+	blchk = mSettings->value("/Uav/pos/cbxSkipEmptyFields", false).toBool();
+	ui.cbxSkipEmptyFields->setChecked(blchk);
 	blchk = mSettings->value("/Uav/pos/chkDMSformat", false).toBool();
 	ui.chkDMSformat->setChecked(blchk);
 
 	QString str = mSettings->value("/Uav/pos/lePosFile", "").toString();
-	ui.lePosFile->setText(str);
+	ui.lePosFile->setText(QDir::toNativeSeparators(str));
 
 	// 调整下拉列表宽度
 	ui.cmb_1->view()->setMinimumWidth(ui.cmb_1->view()->sizeHint().width());
@@ -56,7 +57,6 @@ uavPosLoadDialog::uavPosLoadDialog(QWidget *parent)
 	ui.cmb_6->view()->setMinimumWidth(ui.cmb_6->view()->sizeHint().width());
 	ui.cmb_7->view()->setMinimumWidth(ui.cmb_7->view()->sizeHint().width());
 	ui.cmb_8->view()->setMinimumWidth(ui.cmb_8->view()->sizeHint().width());
-	ui.cmb_9->view()->setMinimumWidth(ui.cmb_9->view()->sizeHint().width());
 
 	connect( ui.chkComma, SIGNAL( stateChanged( int ) ), this, SLOT( updateFieldLists() ) );
 	connect( ui.chkTab, SIGNAL( stateChanged( int ) ), this, SLOT( updateFieldLists() ) );
@@ -65,11 +65,14 @@ uavPosLoadDialog::uavPosLoadDialog(QWidget *parent)
 	connect( ui.chkSemicolon, SIGNAL( stateChanged( int ) ), this, SLOT( updateFieldLists() ) );
 	connect( ui.cbxUseHeader, SIGNAL( stateChanged( int ) ), this, SLOT( updateFieldLists() ) );
 	connect( ui.rowCounter, SIGNAL( valueChanged( int ) ), this, SLOT( updateFieldLists() ) );
+	connect( ui.chkClipSpace, SIGNAL( stateChanged( int ) ), this, SLOT( updateFieldLists() ) );
+	connect( ui.cbxSkipEmptyFields, SIGNAL( stateChanged( int ) ), this, SLOT( updateFieldLists() ) );
+	connect( ui.chkDMSformat, SIGNAL( stateChanged( int ) ), this, SLOT( updateFieldLists() ) );
+	
 }
 
 uavPosLoadDialog::~uavPosLoadDialog()
 {
-	//mSettings->setValue( "/Uav/pos/geometry", saveGeometry() );
 	delete mSettings;
 	delete mFile;
 }
@@ -93,9 +96,10 @@ void uavPosLoadDialog::on_buttonBox_accepted()
 	mSettings->setValue("/Uav/pos/rowCounter", ui.rowCounter->value());
 
 	mSettings->setValue("/Uav/pos/chkClipSpace", ui.chkClipSpace->isChecked());
+	mSettings->setValue("/Uav/pos/cbxSkipEmptyFields", ui.cbxSkipEmptyFields->isChecked());
 	mSettings->setValue("/Uav/pos/chkDMSformat", ui.chkDMSformat->isChecked());
 
-	mSettings->setValue("/Uav/pos/lePosFile", ui.lePosFile->text());
+	mSettings->setValue("/Uav/pos/lePosFile", QDir::fromNativeSeparators(ui.lePosFile->text()));
 
 	mSettings->setValue("/Uav/pos/fieldsList/cmb1", ui.cmb_1->currentIndex());
 	mSettings->setValue("/Uav/pos/fieldsList/cmb2", ui.cmb_2->currentIndex());
@@ -105,7 +109,6 @@ void uavPosLoadDialog::on_buttonBox_accepted()
 	mSettings->setValue("/Uav/pos/fieldsList/cmb6", ui.cmb_6->currentIndex());
 	mSettings->setValue("/Uav/pos/fieldsList/cmb7", ui.cmb_7->currentIndex());
 	mSettings->setValue("/Uav/pos/fieldsList/cmb8", ui.cmb_8->currentIndex());
-	mSettings->setValue("/Uav/pos/fieldsList/cmb9", ui.cmb_9->currentIndex());
 
 	writeFieldsToMemory();
 	emit getFieldsList( mFields );
@@ -122,7 +125,7 @@ void uavPosLoadDialog::getOpenFileName()
 		return;
 
 	// 更新LineEdit
-	ui.lePosFile->setText(posFileName.replace(QRegExp("/"), "\\"));
+	ui.lePosFile->setText(QDir::toNativeSeparators(posFileName));
 }
 
 void uavPosLoadDialog::on_lePosFile_textChanged()
@@ -132,7 +135,7 @@ void uavPosLoadDialog::on_lePosFile_textChanged()
 	if ( file_info.exists() )
 	{
 		QSettings settings;
-		mSettings->setValue("/Uav/pos/pathName", file_info.path());
+		mSettings->setValue("/Uav/pos/pathName", QDir::fromNativeSeparators(file_info.path()));
 	}
 
 	updateFieldLists();
@@ -149,7 +152,6 @@ void uavPosLoadDialog::updateFieldLists()
 	QString column6 = ui.cmb_6->currentText();
 	QString column7 = ui.cmb_7->currentText();
 	QString column8 = ui.cmb_8->currentText();
-	QString column9 = ui.cmb_9->currentText();
 
 	// 清除字段列表
 	ui.cmb_1->clear();
@@ -160,7 +162,6 @@ void uavPosLoadDialog::updateFieldLists()
 	ui.cmb_6->clear();
 	ui.cmb_7->clear();
 	ui.cmb_8->clear();
-	ui.cmb_9->clear();
 
 	if ( !loadDelimitedFileDefinition() )
 		return;
@@ -175,8 +176,7 @@ void uavPosLoadDialog::updateFieldLists()
 	if ( status != QgsDelimitedTextFile::RecordOk ) 
 		return;
 
-	// Look at count of non-blank fields
-
+	// 非空字段的计数
 	int nv = values.size();
 	while ( nv > 0 && values[nv-1].isEmpty() ) nv--;
 
@@ -201,7 +201,6 @@ void uavPosLoadDialog::updateFieldLists()
 	}
 
 	// 将字段添加到cmb控件中
-	int fieldNo = 0;
 	fieldList.insert(0, "NULL");	// 用于忽略
 	for ( int i = 0; i < fieldList.size(); i++ )
 	{
@@ -216,8 +215,6 @@ void uavPosLoadDialog::updateFieldLists()
 		ui.cmb_6->addItem( field );
 		ui.cmb_7->addItem( field );
 		ui.cmb_8->addItem( field );
-		ui.cmb_9->addItem( field );
-		fieldNo++;
 	}
 
 	// 尝试使用的列名称重新设置当前值
@@ -229,7 +226,6 @@ void uavPosLoadDialog::updateFieldLists()
 	ui.cmb_6->setCurrentIndex( ui.cmb_6->findText( column6 ) );
 	ui.cmb_7->setCurrentIndex( ui.cmb_7->findText( column7 ) );
 	ui.cmb_8->setCurrentIndex( ui.cmb_8->findText( column8 ) );
-	ui.cmb_9->setCurrentIndex( ui.cmb_9->findText( column9 ) );
 
 	// 使用保存的设置将空的cmb赋值
 	if (ui.cmb_1->currentIndex() == -1)
@@ -280,22 +276,16 @@ void uavPosLoadDialog::updateFieldLists()
 		if (index > ui.cmb_8->count()) ui.cmb_8->setCurrentIndex(-1);
 		else ui.cmb_8->setCurrentIndex(index);
 	}
-	if (ui.cmb_9->currentIndex() == -1)
-	{
-		int index = mSettings->value("/Uav/pos/fieldsList/cmb9", -1).toInt();
-		if (index > ui.cmb_9->count()) ui.cmb_9->setCurrentIndex(-1);
-		else ui.cmb_9->setCurrentIndex(index);
-	}
 }
 
 bool uavPosLoadDialog::loadDelimitedFileDefinition()
 {
-	mFile->setFileName( ui.lePosFile->text() );
+	mFile->setFileName( QDir::fromNativeSeparators(ui.lePosFile->text()) );
 
 	mFile->setTypeCSV( selectedChars() );
 
 	mFile->setSkipLines( ui.rowCounter->value() );
-	mFile->setUseHeader( !ui.cbxUseHeader->isChecked() );
+	mFile->setUseHeader( ui.cbxUseHeader->isChecked() );
 	mFile->setDiscardEmptyFields( ui.cbxSkipEmptyFields->isChecked() );
 	mFile->setTrimFields( ui.chkClipSpace->isChecked() );
 	return mFile->isValid();
@@ -339,8 +329,6 @@ void uavPosLoadDialog::writeFieldsToMemory()
 		++icount;
 	if (ui.cmb_8->currentIndex() >= 0 && ui.cmb_8->currentText() != "NULL")
 		++icount;
-	if (ui.cmb_9->currentIndex() >= 0 && ui.cmb_9->currentText() != "NULL")
-		++icount;
 
 	QStringList values;
 	mFile->reset();
@@ -357,44 +345,15 @@ void uavPosLoadDialog::writeFieldsToMemory()
 			}
 			else
 			{
-				QgsMessageLog::logMessage(QString("读取曝光点内容 : 第%1行字段数量不够，已忽略.").arg(mFile->recordId()));
+				QgsMessageLog::logMessage(QString("读取曝光点内容 : \t||-->第%1行字段数量不够，已忽略.").arg(mFile->recordId()));
 			}
 		}
 		else
 		{
-			QgsMessageLog::logMessage(QString("读取曝光点内容 : 第%1行为坏记录，已忽略.").arg(mFile->recordId()));
+			QgsMessageLog::logMessage(QString("读取曝光点内容 : \t||-->第%1行为坏记录，已忽略.").arg(mFile->recordId()));
 		}
 
 		status = mFile->nextRecord( values );
 	}
 
-}
-
-bool uavPosLoadDialog::writePos()
-{
-	if (mFields.isEmpty())
-	{
-		return false;
-	}
-
-	QFile file(ui.lePosFile->text());
-	if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate))   //只写、文本、重写
-	{
-		UavMain::instance()->messageBar()->pushMessage( "曝光点文件读写", "重新写入曝光点文件失败...", 
-									QgsMessageBar::WARNING, UavMain::instance()->messageTimeout() );
-		QgsMessageLog::logMessage("曝光点文件读写 : 重新写入曝光点文件失败.");
-		return false;
-	}
-
-	QTextStream out(&file);
-	foreach (QStringList strList, mFields)
-	{
-		QString strLine;
-		foreach (QString str, strList)
-			strLine.append(str + '\t');
-		out << strLine + '\n';
-	}
-
-	file.close();
-	return true;
 }

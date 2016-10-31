@@ -232,6 +232,16 @@ public:
 
         verticalLayout_4->addLayout(hboxLayout);
 
+        QWidget::setTabOrder(lineEdit_2, lineEdit_3);
+        QWidget::setTabOrder(lineEdit_3, lineEdit_4);
+        QWidget::setTabOrder(lineEdit_4, lineEdit_5);
+        QWidget::setTabOrder(lineEdit_5, lineEdit_6);
+        QWidget::setTabOrder(lineEdit_6, chkFormat);
+        QWidget::setTabOrder(chkFormat, chkTransform);
+        QWidget::setTabOrder(chkTransform, chkSketchMap);
+        QWidget::setTabOrder(chkSketchMap, chkLinkPhoto);
+        QWidget::setTabOrder(chkLinkPhoto, lepPhotoName);
+        QWidget::setTabOrder(lepPhotoName, buttonBox);
 
         retranslateUi(uavpossettingdialog);
         QObject::connect(buttonBox, SIGNAL(accepted()), uavpossettingdialog, SLOT(accept()));

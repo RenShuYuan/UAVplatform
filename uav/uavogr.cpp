@@ -14,6 +14,8 @@
 #include <QTextStream>
 #include <QtGlobal>
 
+#include "qgsmessagelog.h"
+
 using namespace std;
 
 uavOgr::uavOgr(const QString &fileName)
@@ -23,7 +25,7 @@ uavOgr::uavOgr(const QString &fileName)
     //CPLSetConfigOption("GDAL_DATA", "C:\\gdal201\\data");
 
     // 支持中文路径
-    //CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
+    CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", "NO");
 
 	open(fileName);
 }
@@ -33,21 +35,27 @@ uavOgr::~uavOgr()
     if (poDataset)
         GDALClose((GDALDatasetH)poDataset);
 	
+	CPLSetConfigOption("GDAL_FILENAME_IS_UTF8", NULL);
 }
 
 bool uavOgr::open(const QString &fileName)
 {
 	// 注册所有影像格式
     GDALAllRegister();
-    QByteArray ba = fileName.toLocal8Bit();
-    const char* pszFile= ba.data();
+	QByteArray ba = fileName.toLocal8Bit();
+	const char* pszFile= ba.data();
 
     // 已只读方式打开影像文件
-    poDataset=(GDALDataset*)GDALOpen(pszFile, GA_ReadOnly);
+     poDataset=(GDALDataset*)GDALOpen(pszFile, GA_ReadOnly);
     if (poDataset)
+	{
+		QgsMessageLog::logMessage(QString("\t\tOK %1").arg(pszFile));
         return true;
-    else
+	}
+	else
+	{
         return false;
+	}
 }
 
 bool uavOgr::isOpen()
@@ -148,7 +156,6 @@ bool uavOgr::getPixelValue( const QgsPoint& point, double &value )
 		return false;
 
 	GDALRasterBand *poBand_1 = poDataset->GetRasterBand(1);
-	//GDALDataType datatype= poBand_1->GetRasterDataType();
 
 	double *pabyData = new double[1];
 	CPLErr err = poBand_1->RasterIO( GF_Read, iCol, iRow, 1, 1, pabyData, 1, 1, GDT_Float64, 0, 0, 0 );
@@ -163,23 +170,6 @@ bool uavOgr::getPixelValue( const QgsPoint& point, double &value )
 		UAVRELEASE(pabyData);
 		return false;
 	}
-	//int	nXBlocks, nYBlocks, nXBlockSize, nYBlockSize;
-	//poBand_1->GetBlockSize( &nXBlockSize, &nYBlockSize );
-	//nXBlocks = (poBand_1->GetXSize() + nXBlockSize - 1) / nXBlockSize;
-	//nYBlocks = (poBand_1->GetYSize() + nYBlockSize - 1) / nYBlockSize;
-	//
-	//GInt16 *pabyData = new GInt16[nXBlockSize*nYBlockSize];
-	//for( int iYBlock = 0; iYBlock < nYBlocks; iYBlock++ )
-	//{
-	//	for( int iXBlock = 0; iXBlock < nXBlocks; iXBlock++ )
-	//	{
-	//		poBand_1->ReadBlock( iXBlock, iYBlock, pabyData );
-	//		for (int i=0; i<nXBlockSize*nYBlockSize; ++i)
-	//		{
-	//			double aa = pabyData[i];
-	//		}
-	//	}
-	//}
 }
 
 bool uavOgr::Projection2ImageRowCol( const QgsPoint& point, int &iCol, int &iRow )

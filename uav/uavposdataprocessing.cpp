@@ -42,12 +42,13 @@ void uavPosDataProcessing::setFieldsList( QList< QStringList >& list )
 {
 	if (list.isEmpty())
 	{
-		QgsMessageLog::logMessage("读取曝光点文件内容 : \t读取字段失败, 程序已终止...");
+		UavMain::instance()->messageBar()->pushMessage( "读取曝光点文件内容", 
+			"读取字段失败, 运行已终止!", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage("读取曝光点文件内容 : \t读取字段失败, 运行已终止...");
 		return;
 	}
 	mFieldsList = list;
-
-
 }
 
 void uavPosDataProcessing::autoPosFormat()
@@ -55,14 +56,14 @@ void uavPosDataProcessing::autoPosFormat()
 	QList<int> indexList;
 
 	indexList << mSettings.value("/Uav/pos/fieldsList/cmb1", -1).toInt()
-		<< mSettings.value("/Uav/pos/fieldsList/cmb2", -1).toInt()
-		<< mSettings.value("/Uav/pos/fieldsList/cmb3", -1).toInt()
-		<< mSettings.value("/Uav/pos/fieldsList/cmb4", -1).toInt()
-		<< mSettings.value("/Uav/pos/fieldsList/cmb5", -1).toInt()
-		<< mSettings.value("/Uav/pos/fieldsList/cmb6", -1).toInt()
-		<< mSettings.value("/Uav/pos/fieldsList/cmb7", -1).toInt()
-		<< mSettings.value("/Uav/pos/fieldsList/cmb8", -1).toInt()
-		<< mSettings.value("/Uav/pos/fieldsList/cmb9", -1).toInt();
+			  << mSettings.value("/Uav/pos/fieldsList/cmb2", -1).toInt()
+			  << mSettings.value("/Uav/pos/fieldsList/cmb3", -1).toInt()
+			  << mSettings.value("/Uav/pos/fieldsList/cmb4", -1).toInt()
+			  << mSettings.value("/Uav/pos/fieldsList/cmb5", -1).toInt()
+			  << mSettings.value("/Uav/pos/fieldsList/cmb6", -1).toInt()
+			  << mSettings.value("/Uav/pos/fieldsList/cmb7", -1).toInt()
+			  << mSettings.value("/Uav/pos/fieldsList/cmb8", -1).toInt()
+			  << mSettings.value("/Uav/pos/fieldsList/cmb9", -1).toInt();
 
 	// 按设置顺序重新排列字段
 	for (int i=0; i<mFieldsList.size(); ++i)
@@ -82,7 +83,7 @@ void uavPosDataProcessing::autoPosFormat()
 		mFieldsList[i] = newOutLineFields;
 	}
 
-	QgsMessageLog::logMessage("曝光点文件格式重构 : \tOK...");
+	QgsMessageLog::logMessage("曝光点文件格式重构 : \t完成.");
 }
 
 bool uavPosDataProcessing::autoPosTransform()
@@ -97,7 +98,10 @@ bool uavPosDataProcessing::autoPosTransform()
 	QgsCoordinateTransform ct(mSourceCrs, mTargetCrs);
 	if (!ct.isInitialised())
 	{
-		QgsMessageLog::logMessage("曝光点坐标转换 : \t创建坐标转换关系失败, 程序已终止...");
+		UavMain::instance()->messageBar()->pushMessage( "曝光点坐标转换", 
+			"创建坐标转换关系失败, 运行已终止!", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage("曝光点坐标转换 : \t创建坐标转换关系失败, 运行已终止.");
 		return false;
 	}
 
@@ -110,7 +114,7 @@ bool uavPosDataProcessing::autoPosTransform()
 		list[2] = QString::number(p.y(), 'f');
 		mFieldsList[i] = list;
 	}
-	QgsMessageLog::logMessage("曝光点坐标转换 : \tOK...");
+	QgsMessageLog::logMessage("曝光点坐标转换 : \t完成.");
 	return true;
 }
 
@@ -126,7 +130,7 @@ int uavPosDataProcessing::getCentralMeridian()
 		double x = str_x.toDouble(&isok);
 		if (!isok)
 		{
-			QgsMessageLog::logMessage(QString("曝光点中央经度计算 : \t--> 第%1行横坐标不可识别, 已删除该行内容.").arg(i));
+			QgsMessageLog::logMessage(QString("曝光点中央经度计算 : \t||--> 第%1行横坐标不可识别, 已跳过该行内容.").arg(i));
 			mFieldsList.removeAt(i);
 		}
 
@@ -177,12 +181,21 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 	layerProperties.append(QString( "index=yes&" ));										// 创建索引
 	layerProperties.append(QString( "memoryid=%1" ).arg( QUuid::createUuid().toString() ));	// 临时编码
 
+	QString sketchMapName;
+	sketchMapName = mSettings.value("/Uav/pos/lePosFile", "").toString();
+	sketchMapName = QFileInfo(sketchMapName).baseName();
+	if (sketchMapName.isEmpty())
+		sketchMapName = "航飞略图";
+
 	QgsVectorLayer* newLayer = new QgsVectorLayer( 
-		layerProperties, QString( "航飞略图" ), QString( "memory" ) );
+		layerProperties, sketchMapName, QString( "memory" ) );
 	
 	if (!newLayer->isValid())
 	{
-		QgsMessageLog::logMessage(QString("创建航飞略图 : \t创建略图失败, 程序已终止..."));
+		UavMain::instance()->messageBar()->pushMessage( "创建航飞略图", 
+			"创建略图失败, 运行已终止, 注意检查plugins文件夹!", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("创建航飞略图 : \t创建略图失败, 程序已终止, 注意检查plugins文件夹。"));
 		return nullptr;
 	}
 
@@ -232,7 +245,7 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 		else
 			elevation = -9999;
 		double resolution = calculateResolution(list.at(3).toDouble(), elevation);
-		list[7] = QString::number(resolution, 'f', 2);
+		list.append(QString::number(resolution, 'f', 2));
 		mFieldsList[index] = list;
 		++index;
 	}
@@ -245,11 +258,17 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 		// 取出字段内容
 		double x = list.at(1).toDouble();
 		double y = list.at(2).toDouble();
-		double h = list.at(7).toDouble();
-		double mRotate = list.at(4).toDouble();
+		double resolution = list.at(list.size()-1).toDouble();
+		double mRotate = list.at(6).toDouble();
+
+		if (resolution == 0.0)
+		{
+			QgsMessageLog::logMessage(QString("\t\t||-->相片:%1 高程异常，地面分辨率计算为0，已跳过该张相片.").arg(list.at(0)));
+			continue;
+		}
 
 		// 创建面要素, 并根据Omega选择角度
-		QgsPolygon polygon = rectangle( QgsPoint(x, y), h );
+		QgsPolygon polygon = rectangle( QgsPoint(x, y), resolution );
 		QgsGeometry* mGeometry = QgsGeometry::fromPolygon(polygon);
 		mGeometry->rotate( mRotate, QgsPoint(x, y) );
 
@@ -262,7 +281,7 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 												<< QVariant(list.at(4))
 												<< QVariant(list.at(5))
 												<< QVariant(list.at(6))
-												<< QVariant(list.at(7)));
+												<< QVariant(list.at(list.size()-1)));
 		featureList.append(MyFeature);
 	}
 
@@ -289,7 +308,7 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 
 	emit stopProcess();
 
-	QgsMessageLog::logMessage(QString("创建航飞略图 : \tOK...\n\t\t创建了%1张相片略图.").arg(newLayer->featureCount()));
+	QgsMessageLog::logMessage(QString("创建航飞略图 : \t完成. 创建了%1张相片略图.").arg(newLayer->featureCount()));
 	UavMain::instance()->mapCanvas()->freeze( false );
 	UavMain::instance()->refreshMapCanvas();
 	return newLayer;
@@ -304,7 +323,10 @@ bool uavPosDataProcessing::createTargetCrs()
 	// 验证源参照坐标系
 	if (!mSourceCrs.isValid())
 	{
-		QgsMessageLog::logMessage("曝光点坐标转换 : \t项目没有指定正确的参照坐标系, 程序已终止...");
+		UavMain::instance()->messageBar()->pushMessage( "曝光点坐标转换", 
+			"项目没有指定正确的参照坐标系, 运行已终止!", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage("曝光点坐标转换 : \t项目没有指定正确的参照坐标系, 运行已终止!");
 		return false;
 	}
 
@@ -312,17 +334,23 @@ bool uavPosDataProcessing::createTargetCrs()
 	if ( !( (mSourceCrs.authid() == "EPSG:4326") ||		// WGS84
 		(mSourceCrs.authid() == "EPSG:4490") ) )		// CGCS2000
 	{
-		QgsMessageLog::logMessage("创建参照坐标系 : \t项目指定了错误的参照坐标系, 目前仅支持WGS84、CGCS2000, 程序已终止...");
+		UavMain::instance()->messageBar()->pushMessage( "创建参照坐标系", 
+			"项目指定了错误的参照坐标系, 目前仅支持WGS84、CGCS2000, 运行已终止!", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage("创建参照坐标系 : \t项目指定了错误的参照坐标系, 目前仅支持WGS84、CGCS2000, 运行已终止!");
 		return false;
 	}
 
 	// 获得曝光点文件中的中央经线
 	int cm = getCentralMeridian();
 
-	// 检查精度是否在正常范围内
+	// 检查经度是否在正常范围内
 	if ( !((cm>74 && cm<136) || (cm>24 && cm<46) || (cm>12 && cm<24)) )
 	{
-		QgsMessageLog::logMessage("创建参照坐标系 : \t曝光点文件中的经度并不在中国范围内, 程序已终止...");
+		UavMain::instance()->messageBar()->pushMessage( "带号自动计算", 
+			"曝光点文件中的经度并不在中国范围内, 运行已终止!", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("带号自动计算 : \t曝光点文件中的经度 %1 并不在中国范围内, 运行已终止!").arg(cm));
 		return false;
 	}
 
@@ -356,7 +384,10 @@ bool uavPosDataProcessing::createTargetCrs()
 	
 	if ( !mTargetCrs.isValid() )
 	{
-		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t曝光点中央经线计算为%1, 创建投影参考坐标系失败, 程序已终止...").arg(cm));
+		UavMain::instance()->messageBar()->pushMessage( "创建参照坐标系", 
+			QString("曝光点中央经线计算为%1, 创建投影参考坐标系失败, 运行已终止!").arg(cm), 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t曝光点中央经线计算为%1, 创建投影参考坐标系失败, 运行已终止!").arg(cm));
 		return false;
 	}
 	
@@ -388,7 +419,10 @@ bool uavPosDataProcessing::createTargetCrs()
 		}
 		else
 		{
-			QgsMessageLog::logMessage(QString("创建参照坐标系 : \t向数据库中写入 %1 参考坐标系失败, 程序已终止...").arg(strDescription));
+			UavMain::instance()->messageBar()->pushMessage( "创建参照坐标系", 
+				QString("向数据库中写入 %1 参考坐标系失败, 运行已终止!").arg(strDescription), 
+				QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+			QgsMessageLog::logMessage(QString("创建参照坐标系 : \t向数据库中写入 %1 参考坐标系失败, 运行已终止!").arg(strDescription));
 			return false;
 		}
 	}
@@ -408,8 +442,8 @@ QgsCoordinateReferenceSystem& uavPosDataProcessing::targetCrs()
 
 QgsPolygon uavPosDataProcessing::rectangle( const QgsPoint& point, const double& resolution )
 {
-	int weight = (mSettings.value("/Uav/pos/options/leWidth", "0").toString()).toInt();
-	int height = (mSettings.value("/Uav/pos/options/leHeight", "0").toString()).toInt();
+	int weight = mSettings.value("/Uav/pos/options/leWidth", 0).toInt();
+	int height = mSettings.value("/Uav/pos/options/leHeight", 0).toInt();
 	double midx = (weight*resolution) / 2;
 	double midy = (height*resolution) / 2;
 
@@ -434,7 +468,10 @@ bool uavPosDataProcessing::descriptionForDb( QStringList &list )
 	QString databaseFileName = QDir::currentPath() + "/Resources/srs.db";
 	if ( !QFileInfo( databaseFileName ).exists() )
 	{
-		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t没有找到srs.db, 程序已终止..."));
+		UavMain::instance()->messageBar()->pushMessage( "创建参照坐标系", 
+			QString("没有找到srs.db, 运行已终止!"), 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t没有找到srs.db, 运行已终止!"));
 		return false;
 	}
 
@@ -443,7 +480,10 @@ bool uavPosDataProcessing::descriptionForDb( QStringList &list )
 	if ( myResult )
 	{
 		QString errInfo = QString( "不能打开数据库: %1" ).arg( sqlite3_errmsg( myDatabase ) );
-		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t%1, 程序已终止...").arg(errInfo));
+		UavMain::instance()->messageBar()->pushMessage( "创建参照坐标系", 
+			QString("%1, 运行已终止!").arg(errInfo), 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t%1, 运行已终止!").arg(errInfo));
 		return false;
 	}
 
@@ -462,7 +502,10 @@ bool uavPosDataProcessing::descriptionForDb( QStringList &list )
 	}
 	else
 	{
-		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t查询系统数据库, 检索所需的投影信息失败, 程序已终止..."));
+		UavMain::instance()->messageBar()->pushMessage( "创建参照坐标系", 
+			QString("查询系统数据库, 检索所需的投影信息失败, 运行已终止!"), 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t查询系统数据库, 检索所需的投影信息失败, 运行已终止!"));
 		sqlite3_finalize( myPreparedStatement );
 		sqlite3_close( myDatabase );
 		return false;
@@ -478,7 +521,10 @@ bool uavPosDataProcessing::descriptionForUserDb( QStringList &list )
 	QString databaseFileName = QDir::currentPath() + "/Resources/qgis.db";
 	if ( !QFileInfo( databaseFileName ).exists() )
 	{
-		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t没有找到qgis.db, 程序已终止..."));
+		UavMain::instance()->messageBar()->pushMessage( "创建参照坐标系", 
+			"没有找到qgis.db, 运行已终止!", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t没有找到qgis.db, 运行已终止!"));
 		return false;
 	}
 
@@ -490,7 +536,10 @@ bool uavPosDataProcessing::descriptionForUserDb( QStringList &list )
 	if ( result )
 	{
 		QString errInfo = QString( "不能打开数据库: %1" ).arg( sqlite3_errmsg( database ) );
-		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t%1, 程序已终止...").arg(errInfo));
+		UavMain::instance()->messageBar()->pushMessage( "创建参照坐标系", 
+			QString("%1, 运行已终止!").arg(errInfo), 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t%1, 运行已终止!").arg(errInfo));
 		return false;
 	}
 
@@ -509,7 +558,10 @@ bool uavPosDataProcessing::descriptionForUserDb( QStringList &list )
 	}
 	else
 	{
-		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t查询系统数据库, 检索所需的投影信息失败, 程序已终止..."));
+		UavMain::instance()->messageBar()->pushMessage( "创建参照坐标系", 
+			QString("查询系统数据库, 检索所需的投影信息失败, 运行已终止!"), 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("创建参照坐标系 : \t查询系统数据库, 检索所需的投影信息失败, 运行已终止!"));
 		sqlite3_finalize( stmt );
 		sqlite3_close( database );
 		return false;
@@ -539,18 +591,78 @@ double uavPosDataProcessing::calculateResolution( const double &absoluteHeight, 
 
 	QString tmp;
 	if (groundHeight == -9999)
-	{
-		tmp = mSettings.value("/Uav/pos/options/leAverageEle", "0").toString();
-		elevation = tmp.toFloat();
-	}
+		elevation = mSettings.value("/Uav/pos/options/leAverageEle", 0.0).toDouble();
 	else
 		elevation = groundHeight;
 
-	tmp = mSettings.value("/Uav/pos/options/lePixelSize", "0").toString();
-	pixelSize = tmp.toDouble();
-	tmp = mSettings.value("/Uav/pos/options/leFocal", "0").toString();
-	focal = tmp.toDouble();
+	pixelSize = mSettings.value("/Uav/pos/options/lePixelSize", 0.0).toDouble();
+	focal = mSettings.value("/Uav/pos/options/leFocal", 0.0).toDouble();
 	resolution = (absoluteHeight-elevation)*pixelSize/1000/focal;
 
 	return resolution;
+}
+
+bool uavPosDataProcessing::posExport()
+{
+	if (mFieldsList.isEmpty())
+	{
+		UavMain::instance()->messageBar()->pushMessage( "导出曝光点文件", 
+			"内存数组被破坏，未正确导出，请联系开发人员解决.", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("导出曝光点文件 : \t内存数组被破坏，未正确导出，请联系开发人员解决."));
+		return false;
+	}
+
+	QString path = mSettings.value("/Uav/pos/lePosFile", "").toString();
+	path.insert(path.size()-4, "out");
+	QFile file(path);
+	if (!file.open(QFile::WriteOnly | QFile::Text | QFile::Truncate))   //只写、文本、重写
+	{
+		UavMain::instance()->messageBar()->pushMessage( "导出曝光点文件", 
+			QString("创建%1曝光点文件失败.").arg(QDir::toNativeSeparators(path)), 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("导出曝光点文件 : \t创建%1曝光点文件失败.").arg(QDir::toNativeSeparators(path)));
+		return false;
+	}
+
+	QTextStream out(&file);
+	foreach (QStringList strList, mFieldsList)
+	{
+		QString strLine;
+		for (int i=0; i<(strList.size()-2); ++i)
+		{
+			QString str = strList.at(i);
+			strLine.append(str + ' ');
+		}
+		out << strLine + '\n';
+	}
+
+	file.close();
+	UavMain::instance()->messageBar()->pushMessage( "导出曝光点文件", 
+		QString("导出%1曝光点文件成功.").arg(QDir::toNativeSeparators(path)), 
+		QgsMessageBar::SUCCESS, UavMain::instance()->messageTimeout() );
+	QgsMessageLog::logMessage(QString("导出曝光点文件 : \t导出%1曝光点文件成功.").arg(QDir::toNativeSeparators(path)));
+	return true;
+}
+
+const QStringList uavPosDataProcessing::checkPosSettings()
+{
+	QStringList errList;
+	double tmpDouble = 0.0;
+	int tmpInt = 0;
+	
+	tmpDouble = mSettings.value("/Uav/pos/options/leFocal", 0.0).toDouble();
+	if (!tmpDouble)
+		errList.append("相机焦距");
+	tmpDouble = mSettings.value("/Uav/pos/options/lePixelSize", 0.0).toDouble();
+	if (!tmpDouble)
+		errList.append("相机大小");
+	tmpInt = mSettings.value("/Uav/pos/options/leHeight", 0.0).toInt();
+	if (!tmpInt)
+		errList.append("相幅大小(长)");
+	tmpInt = mSettings.value("/Uav/pos/options/leWidth", 0.0).toInt();
+	if (!tmpInt)
+		errList.append("相幅大小(宽)");
+
+	return errList;
 }
