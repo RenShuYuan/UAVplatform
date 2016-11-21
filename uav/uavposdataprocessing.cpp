@@ -62,8 +62,7 @@ void uavPosDataProcessing::autoPosFormat()
 			  << mSettings.value("/Uav/pos/fieldsList/cmb5", -1).toInt()
 			  << mSettings.value("/Uav/pos/fieldsList/cmb6", -1).toInt()
 			  << mSettings.value("/Uav/pos/fieldsList/cmb7", -1).toInt()
-			  << mSettings.value("/Uav/pos/fieldsList/cmb8", -1).toInt()
-			  << mSettings.value("/Uav/pos/fieldsList/cmb9", -1).toInt();
+			  << mSettings.value("/Uav/pos/fieldsList/cmb8", -1).toInt();
 
 	// 按设置顺序重新排列字段
 	for (int i=0; i<mFieldsList.size(); ++i)

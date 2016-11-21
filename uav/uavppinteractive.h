@@ -16,6 +16,14 @@ class uavPPInteractive : public QObject
 	Q_OBJECT
 
 public:
+	//enum linkedType
+	//{
+	//	LINKED,				// 已关联
+	//	UNLINKED,			// 未关联
+	//	ERROR,				// 错误
+	//	WARNING,			// 警告
+	//};
+
 	uavPPInteractive(QObject *parent);
 	uavPPInteractive(QObject *parent, QgsVectorLayer* layer, QList< QStringList >* fieldsList);
 	~uavPPInteractive();
@@ -96,6 +104,10 @@ public:
     */
 	void matchPosName(const QStringList& photoList, QStringList& posList);
 
+	void addChangedItem(const QString& item);
+	void clearAllChangedItem();
+
+	void updata(QgsSymbolV2* v2);
 signals:
 	/**
     * @brief            向主窗口发送信号更新繁忙进度条状态
@@ -126,14 +138,20 @@ private:
 
 	// 相片列表,保存文件baseName与完整路径
 	QMap<QString, QString> mPhotoMap;
+	// 关联图层指针
 	QgsVectorLayer* mLayer;
+	// 关联POS列表指针
 	QList< QStringList >* mFieldsList;
+	// save changed item
+	QList< QString > mChangeList;
 
-	QColor cLinked;		// 已关联的符号颜色
-	QColor cUnlinked;	// 未关联符号颜色
+	QColor cLinked;			// 已关联的符号颜色
+	QColor cUnlinked;		// 未关联符号颜色
+	QColor cError;			// 错误符号颜色
+	QColor cWarning;		// 警告符号颜色
 
-	QgsSymbolV2* mLinkedSymbolV2;
-	QgsSymbolV2* mUnlinkedSymbolV2;
+	QgsSymbolV2* mLinkedSymbolV2;	// 已关联的符号类
+	QgsSymbolV2* mUnlinkedSymbolV2;	// 未关联的符号类
 };
 
 #endif // PPINTERACTIVE_H

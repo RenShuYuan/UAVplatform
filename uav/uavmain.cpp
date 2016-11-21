@@ -4089,6 +4089,9 @@ void UavMain::openPosFile()
 			QString("程序检测到%1参数设置可能不正确，请确认参数是否已正确初始化。").arg(err), 
 			QgsMessageBar::WARNING, messageTimeout() );
 	}
+
+	// 整理POS格式
+	posdp->autoPosFormat();
 }
 
 void UavMain::posFormat()

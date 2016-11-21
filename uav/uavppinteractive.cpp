@@ -22,6 +22,8 @@ uavPPInteractive::uavPPInteractive(QObject *parent)
 
 	cLinked.setRgb(186, 221, 105);
 	cUnlinked = Qt::gray;
+	cError = Qt::red;
+	cWarning = Qt::yellow;
 
 	definitionLinkedSymbolV2();
 	definitionUnLinkedSymbolV2();
@@ -90,7 +92,7 @@ void uavPPInteractive::createPPlinkage()
 	foreach (QStringList subList, *mFieldsList)
 		basePos.append(subList.at(0));
 
-	matchPosName(list, basePos);
+	//matchPosName(list, basePos);
 
 	// 填充mPhotoMap, mPhotoMap[001] = "D:\测试数据\平台处理\photo\001.tif"
 	foreach (QString str, list)
@@ -144,7 +146,6 @@ void uavPPInteractive::upDataLinkedSymbol()
 		initLayerCategorizedSymbolRendererV2();
 		cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
 	}
-	
 
 	QMap<QString, QString>::iterator it = mPhotoMap.begin();
 	while (it != mPhotoMap.end())
@@ -158,15 +159,6 @@ void uavPPInteractive::upDataLinkedSymbol()
 			cRenderer->deleteCategory(index);
 			cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), linkedSymbolV2(), it.key()));
 		}
-		//if (-1 == index)
-		//{
-		//	cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), unlinkedSymbolV2(), QString("未关联")));
-		//}
-		//else
-		//{
-		//	cRenderer->deleteCategory(index);
-		//	cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), linkedSymbolV2(), QString("已关联 %1").arg(it.key())));
-		//}
 		++it;
 	}
 
@@ -178,22 +170,31 @@ void uavPPInteractive::upDataLinkedSymbol()
 void uavPPInteractive::upDataUnLinkedSymbol()
 {
 	// 获得目前图层的分类样式符号渲染器
-	QgsCategorizedSymbolRendererV2* cRenderer;
-	cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
-	if (!cRenderer)
+	//QgsCategorizedSymbolRendererV2* cRenderer;
+	//cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
+	//if (!cRenderer)
+	//{
+	//	initLayerCategorizedSymbolRendererV2();
+	//	cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
+	//}
+
+	//QgsCategoryList cgList = cRenderer->categories();
+	//for (int i=0; i<cgList.size(); i++)
+	//{
+	//	cRenderer->updateCategorySymbol(i, unlinkedSymbolV2());
+	//}
+
+	//UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());
+	//UavMain::instance()->refreshMapCanvas();
+	// 
+	QMap<QString, QString>::iterator it = mPhotoMap.begin();
+	while (it != mPhotoMap.end())
 	{
-		initLayerCategorizedSymbolRendererV2();
-		cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
+		addChangedItem(it.key());
+		++it;
 	}
 
-	QgsCategoryList cgList = cRenderer->categories();
-	for (int i=0; i<cgList.size(); i++)
-	{
-		cRenderer->updateCategorySymbol(i, unlinkedSymbolV2());
-	}
-
-	UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());
-	UavMain::instance()->refreshMapCanvas();
+	updata(unlinkedSymbolV2());
 }
 
 void uavPPInteractive::definitionLinkedSymbolV2()
@@ -262,10 +263,7 @@ void uavPPInteractive::matchPosName(const QStringList& photoList, QStringList& p
 		photoNameList.append(QFileInfo(photoPath).baseName());
 	if (photoNameList.isEmpty())
 		return;
-	//for (int i=0; i<posList.size(); ++i)
-	//	tmpPosList.append(posList.at(i));
-	//if (tmpPosList.isEmpty())
-	//	return;
+
 	tmpPosList = posList;
 
 	QgsMessageLog::logMessage(QString("匹配曝光点名称 : \t开始匹配曝光点与相片名称..."));
@@ -317,4 +315,39 @@ void uavPPInteractive::matchPosName(const QStringList& photoList, QStringList& p
 				QgsMessageLog::logMessage(QString("\t\t未匹配到曝光点: %1.").arg(posList.at(i)));
 		}
 	}
+}
+
+void uavPPInteractive::addChangedItem( const QString& item )
+{
+	mChangeList.append(item);
+}
+
+void uavPPInteractive::clearAllChangedItem()
+{
+	mChangeList.clear();
+}
+
+void uavPPInteractive::updata(QgsSymbolV2* v2)
+{
+	// 获得目前图层的分类样式符号渲染器
+	QgsCategorizedSymbolRendererV2* cRenderer;
+	cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
+	if (!cRenderer)
+	{
+		initLayerCategorizedSymbolRendererV2();
+		cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
+	}
+
+	foreach (QString str, mChangeList)
+	{
+		int index = cRenderer->categoryIndexForValue(QVariant(str));
+		if (index != -1)
+		{
+			cRenderer->updateCategorySymbol(index, v2);
+		}
+	}
+
+	UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());
+	UavMain::instance()->refreshMapCanvas();
+	clearAllChangedItem();
 }
