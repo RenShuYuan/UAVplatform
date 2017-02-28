@@ -39,8 +39,6 @@ uavpossettingdialog::uavpossettingdialog(QWidget *parent)
 
 	// 曝光点一键处理 初始化
 	bool blchk;
-	blchk = settings.value("/Uav/pos/options/chkFormat", true).toBool();
-	ui.chkFormat->setChecked(blchk);
 	blchk = settings.value("/Uav/pos/options/chkTransform", true).toBool();
 	ui.chkTransform->setChecked(blchk);
 	blchk = settings.value("/Uav/pos/options/chkSketchMap", true).toBool();
@@ -73,7 +71,6 @@ void uavpossettingdialog::on_buttonBox_accepted()
 	settings.setValue( "/Uav/pos/options/leWidth", ui.lineEdit_5->text().toInt() );
 	settings.setValue( "/Uav/pos/options/leAverageEle", ui.lineEdit_6->text().toDouble() );
 	
-	settings.setValue("/Uav/pos/options/chkFormat", ui.chkFormat->isChecked());
 	settings.setValue("/Uav/pos/options/chkTransform", ui.chkTransform->isChecked());
 	settings.setValue("/Uav/pos/options/chkSketchMap", ui.chkSketchMap->isChecked());
 	settings.setValue("/Uav/pos/options/chkLinkPhoto", ui.chkLinkPhoto->isChecked());

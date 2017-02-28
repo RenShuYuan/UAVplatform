@@ -380,7 +380,7 @@ QString uavPrj::createWktBeijing1954Gcs( const int cm )
 	return pszCGCS_2000_1 + pszCGCS_2000_2 + pszCGCS_2000_3 + pszCGCS_2000_4;
 }
 
-QString uavPrj::createProj4Cgcs2000Gcs( const int cm )
+QString uavPrj::createProj4Cgcs2000Gcs( const double cm )
 {
 	QString pszCGCS_2000;
 
@@ -403,7 +403,7 @@ QString uavPrj::createProj4Cgcs2000Gcs( const int cm )
 	return pszCGCS_2000;
 }
 
-QString uavPrj::createProj4Wgs84Gcs( const int cm )
+QString uavPrj::createProj4Wgs84Gcs( const double cm )
 {
 	QString pszCGCS_84;
 
@@ -426,7 +426,7 @@ QString uavPrj::createProj4Wgs84Gcs( const int cm )
 	return pszCGCS_84;
 }
 
-QString uavPrj::createProj4Xian1980Gcs( const int cm )
+QString uavPrj::createProj4Xian1980Gcs( const double cm )
 {
 	QString pszCGCS_80;
 
@@ -449,7 +449,7 @@ QString uavPrj::createProj4Xian1980Gcs( const int cm )
 	return pszCGCS_80;
 }
 
-QString uavPrj::createProj4Beijing1954Gcs( const int cm )
+QString uavPrj::createProj4Beijing1954Gcs( const double cm )
 {
 	QString pszCGCS_54;
 

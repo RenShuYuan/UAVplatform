@@ -4,6 +4,8 @@
 #include "uavprj.h"
 #include "uavinquiredemvalue.h"
 
+#include "app/delimitedtext/qgsdelimitedtextfile.h"
+#include "app/delimitedtext/qgsdelimitedtextprovider.h"
 #include "qgssinglesymbolrendererv2.h"
 #include "qgscategorizedsymbolrendererv2.h"
 #include "qgscoordinatereferencesystem.h"
@@ -27,62 +29,207 @@
 
 #include "proj_api.h"
 
+QRegExp uavPosDataProcessing::WktPrefixRegexp( "^\\s*(?:\\d+\\s+|SRID\\=\\d+\\;)", Qt::CaseInsensitive );
+QRegExp uavPosDataProcessing::CrdDmsRegexp( "^\\s*(?:([-+nsew])\\s*)?(\\d{1,3})(?:[^0-9.]+([0-5]?\\d))?[^0-9.]+([0-5]?\\d(?:\\.\\d+)?)[^0-9.]*([-+nsew])?\\s*$", Qt::CaseInsensitive );
+
 uavPosDataProcessing::uavPosDataProcessing(QObject *parent)
 	: QObject(parent)
+	, mFile( nullptr )
+	, mXyDms( false )
+	, mMaxInvalidLines(50)
+	, mNExtraInvalidLines(0)
 {
 	this->parent = parent;
 }
 
 uavPosDataProcessing::~uavPosDataProcessing()
 {
-
+	if ( mFile )
+	{
+		delete mFile;
+		mFile = nullptr;
+	}
 }
 
-void uavPosDataProcessing::setFieldsList( QList< QStringList >& list )
+void uavPosDataProcessing::readFieldsList( QString& strUrl )
 {
-	if (list.isEmpty())
+	QUrl url = QUrl::fromEncoded( strUrl.toAscii() );
+	mFile = new QgsDelimitedTextFile();
+	mFile->setFromUrl( url );
+
+	if ( ! mFile->isValid() )
+	{
+			UavMain::instance()->messageBar()->pushMessage( "读取曝光点文件内容", 
+				"读取字段失败, 运行已终止!", 
+				QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+			QgsMessageLog::logMessage("读取曝光点文件内容 : \t读取字段失败, 运行已终止...");
+			return;
+	}
+
+	mFieldsList.clear();
+	QString mNoFieldName, mXFieldName, mYFieldName, mZFieldName,
+			mOmegaFieldName, mPhiFieldName, mKappaFieldName, mPphotoMarkFieldName;
+	if ( url.hasQueryItem( "noField" ) )
+	{
+		mFieldsList["noField"] = QStringList();
+		mNoFieldName = url.queryItemValue( "noField" );
+	}
+	if ( url.hasQueryItem( "xField" ) )
+	{
+		mFieldsList["xField"] = QStringList();
+		mXFieldName = url.queryItemValue( "xField" );
+	}
+	if ( url.hasQueryItem( "yField" ) )
+	{
+		mFieldsList["yField"] = QStringList();
+		mYFieldName = url.queryItemValue( "yField" );
+	}
+	if ( url.hasQueryItem( "zField" ) )
+	{
+		mFieldsList["zField"] = QStringList();
+		mZFieldName = url.queryItemValue( "zField" );
+	}
+	if ( url.hasQueryItem( "omegaField" ) )
+	{
+		mFieldsList["omegaField"] = QStringList();
+		mOmegaFieldName = url.queryItemValue( "omegaField" );
+	}
+	if ( url.hasQueryItem( "phiField" ) )
+	{
+		mFieldsList["phiField"] = QStringList();
+		mPhiFieldName = url.queryItemValue( "phiField" );
+	}
+	if ( url.hasQueryItem( "kappaField" ) )
+	{
+		mFieldsList["kappaField"] = QStringList();
+		mKappaFieldName = url.queryItemValue( "kappaField" );
+	}
+	if ( url.hasQueryItem( "photoMarkField" ) )
+	{
+		mFieldsList["photoMarkField"] = QStringList();
+		mPphotoMarkFieldName = url.queryItemValue( "photoMarkField" );
+	}
+
+	if (mFieldsList.isEmpty())
 	{
 		UavMain::instance()->messageBar()->pushMessage( "读取曝光点文件内容", 
-			"读取字段失败, 运行已终止!", 
+			"读取字段失败, 曝光点文件字段解析失败, 运行已终止!", 
 			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
-		QgsMessageLog::logMessage("读取曝光点文件内容 : \t读取字段失败, 运行已终止...");
+		QgsMessageLog::logMessage("读取曝光点文件内容 : \t读取字段失败, 曝光点文件字段解析失败, 运行已终止...");
 		return;
 	}
-	mFieldsList = list;
-}
 
-void uavPosDataProcessing::autoPosFormat()
-{
-	QList<int> indexList;
-
-	indexList << mSettings.value("/Uav/pos/fieldsList/cmb1", -1).toInt()
-			  << mSettings.value("/Uav/pos/fieldsList/cmb2", -1).toInt()
-			  << mSettings.value("/Uav/pos/fieldsList/cmb3", -1).toInt()
-			  << mSettings.value("/Uav/pos/fieldsList/cmb4", -1).toInt()
-			  << mSettings.value("/Uav/pos/fieldsList/cmb5", -1).toInt()
-			  << mSettings.value("/Uav/pos/fieldsList/cmb6", -1).toInt()
-			  << mSettings.value("/Uav/pos/fieldsList/cmb7", -1).toInt()
-			  << mSettings.value("/Uav/pos/fieldsList/cmb8", -1).toInt();
-
-	// 按设置顺序重新排列字段
-	for (int i=0; i<mFieldsList.size(); ++i)
+	if ( url.hasQueryItem( "xyDms" ) )
 	{
-		QStringList newOutLineFields;
-		QStringList outLineFields = mFieldsList.at(i);
-		foreach (int j, indexList)
-		{
-			if (j != -1)
-			{
-				if (j)
-					newOutLineFields.append(outLineFields.at(j-1));
-				else
-					newOutLineFields.append(QString::null);
-			}
-		}
-		mFieldsList[i] = newOutLineFields;
+		mXyDms = ! url.queryItemValue( "xyDms" ).toLower().startsWith( 'n' );
 	}
 
-	QgsMessageLog::logMessage("曝光点文件格式重构 : \t完成.");
+	QStringList parts;
+	long nEmptyRecords = 0;
+
+	int maxField = 0;
+	QgsDelimitedTextFile::Status status = mFile->nextRecord( parts );
+	if ( status == QgsDelimitedTextFile::RecordOk )
+	{
+		maxField = parts.size();
+	}
+	mFile->reset();
+
+	while ( true )
+	{
+		QgsDelimitedTextFile::Status status = mFile->nextRecord( parts );
+		if ( status == QgsDelimitedTextFile::RecordEOF ) break;
+		if ( status != QgsDelimitedTextFile::RecordOk )
+		{
+			recordInvalidLine( "\t**-->第%1行记录格式无效" );
+			continue;
+		}
+		if (parts.size() != maxField)
+		{
+			recordInvalidLine( "\t**-->第%1行记录缺少字段" );
+			continue;
+		}
+		// 跳过空记录
+		if ( recordIsEmpty( parts ) )
+		{
+			continue;
+		}
+
+		// 获得字段内容
+		bool isbl = true;
+		bool isXField = false;
+		bool isYField = false;
+		QMap<QString, QString> tmp;
+		QMap< QString, QStringList >::iterator it = mFieldsList.begin();
+		while (it != mFieldsList.end())
+		{
+			int mFieldIndex = 0;
+			if (it.key() == "noField") mFieldIndex = mFile->fieldIndex( mNoFieldName );
+			else if (it.key() == "xField")
+			{
+				isXField = true;
+				mFieldIndex = mFile->fieldIndex( mXFieldName );
+			}
+			else if (it.key() == "yField")
+			{
+				isYField = true;
+				mFieldIndex = mFile->fieldIndex( mYFieldName );
+			}
+			else if (it.key() == "zField") mFieldIndex = mFile->fieldIndex( mZFieldName );
+			else if (it.key() == "omegaField") mFieldIndex = mFile->fieldIndex( mOmegaFieldName );
+			else if (it.key() == "phiField") mFieldIndex = mFile->fieldIndex( mPhiFieldName );
+			else if (it.key() == "kappaField") mFieldIndex = mFile->fieldIndex( mKappaFieldName );
+			else if (it.key() == "photoMarkField") mFieldIndex = mFile->fieldIndex( mPphotoMarkFieldName );
+			
+			QString field = mFieldIndex < parts.size() ? parts[mFieldIndex] : QString();
+			
+			if ( (it.key() == "xField") || (it.key() == "yField") )
+			{
+				bool ok = dFromDms( field, mXyDms );
+				if (!ok)
+				{
+					isbl = false;
+					recordInvalidLine( "\t**-->第%1行记录的x或y字段是无效的地理坐标格式" );
+				}
+			}
+
+			tmp[it.key()] = field;
+			++it;
+		}
+		if (!isXField || !isYField)
+		{
+			isbl = false;
+			recordInvalidLine( "\t**-->第%1行记录缺少x或y坐标" );
+		}
+
+		it = mFieldsList.begin();
+		while (it != mFieldsList.end())
+		{
+			QMap<QString, QString>::iterator itSub = tmp.find(it.key());
+			if ( itSub == tmp.end() )
+			{
+				isbl = false;
+				recordInvalidLine( "\t**-->第%1行记录缺少" + it.key() + "字段" );
+			}
+			++it;
+		}
+
+		if (isbl)
+		{
+			QMap<QString, QString>::iterator it = tmp.begin();
+			while (it != tmp.end())
+			{
+				QMap< QString, QStringList >::iterator itSub = mFieldsList.find(it.key());
+				if (itSub != mFieldsList.end())
+				{
+					QStringList *list = &(itSub.value());
+					list->append(it.value());
+				}
+				++it;
+			}
+		}
+	}
+	reportErrors(QStringList()<<"曝光点文件处理");
 }
 
 bool uavPosDataProcessing::autoPosTransform()
@@ -105,14 +252,28 @@ bool uavPosDataProcessing::autoPosTransform()
 	}
 
 	// 开始转换
-	for (int i=0; i<mFieldsList.size(); ++i)
+	QMap< QString, QStringList >::iterator it_x = mFieldsList.find("xField");
+	QMap< QString, QStringList >::iterator it_y = mFieldsList.find("yField");
+	QStringList xList = it_x.value();
+	QStringList yList = it_y.value();
+	if (xList.size() != yList.size())
 	{
-		QStringList list = mFieldsList.at(i);
-		QgsPoint p = ct.transform(list.at(1).toDouble(), list.at(2).toDouble());
-		list[1] = QString::number(p.x(), 'f');
-		list[2] = QString::number(p.y(), 'f');
-		mFieldsList[i] = list;
+		UavMain::instance()->messageBar()->pushMessage( "曝光点坐标转换", 
+			"横坐标与纵坐标数量不一致，无法进行下一步转换, 运行已终止!", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage("曝光点坐标转换 : \t横坐标与纵坐标数量不一致，无法进行下一步转换, 运行已终止.");
+		return false;
 	}
+
+	for (int i=0; i<xList.size(); ++i)
+	{
+		QgsPoint p = ct.transform(xList.at(i).toDouble(), yList.at(i).toDouble());
+		xList[i] = QString::number(p.x(), 'f');
+		yList[i] = QString::number(p.y(), 'f');
+	}
+	mFieldsList["xField"] = xList;
+	mFieldsList["yField"] = yList;
+
 	QgsMessageLog::logMessage("曝光点坐标转换 : \t完成.");
 	return true;
 }
@@ -121,16 +282,17 @@ int uavPosDataProcessing::getCentralMeridian()
 {
 	QMap< QString, int > cmMap;
 
-	for (int i=0; i<mFieldsList.size(); ++i)
+	QMap< QString, QStringList >::iterator it_x = mFieldsList.find("xField");
+	QStringList* xList = &(it_x.value());
+
+	for (int i=0; i<xList->size(); ++i)
 	{
 		bool isok = false;
-		QStringList list = mFieldsList.at(i);
-		QString str_x = list.at(1);
+		QString str_x = xList->at(i);
 		double x = str_x.toDouble(&isok);
 		if (!isok)
 		{
-			QgsMessageLog::logMessage(QString("曝光点中央经度计算 : \t||--> 第%1行横坐标不可识别, 已跳过该行内容.").arg(i));
-			mFieldsList.removeAt(i);
+			QgsMessageLog::logMessage(QString("曝光点中央经度计算 : \t||--> 第%1行横坐标不可识别, 请注意检查该行内容.").arg(i));
 		}
 
 		// 计算中央经线
@@ -210,77 +372,89 @@ QgsVectorLayer* uavPosDataProcessing::autoSketchMap()
 
 	QgsVectorDataProvider* dateProvider = newLayer->dataProvider();
 
+	QMap< QString, QStringList >::iterator it_n = mFieldsList.find("noField");
+	QMap< QString, QStringList >::iterator it_x = mFieldsList.find("xField");
+	QMap< QString, QStringList >::iterator it_y = mFieldsList.find("yField");
+	QMap< QString, QStringList >::iterator it_z = mFieldsList.find("zField");
+	QMap< QString, QStringList >::iterator it_o = mFieldsList.find("omegaField");
+	QMap< QString, QStringList >::iterator it_p = mFieldsList.find("phiField");
+	QMap< QString, QStringList >::iterator it_k = mFieldsList.find("kappaField");
+	QStringList* nList = &(it_n.value());
+	QStringList* xList = &(it_x.value());
+	QStringList* yList = &(it_y.value());
+	QStringList* zList = &(it_z.value());
+	QStringList* oList = &(it_o.value());
+	QStringList* pList = &(it_p.value());
+	QStringList* kList = &(it_k.value());
+
 	// 计算相片地面分辨率
 	uavInquireDemValue dem(this);
 	QList< QgsPoint > pointFirst;
 	QList< qreal > elevations;
+	QStringList resolutionList;
+	bool isbl = false;
 
-	foreach(QStringList list, mFieldsList)
+	for(int i = 0; i < xList->size(); ++i)
 	{
 		// 取出字段内容
 		QgsPoint point;
-		point.setX(list.at(1).toDouble());
-		point.setY(list.at(2).toDouble());
+		point.setX(xList->at(i).toDouble());
+		point.setY(yList->at(i).toDouble());
 		pointFirst.append(point);
 	}
 
-	bool isbl = false;
+	// 计算曝光点坐标对应的DEM高程
 	if ( uavInquireDemValue::eOK == dem.inquireElevations(pointFirst, elevations, &srs) )
 	{
 		isbl = true;
-		if (mFieldsList.size() == elevations.size())
+		if (xList->size() == elevations.size())
 			isbl = true;
 		else 
 			isbl = false;
 	}
 
-	int index = 0;
-	while (index != mFieldsList.size())
+	// 利用DEM高程计算地面分辨率
+	for (int i = 0; i < zList->size(); ++i)
 	{
 		qreal elevation = 0.0;
-		QStringList list = mFieldsList.at(index);
 		if (isbl)
-			elevation = elevations.at(index);
+			elevation = elevations.at(i);
 		else
 			elevation = -9999;
-		double resolution = calculateResolution(list.at(3).toDouble(), elevation);
-		list.append(QString::number(resolution, 'f', 2));
-		mFieldsList[index] = list;
-		++index;
+		double resolution = calculateResolution(zList->at(i).toDouble(), elevation);
+		resolutionList.append(QString::number(resolution, 'f', 2));
 	}
 
 	// 创建面要素
 	int icount = 0;
 	QgsFeatureList featureList;
-	foreach(QStringList list, mFieldsList)
+	for (int i = 0; i < xList->size(); ++i)
 	{
 		// 取出字段内容
-		double x = list.at(1).toDouble();
-		double y = list.at(2).toDouble();
-		double resolution = list.at(list.size()-1).toDouble();
-		double mRotate = list.at(6).toDouble();
+		double resolution = resolutionList.at(i).toDouble();
+		double mRotate = kList->at(i).toDouble();
 
 		if (resolution == 0.0)
 		{
-			QgsMessageLog::logMessage(QString("\t\t||-->相片:%1 高程异常，地面分辨率计算为0，已跳过该张相片.").arg(list.at(0)));
+			QgsMessageLog::logMessage(QString("\t\t||-->相片:%1 高程异常，地面分辨率计算为0，已跳过该张相片.").arg(nList->at(i)));
 			continue;
 		}
 
 		// 创建面要素, 并根据Omega选择角度
-		QgsPolygon polygon = rectangle( QgsPoint(x, y), resolution );
+		QgsPolygon polygon = rectangle( pointFirst.at(i), resolution );
 		QgsGeometry* mGeometry = QgsGeometry::fromPolygon(polygon);
-		mGeometry->rotate( mRotate, QgsPoint(x, y) );
+		mGeometry->rotate( mRotate, pointFirst.at(i) );
 
 		// 设置几何要素与属性
 		QgsFeature MyFeature;
 		MyFeature.setGeometry( mGeometry );
 		MyFeature.setAttributes(QgsAttributes() << QVariant(++icount)
-												<< QVariant(list.first())
-												<< QVariant(QString(list.at(1)+","+list.at(2)))
-												<< QVariant(list.at(4))
-												<< QVariant(list.at(5))
-												<< QVariant(list.at(6))
-												<< QVariant(list.at(list.size()-1)));
+												<< QVariant(nList->at(i))
+												<< QVariant(QString(xList->at(i)+","+yList->at(i)))
+												<< QVariant(oList->at(i))
+												<< QVariant(pList->at(i))
+												<< QVariant(kList->at(i))
+												<< QVariant(resolutionList.at(i)));
 		featureList.append(MyFeature);
 	}
 
@@ -341,7 +515,7 @@ bool uavPosDataProcessing::createTargetCrs()
 	}
 
 	// 获得曝光点文件中的中央经线
-	int cm = getCentralMeridian();
+	double cm = getCentralMeridian();
 
 	// 检查经度是否在正常范围内
 	if ( !((cm>74 && cm<136) || (cm>24 && cm<46) || (cm>12 && cm<24)) )
@@ -576,9 +750,13 @@ bool uavPosDataProcessing::isValid()
 	return !mFieldsList.isEmpty();
 }
 
-QList< QStringList >* uavPosDataProcessing::fieldsList()
+QStringList* uavPosDataProcessing::noList()
 {
-	return &mFieldsList;
+	QMap< QString, QStringList >::iterator it_no = mFieldsList.find("noField");
+	if (it_no != mFieldsList.end())
+		return &(it_no.value());
+	else
+		return nullptr;
 }
 
 double uavPosDataProcessing::calculateResolution( const double &absoluteHeight, const double &groundHeight )
@@ -606,9 +784,9 @@ bool uavPosDataProcessing::posExport()
 	if (mFieldsList.isEmpty())
 	{
 		UavMain::instance()->messageBar()->pushMessage( "导出曝光点文件", 
-			"内存数组被破坏，未正确导出，请联系开发人员解决.", 
+			"内存结构被破坏，未正确导出，请联系开发人员解决.", 
 			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
-		QgsMessageLog::logMessage(QString("导出曝光点文件 : \t内存数组被破坏，未正确导出，请联系开发人员解决."));
+		QgsMessageLog::logMessage(QString("导出曝光点文件 : \t内存结构被破坏，未正确导出，请联系开发人员解决."));
 		return false;
 	}
 
@@ -625,13 +803,39 @@ bool uavPosDataProcessing::posExport()
 	}
 
 	QTextStream out(&file);
-	foreach (QStringList strList, mFieldsList)
+
+	QMap< QString, QStringList >::iterator it_no = mFieldsList.find("noField");
+	QMap< QString, QStringList >::iterator it_x = mFieldsList.find("xField");
+	QMap< QString, QStringList >::iterator it_y = mFieldsList.find("yField");
+	QMap< QString, QStringList >::iterator it_z = mFieldsList.find("zField");
+	QMap< QString, QStringList >::iterator it_omega = mFieldsList.find("omegaField");
+	QMap< QString, QStringList >::iterator it_phi = mFieldsList.find("phiField");
+	QMap< QString, QStringList >::iterator it_kappa = mFieldsList.find("kappaField");
+	QMap< QString, QStringList >::iterator it_photoMark = mFieldsList.find("photoMarkField");
+
+	QList< QStringList* > outList;
+	if (it_no != mFieldsList.end()) outList << &(it_no.value());
+	if (it_x != mFieldsList.end()) outList << &(it_x.value());
+	if (it_y != mFieldsList.end()) outList << &(it_y.value());
+	if (it_z != mFieldsList.end()) outList << &(it_z.value());
+	if (it_omega != mFieldsList.end()) outList << &(it_omega.value());
+	if (it_phi != mFieldsList.end()) outList << &(it_phi.value());
+	if (it_kappa != mFieldsList.end()) outList << &(it_kappa.value());
+	if (it_photoMark != mFieldsList.end()) outList << &(it_photoMark.value());
+
+	int maxCount = 0;
+	foreach (QStringList* list, outList)
+	{
+		maxCount = list->size() > maxCount ? list->size() : maxCount;
+	}
+
+	for (int i=0; i<maxCount; ++i)
 	{
 		QString strLine;
-		for (int i=0; i<(strList.size()-2); ++i)
+		foreach (QStringList* list, outList)
 		{
-			QString str = strList.at(i);
-			strLine.append(str + ' ');
+			QString str = list->at(i);
+			strLine.append(str + '\t');
 		}
 		out << strLine + '\n';
 	}
@@ -664,4 +868,139 @@ const QStringList uavPosDataProcessing::checkPosSettings()
 		errList.append("相幅大小(宽)");
 
 	return errList;
+}
+
+void uavPosDataProcessing::recordInvalidLine( const QString& message )
+{
+	if ( mInvalidLines.size() < mMaxInvalidLines )
+	{
+		mInvalidLines.append( message.arg( mFile->recordId() ) );
+	}
+	else
+	{
+		mNExtraInvalidLines++;
+	}
+}
+
+bool uavPosDataProcessing::recordIsEmpty( QStringList &record )
+{
+	foreach ( const QString& s, record )
+	{
+		if ( ! s.isEmpty() ) return false;
+	}
+	return true;
+}
+
+bool uavPosDataProcessing::dFromDms( QString &sDms, bool xyDms )
+{
+	bool Ok;
+	double xy = 0;
+	
+	if ( xyDms )
+	{
+		xy = this->dmsStringToDouble( sDms, &Ok );
+
+		if (Ok)
+		{
+			sDms = QString::number(xy, 'f', 9);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		xy = sDms.toDouble(&Ok);
+		if (Ok)
+			return true;
+	}
+
+	return false;
+}
+
+double uavPosDataProcessing::dmsStringToDouble( const QString &sX, bool *xOk )
+{
+	static QString negative( "swSW-" );
+	QRegExp re( CrdDmsRegexp );
+	double x = 0.0;
+
+	*xOk = re.indexIn( sX ) == 0;
+	if ( ! *xOk ) return 0.0;
+	QString dms1 = re.capturedTexts().at( 2 );
+	QString dms2 = re.capturedTexts().at( 3 );
+	QString dms3 = re.capturedTexts().at( 4 );
+	x = dms3.toDouble( xOk );
+	// Allow for Degrees/minutes format as well as DMS
+	if ( ! dms2.isEmpty() )
+	{
+		x = dms2.toInt( xOk ) + x / 60.0;
+	}
+	x = dms1.toInt( xOk ) + x / 60.0;
+	QString sign1 = re.capturedTexts().at( 1 );
+	QString sign2 = re.capturedTexts().at( 5 );
+
+	if ( sign1.isEmpty() )
+	{
+		if ( ! sign2.isEmpty() && negative.contains( sign2 ) ) x = -x;
+	}
+	else if ( sign2.isEmpty() )
+	{
+		if ( ! sign1.isEmpty() && negative.contains( sign1 ) ) x = -x;
+	}
+	else
+	{
+		*xOk = false;
+	}
+	return x;
+}
+
+void uavPosDataProcessing::clearInvalidLines()
+{
+	mInvalidLines.clear();
+	mNExtraInvalidLines = 0;
+}
+
+void uavPosDataProcessing::reportErrors( const QStringList& messages /*= QStringList()*/, bool showDialog /*= false */ )
+{
+	if ( !mInvalidLines.isEmpty() && !messages.isEmpty() )
+	{
+		QString tag( "曝光点处理" );
+		QgsMessageLog::logMessage( QString("错误文件 %1").arg( mFile->fileName() ), tag );
+		foreach ( const QString& message, messages )
+		{
+			QgsMessageLog::logMessage( message, tag );
+		}
+		if ( ! mInvalidLines.isEmpty() )
+		{
+			QgsMessageLog::logMessage( "由于错误，以下行未加载到略图中:", tag );
+			for ( int i = 0; i < mInvalidLines.size(); ++i )
+				QgsMessageLog::logMessage( mInvalidLines.at( i ), tag );
+			if ( mNExtraInvalidLines > 0 )
+				QgsMessageLog::logMessage( QString( "文件中还有%1个其他错误" ).arg( mNExtraInvalidLines ), tag );
+		}
+
+		// We no longer need these lines.
+		clearInvalidLines();
+	}
+}
+
+void uavPosDataProcessing::deletePosRecord( const QString No )
+{
+	if (No.isEmpty())
+	{
+		return;
+	}
+
+	if (mFieldsList.isEmpty())
+	{
+		UavMain::instance()->messageBar()->pushMessage( "导出曝光点文件", 
+			"内存结构被破坏，未正确导出，请联系开发人员解决.", 
+			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
+		QgsMessageLog::logMessage(QString("导出曝光点文件 : \t内存结构被破坏，未正确导出，请联系开发人员解决."));
+		return;
+	}
+
+
 }

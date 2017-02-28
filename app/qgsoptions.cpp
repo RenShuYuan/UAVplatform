@@ -125,6 +125,51 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   double highlightMinWidth = mSettings->value( "/Map/highlight/minWidth", QGis::DEFAULT_HIGHLIGHT_MIN_WIDTH_MM ).toDouble();
   mIdentifyHighlightMinWidthSpinBox->setValue( highlightMinWidth );
 
+  // ***影像预处理***/
+  // 添加参照坐标系选择小组件
+  leProjectGlobalCrs = new QgsProjectionSelectionWidget(this);
+  QString myDefaultCrs_my = mSettings->value( "/Uav/pos/options/projectDefaultCrs", GEO_EPSG_CRS_AUTHID ).toString();
+  mDefaultCrs.createFromOgcWmsCrs( myDefaultCrs_my );
+  leProjectGlobalCrs->setCrs( mDefaultCrs );
+  leProjectGlobalCrs->setOptionVisible( QgsProjectionSelectionWidget::DefaultCrs, false );
+  gridLayout_2->addWidget(leProjectGlobalCrs, 0, 1, 1, 2);
+  connect( leProjectGlobalCrs, SIGNAL( crsChanged(const QgsCoordinateReferenceSystem&) ), this, SLOT( crsChanged(const QgsCoordinateReferenceSystem&) ) );
+  
+  // 参数设置
+  QString strText;
+  double tmpDouble = 0.0;
+  int tmpInt = 0;
+  tmpDouble = mSettings->value("/Uav/pos/options/leFocal", "").toDouble();
+  lineEdit_2->setText(QString::number(tmpDouble, 'f', 9));
+  tmpDouble = mSettings->value("/Uav/pos/options/lePixelSize", "").toDouble();
+  lineEdit_3->setText(QString::number(tmpDouble, 'f', 3));
+  tmpInt = mSettings->value("/Uav/pos/options/leHeight", "").toInt();
+  lineEdit_4->setText(QString::number(tmpInt));
+  tmpInt = mSettings->value("/Uav/pos/options/leWidth", "").toInt();
+  lineEdit_5->setText(QString::number(tmpInt));
+  tmpDouble = mSettings->value("/Uav/pos/options/leAverageEle", "0").toDouble();
+  lineEdit_6->setText(QString::number(tmpDouble, 'f', 2));
+
+  // 曝光点一键处理 初始化
+  bool blchk;
+  blchk = mSettings->value("/Uav/pos/options/chkTransform", true).toBool();
+  chkTransform->setChecked(blchk);
+  blchk = mSettings->value("/Uav/pos/options/chkSketchMap", true).toBool();
+  chkSketchMap->setChecked(blchk);
+
+  // 动态联动 初始化
+  blchk = mSettings->value("/Uav/pos/options/chkLinkPhoto", true).toBool();
+  chkLinkPhoto->setChecked(blchk);
+  QString strPhotoName = mSettings->value("/Uav/pos/options/lePhotoFolder", "photo").toString();
+  lepPhotoName->setText(strPhotoName);
+  label_14->setEnabled(chkLinkPhoto->isChecked());
+  lepPhotoName->setEnabled(chkLinkPhoto->isChecked());
+
+  connect(chkLinkPhoto, SIGNAL(toggled (bool) ), label_14, SLOT( setEnabled (bool) ));
+  connect(chkLinkPhoto, SIGNAL(toggled (bool) ), lepPhotoName, SLOT( setEnabled (bool) ));
+
+  // 飞行质量参数
+
   // 自定义环境变量(系统)
   //bool useCustomVars = mSettings->value( "qgis/customEnvVarsUse", QVariant( false ) ).toBool();
   //mCustomVariablesChkBx->setChecked( useCustomVars );

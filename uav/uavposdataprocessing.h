@@ -2,11 +2,14 @@
 #define POSDATAPROCESSING_H
 
 #include <QObject>
+#include <QMap>
 #include <QSettings>
+#include <QRegExp>
 #include "qgscoordinatereferencesystem.h"
 #include "qgsgeometry.h"
 
 class QgsVectorLayer;
+class QgsDelimitedTextFile;
 
 // 负责处理与曝光点数据相关的类
 class uavPosDataProcessing : public QObject
@@ -14,6 +17,9 @@ class uavPosDataProcessing : public QObject
 	Q_OBJECT
 
 public:
+	static QRegExp WktPrefixRegexp;
+	static QRegExp CrdDmsRegexp;
+
 	uavPosDataProcessing(QObject *parent = nullptr);
 	~uavPosDataProcessing();
 
@@ -35,14 +41,19 @@ public:
 	const QStringList checkPosSettings();
 
 	/**
-    * @brief                    返回Pos文件内容
+    * @brief                    返回Pos相片编号
     * @author                   YuanLong
-    * @return					返回一个指向mFieldsList的指针
+    * @return					返回一个指向相片编号的指针
     */
-	QList< QStringList >* fieldsList();
+	QStringList* noList();
 
-	// POS格式整理
-	void autoPosFormat();
+	/**
+    * @brief                    删除曝光点记录
+    * @author                   YuanLong
+    * @param No 				要删除的相片编号
+    * @return
+    */
+	void deletePosRecord( const QString No );
 
 	// POS坐标转换
 	bool autoPosTransform();
@@ -59,8 +70,8 @@ signals:
 
 private slots:
 
-	// 设置POS列表
-	void setFieldsList(QList< QStringList >&);
+	// 读取POS文件并设置字段列表
+	void readFieldsList(QString &);
 
 private:
 
@@ -86,15 +97,34 @@ private:
 	QgsCoordinateReferenceSystem& sourceCrs();
 	QgsCoordinateReferenceSystem& targetCrs();
 
+	// 度分秒转度
+	bool dFromDms( QString &sDms, bool xyDms );
+	static double dmsStringToDouble( const QString &sX, bool *xOk );
+
+	// 记录错误
+	void recordInvalidLine( const QString& message );
+	static bool recordIsEmpty( QStringList &record );
+	void reportErrors( const QStringList& messages = QStringList(), bool showDialog = false );
+	void clearInvalidLines();
+
 private:
 	QObject *parent;
 	QSettings mSettings;
-	QList< QStringList > mFieldsList;
+	QMap< QString, QStringList > mFieldsList;
 	QStringList descriptionList;
 	QStringList descriptionUserList;
 
+	QgsDelimitedTextFile *mFile;
+
 	QgsCoordinateReferenceSystem mSourceCrs;
 	QgsCoordinateReferenceSystem mTargetCrs;
+
+	bool mXyDms;
+
+	//! 存储无法加载文件中的行
+	int mMaxInvalidLines;
+	int mNExtraInvalidLines;
+	QStringList mInvalidLines;
 };
 
 #endif // POSDATAPROCESSING_H

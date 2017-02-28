@@ -468,6 +468,110 @@ public:
     QLabel *label_44;
     QPushButton *mAdvancedSettingsEnableButton;
     QgsSettingsTree *mAdvancedSettingsEditor;
+    QWidget *page;
+    QVBoxLayout *verticalLayout_20;
+    QGroupBox *groupBox_31;
+    QVBoxLayout *verticalLayout_40;
+    QGroupBox *groupBox_20;
+    QVBoxLayout *verticalLayout_34;
+    QGridLayout *gridLayout_2;
+    QLabel *label_5;
+    QLabel *label_11;
+    QSpacerItem *horizontalSpacer_9;
+    QLineEdit *lineEdit_6;
+    QGroupBox *groupBox_4;
+    QVBoxLayout *verticalLayout_35;
+    QGridLayout *gridLayout_4;
+    QLabel *label_10;
+    QLabel *label_7;
+    QLabel *label_9;
+    QLineEdit *lineEdit_3;
+    QLineEdit *lineEdit_4;
+    QLineEdit *lineEdit_5;
+    QSpacerItem *horizontalSpacer_52;
+    QSpacerItem *horizontalSpacer_53;
+    QLineEdit *lineEdit_2;
+    QSpacerItem *horizontalSpacer_51;
+    QGroupBox *groupBox_2;
+    QVBoxLayout *verticalLayout_7;
+    QHBoxLayout *horizontalLayout_33;
+    QCheckBox *chkTransform;
+    QSpacerItem *horizontalSpacer_22;
+    QHBoxLayout *horizontalLayout_3;
+    QCheckBox *chkSketchMap;
+    QSpacerItem *horizontalSpacer_35;
+    QHBoxLayout *horizontalLayout_2;
+    QCheckBox *chkLinkPhoto;
+    QSpacerItem *horizontalSpacer_2;
+    QHBoxLayout *horizontalLayout_11;
+    QLabel *label_31;
+    QSpacerItem *horizontalSpacer_27;
+    QLineEdit *lepPhotoName;
+    QSpacerItem *verticalSpacer_9;
+    QWidget *page_2;
+    QGridLayout *gridLayout_5;
+    QGroupBox *groupBox_12;
+    QVBoxLayout *verticalLayout_8;
+    QGroupBox *groupBox_22;
+    QVBoxLayout *verticalLayout_19;
+    QHBoxLayout *horizontalLayout_15;
+    QLabel *label_32;
+    QSpinBox *spinBox;
+    QLabel *label_33;
+    QSpinBox *spinBox_2;
+    QSpacerItem *horizontalSpacer_14;
+    QHBoxLayout *horizontalLayout_16;
+    QLabel *label_41;
+    QSpinBox *spinBox_3;
+    QLabel *label_45;
+    QSpinBox *spinBox_4;
+    QSpacerItem *horizontalSpacer_17;
+    QGroupBox *groupBox_25;
+    QVBoxLayout *verticalLayout_22;
+    QHBoxLayout *horizontalLayout_17;
+    QLabel *label_46;
+    QSpinBox *spinBox_6;
+    QLabel *label_47;
+    QSpinBox *spinBox_5;
+    QSpacerItem *horizontalSpacer_36;
+    QHBoxLayout *horizontalLayout_21;
+    QLabel *label_48;
+    QSpinBox *spinBox_7;
+    QLabel *label_49;
+    QSpinBox *spinBox_8;
+    QLabel *label_50;
+    QSpacerItem *horizontalSpacer_37;
+    QGroupBox *groupBox_29;
+    QVBoxLayout *verticalLayout_32;
+    QHBoxLayout *horizontalLayout_34;
+    QLabel *label_51;
+    QSpacerItem *horizontalSpacer_39;
+    QSpinBox *spinBox_9;
+    QHBoxLayout *horizontalLayout_35;
+    QLabel *label_52;
+    QSpinBox *spinBox_11;
+    QLabel *label_54;
+    QSpinBox *spinBox_10;
+    QLabel *label_55;
+    QSpacerItem *horizontalSpacer_42;
+    QHBoxLayout *horizontalLayout_40;
+    QLabel *label_57;
+    QSpinBox *spinBox_13;
+    QLabel *label_58;
+    QSpinBox *spinBox_12;
+    QLabel *label_64;
+    QSpacerItem *horizontalSpacer_48;
+    QGroupBox *groupBox_30;
+    QVBoxLayout *verticalLayout_33;
+    QHBoxLayout *horizontalLayout_41;
+    QLabel *label_67;
+    QSpacerItem *horizontalSpacer_49;
+    QSpinBox *spinBox_14;
+    QHBoxLayout *horizontalLayout_42;
+    QLabel *label_68;
+    QSpacerItem *horizontalSpacer_50;
+    QSpinBox *spinBox_15;
+    QSpacerItem *verticalSpacer_11;
     QFrame *mButtonBoxFrame;
     QHBoxLayout *horizontalLayout;
     QDialogButtonBox *buttonBox;
@@ -476,7 +580,7 @@ public:
     {
         if (QgsOptionsBase->objectName().isEmpty())
             QgsOptionsBase->setObjectName(QString::fromUtf8("QgsOptionsBase"));
-        QgsOptionsBase->resize(895, 637);
+        QgsOptionsBase->resize(780, 544);
         QgsOptionsBase->setMinimumSize(QSize(780, 0));
         QgsOptionsBase->setModal(true);
         verticalLayout_5 = new QVBoxLayout(QgsOptionsBase);
@@ -541,6 +645,8 @@ public:
         icon10.addFile(QString::fromUtf8(":/images/themes/default/mIconWarning.svg"), QSize(), QIcon::Normal, QIcon::Off);
         QListWidgetItem *__qlistwidgetitem10 = new QListWidgetItem(mOptionsListWidget);
         __qlistwidgetitem10->setIcon(icon10);
+        new QListWidgetItem(mOptionsListWidget);
+        new QListWidgetItem(mOptionsListWidget);
         mOptionsListWidget->setObjectName(QString::fromUtf8("mOptionsListWidget"));
         mOptionsListWidget->setMinimumSize(QSize(58, 0));
         mOptionsListWidget->setMaximumSize(QSize(150, 16777215));
@@ -581,7 +687,7 @@ public:
         mOptionsScrollArea_01->setWidgetResizable(true);
         mOptionsScrollAreaContents_01 = new QWidget();
         mOptionsScrollAreaContents_01->setObjectName(QString::fromUtf8("mOptionsScrollAreaContents_01"));
-        mOptionsScrollAreaContents_01->setGeometry(QRect(0, 0, 717, 580));
+        mOptionsScrollAreaContents_01->setGeometry(QRect(0, 0, 677, 415));
         verticalLayout_28 = new QVBoxLayout(mOptionsScrollAreaContents_01);
         verticalLayout_28->setSpacing(6);
         verticalLayout_28->setContentsMargins(11, 11, 11, 11);
@@ -836,7 +942,7 @@ public:
         mOptionsScrollArea_11->setWidgetResizable(true);
         mOptionsScrollAreaContents_11 = new QWidget();
         mOptionsScrollAreaContents_11->setObjectName(QString::fromUtf8("mOptionsScrollAreaContents_11"));
-        mOptionsScrollAreaContents_11->setGeometry(QRect(0, 0, 717, 580));
+        mOptionsScrollAreaContents_11->setGeometry(QRect(0, 0, 629, 559));
         verticalLayout_27 = new QVBoxLayout(mOptionsScrollAreaContents_11);
         verticalLayout_27->setSpacing(6);
         verticalLayout_27->setContentsMargins(11, 11, 11, 11);
@@ -1470,7 +1576,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 717, 580));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 168, 278));
         horizontalLayout_46 = new QHBoxLayout(scrollAreaWidgetContents);
         horizontalLayout_46->setSpacing(6);
         horizontalLayout_46->setContentsMargins(11, 11, 11, 11);
@@ -1540,7 +1646,7 @@ public:
         mOptionsScrollArea_06->setWidgetResizable(true);
         mOptionsScrollAreaContents_06 = new QWidget();
         mOptionsScrollAreaContents_06->setObjectName(QString::fromUtf8("mOptionsScrollAreaContents_06"));
-        mOptionsScrollAreaContents_06->setGeometry(QRect(0, 0, 717, 580));
+        mOptionsScrollAreaContents_06->setGeometry(QRect(0, 0, 562, 291));
         verticalLayout_25 = new QVBoxLayout(mOptionsScrollAreaContents_06);
         verticalLayout_25->setSpacing(6);
         verticalLayout_25->setContentsMargins(11, 11, 11, 11);
@@ -1701,7 +1807,7 @@ public:
         mOptionsScrollArea_05->setWidgetResizable(true);
         mOptionsScrollAreaContents_05 = new QWidget();
         mOptionsScrollAreaContents_05->setObjectName(QString::fromUtf8("mOptionsScrollAreaContents_05"));
-        mOptionsScrollAreaContents_05->setGeometry(QRect(0, 0, 696, 641));
+        mOptionsScrollAreaContents_05->setGeometry(QRect(0, 0, 662, 641));
         verticalLayout_30 = new QVBoxLayout(mOptionsScrollAreaContents_05);
         verticalLayout_30->setSpacing(6);
         verticalLayout_30->setContentsMargins(11, 11, 11, 11);
@@ -1976,7 +2082,7 @@ public:
         mOptionsScrollArea_12->setWidgetResizable(true);
         mOptionsScrollAreaContents_12 = new QWidget();
         mOptionsScrollAreaContents_12->setObjectName(QString::fromUtf8("mOptionsScrollAreaContents_12"));
-        mOptionsScrollAreaContents_12->setGeometry(QRect(0, 0, 717, 580));
+        mOptionsScrollAreaContents_12->setGeometry(QRect(0, 0, 589, 573));
         verticalLayout_39 = new QVBoxLayout(mOptionsScrollAreaContents_12);
         verticalLayout_39->setSpacing(6);
         verticalLayout_39->setContentsMargins(11, 11, 11, 11);
@@ -2148,7 +2254,7 @@ public:
         mOptionsScrollArea_07->setWidgetResizable(true);
         mOptionsScrollAreaContents_07 = new QWidget();
         mOptionsScrollAreaContents_07->setObjectName(QString::fromUtf8("mOptionsScrollAreaContents_07"));
-        mOptionsScrollAreaContents_07->setGeometry(QRect(0, 0, 696, 630));
+        mOptionsScrollAreaContents_07->setGeometry(QRect(0, 0, 625, 630));
         verticalLayout_31 = new QVBoxLayout(mOptionsScrollAreaContents_07);
         verticalLayout_31->setSpacing(6);
         verticalLayout_31->setContentsMargins(11, 11, 11, 11);
@@ -2449,7 +2555,7 @@ public:
         mOptionsScrollArea_02->setWidgetResizable(true);
         mOptionsScrollAreaContents_02 = new QWidget();
         mOptionsScrollAreaContents_02->setObjectName(QString::fromUtf8("mOptionsScrollAreaContents_02"));
-        mOptionsScrollAreaContents_02->setGeometry(QRect(0, 0, 717, 580));
+        mOptionsScrollAreaContents_02->setGeometry(QRect(0, 0, 499, 383));
         verticalLayout_6 = new QVBoxLayout(mOptionsScrollAreaContents_02);
         verticalLayout_6->setSpacing(6);
         verticalLayout_6->setContentsMargins(11, 11, 11, 11);
@@ -2524,7 +2630,7 @@ public:
         mOptionsScrollArea_08->setWidgetResizable(true);
         mOptionsScrollAreaContents_08 = new QWidget();
         mOptionsScrollAreaContents_08->setObjectName(QString::fromUtf8("mOptionsScrollAreaContents_08"));
-        mOptionsScrollAreaContents_08->setGeometry(QRect(0, 0, 696, 650));
+        mOptionsScrollAreaContents_08->setGeometry(QRect(0, 0, 680, 650));
         gridLayout_15 = new QGridLayout(mOptionsScrollAreaContents_08);
         gridLayout_15->setSpacing(6);
         gridLayout_15->setContentsMargins(11, 11, 11, 11);
@@ -2704,6 +2810,522 @@ public:
         verticalLayout_43->addWidget(groupBox_26);
 
         mOptionsStackedWidget->addWidget(mOptionsPageSettingsEditor);
+        page = new QWidget();
+        page->setObjectName(QString::fromUtf8("page"));
+        verticalLayout_20 = new QVBoxLayout(page);
+        verticalLayout_20->setSpacing(6);
+        verticalLayout_20->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_20->setObjectName(QString::fromUtf8("verticalLayout_20"));
+        groupBox_31 = new QGroupBox(page);
+        groupBox_31->setObjectName(QString::fromUtf8("groupBox_31"));
+        verticalLayout_40 = new QVBoxLayout(groupBox_31);
+        verticalLayout_40->setSpacing(6);
+        verticalLayout_40->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_40->setObjectName(QString::fromUtf8("verticalLayout_40"));
+        groupBox_20 = new QGroupBox(groupBox_31);
+        groupBox_20->setObjectName(QString::fromUtf8("groupBox_20"));
+        groupBox_20->setFlat(true);
+        verticalLayout_34 = new QVBoxLayout(groupBox_20);
+        verticalLayout_34->setSpacing(6);
+        verticalLayout_34->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_34->setObjectName(QString::fromUtf8("verticalLayout_34"));
+        gridLayout_2 = new QGridLayout();
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        label_5 = new QLabel(groupBox_20);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        gridLayout_2->addWidget(label_5, 0, 0, 1, 1);
+
+        label_11 = new QLabel(groupBox_20);
+        label_11->setObjectName(QString::fromUtf8("label_11"));
+
+        gridLayout_2->addWidget(label_11, 1, 0, 1, 1);
+
+        horizontalSpacer_9 = new QSpacerItem(288, 17, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_2->addItem(horizontalSpacer_9, 1, 1, 1, 1);
+
+        lineEdit_6 = new QLineEdit(groupBox_20);
+        lineEdit_6->setObjectName(QString::fromUtf8("lineEdit_6"));
+        lineEdit_6->setMaximumSize(QSize(100, 16777215));
+
+        gridLayout_2->addWidget(lineEdit_6, 1, 2, 1, 1);
+
+
+        verticalLayout_34->addLayout(gridLayout_2);
+
+
+        verticalLayout_40->addWidget(groupBox_20);
+
+        groupBox_4 = new QGroupBox(groupBox_31);
+        groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
+        groupBox_4->setFlat(true);
+        groupBox_4->setCheckable(false);
+        verticalLayout_35 = new QVBoxLayout(groupBox_4);
+        verticalLayout_35->setSpacing(6);
+        verticalLayout_35->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_35->setObjectName(QString::fromUtf8("verticalLayout_35"));
+        gridLayout_4 = new QGridLayout();
+        gridLayout_4->setSpacing(6);
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        label_10 = new QLabel(groupBox_4);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
+
+        gridLayout_4->addWidget(label_10, 2, 0, 1, 1);
+
+        label_7 = new QLabel(groupBox_4);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+
+        gridLayout_4->addWidget(label_7, 0, 0, 1, 1);
+
+        label_9 = new QLabel(groupBox_4);
+        label_9->setObjectName(QString::fromUtf8("label_9"));
+
+        gridLayout_4->addWidget(label_9, 1, 0, 1, 1);
+
+        lineEdit_3 = new QLineEdit(groupBox_4);
+        lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
+        lineEdit_3->setMaximumSize(QSize(100, 16777215));
+
+        gridLayout_4->addWidget(lineEdit_3, 1, 5, 1, 1);
+
+        lineEdit_4 = new QLineEdit(groupBox_4);
+        lineEdit_4->setObjectName(QString::fromUtf8("lineEdit_4"));
+        lineEdit_4->setMaximumSize(QSize(100, 16777215));
+
+        gridLayout_4->addWidget(lineEdit_4, 2, 4, 1, 1);
+
+        lineEdit_5 = new QLineEdit(groupBox_4);
+        lineEdit_5->setObjectName(QString::fromUtf8("lineEdit_5"));
+        lineEdit_5->setMaximumSize(QSize(100, 16777215));
+
+        gridLayout_4->addWidget(lineEdit_5, 2, 5, 1, 1);
+
+        horizontalSpacer_52 = new QSpacerItem(308, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_4->addItem(horizontalSpacer_52, 1, 1, 1, 4);
+
+        horizontalSpacer_53 = new QSpacerItem(198, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_4->addItem(horizontalSpacer_53, 2, 1, 1, 3);
+
+        lineEdit_2 = new QLineEdit(groupBox_4);
+        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
+        lineEdit_2->setMaximumSize(QSize(215, 16777215));
+
+        gridLayout_4->addWidget(lineEdit_2, 0, 4, 1, 2);
+
+        horizontalSpacer_51 = new QSpacerItem(208, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_4->addItem(horizontalSpacer_51, 0, 1, 1, 3);
+
+
+        verticalLayout_35->addLayout(gridLayout_4);
+
+
+        verticalLayout_40->addWidget(groupBox_4);
+
+        groupBox_2 = new QGroupBox(groupBox_31);
+        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        groupBox_2->setFlat(true);
+        verticalLayout_7 = new QVBoxLayout(groupBox_2);
+        verticalLayout_7->setSpacing(6);
+        verticalLayout_7->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
+        horizontalLayout_33 = new QHBoxLayout();
+        horizontalLayout_33->setSpacing(6);
+        horizontalLayout_33->setObjectName(QString::fromUtf8("horizontalLayout_33"));
+        chkTransform = new QCheckBox(groupBox_2);
+        chkTransform->setObjectName(QString::fromUtf8("chkTransform"));
+
+        horizontalLayout_33->addWidget(chkTransform);
+
+        horizontalSpacer_22 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_33->addItem(horizontalSpacer_22);
+
+
+        verticalLayout_7->addLayout(horizontalLayout_33);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        chkSketchMap = new QCheckBox(groupBox_2);
+        chkSketchMap->setObjectName(QString::fromUtf8("chkSketchMap"));
+
+        horizontalLayout_3->addWidget(chkSketchMap);
+
+        horizontalSpacer_35 = new QSpacerItem(37, 17, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_35);
+
+
+        verticalLayout_7->addLayout(horizontalLayout_3);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        chkLinkPhoto = new QCheckBox(groupBox_2);
+        chkLinkPhoto->setObjectName(QString::fromUtf8("chkLinkPhoto"));
+
+        horizontalLayout_2->addWidget(chkLinkPhoto);
+
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_2);
+
+
+        verticalLayout_7->addLayout(horizontalLayout_2);
+
+        horizontalLayout_11 = new QHBoxLayout();
+        horizontalLayout_11->setSpacing(6);
+        horizontalLayout_11->setObjectName(QString::fromUtf8("horizontalLayout_11"));
+        label_31 = new QLabel(groupBox_2);
+        label_31->setObjectName(QString::fromUtf8("label_31"));
+        label_31->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+
+        horizontalLayout_11->addWidget(label_31);
+
+        horizontalSpacer_27 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_11->addItem(horizontalSpacer_27);
+
+        lepPhotoName = new QLineEdit(groupBox_2);
+        lepPhotoName->setObjectName(QString::fromUtf8("lepPhotoName"));
+        lepPhotoName->setMaximumSize(QSize(205, 16777215));
+
+        horizontalLayout_11->addWidget(lepPhotoName);
+
+
+        verticalLayout_7->addLayout(horizontalLayout_11);
+
+
+        verticalLayout_40->addWidget(groupBox_2);
+
+        verticalSpacer_9 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_40->addItem(verticalSpacer_9);
+
+
+        verticalLayout_20->addWidget(groupBox_31);
+
+        mOptionsStackedWidget->addWidget(page);
+        page_2 = new QWidget();
+        page_2->setObjectName(QString::fromUtf8("page_2"));
+        gridLayout_5 = new QGridLayout(page_2);
+        gridLayout_5->setSpacing(6);
+        gridLayout_5->setContentsMargins(11, 11, 11, 11);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        groupBox_12 = new QGroupBox(page_2);
+        groupBox_12->setObjectName(QString::fromUtf8("groupBox_12"));
+        verticalLayout_8 = new QVBoxLayout(groupBox_12);
+        verticalLayout_8->setSpacing(6);
+        verticalLayout_8->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_8->setObjectName(QString::fromUtf8("verticalLayout_8"));
+        groupBox_22 = new QGroupBox(groupBox_12);
+        groupBox_22->setObjectName(QString::fromUtf8("groupBox_22"));
+        groupBox_22->setFlat(true);
+        verticalLayout_19 = new QVBoxLayout(groupBox_22);
+        verticalLayout_19->setSpacing(6);
+        verticalLayout_19->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_19->setObjectName(QString::fromUtf8("verticalLayout_19"));
+        horizontalLayout_15 = new QHBoxLayout();
+        horizontalLayout_15->setSpacing(6);
+        horizontalLayout_15->setObjectName(QString::fromUtf8("horizontalLayout_15"));
+        label_32 = new QLabel(groupBox_22);
+        label_32->setObjectName(QString::fromUtf8("label_32"));
+
+        horizontalLayout_15->addWidget(label_32);
+
+        spinBox = new QSpinBox(groupBox_22);
+        spinBox->setObjectName(QString::fromUtf8("spinBox"));
+
+        horizontalLayout_15->addWidget(spinBox);
+
+        label_33 = new QLabel(groupBox_22);
+        label_33->setObjectName(QString::fromUtf8("label_33"));
+
+        horizontalLayout_15->addWidget(label_33);
+
+        spinBox_2 = new QSpinBox(groupBox_22);
+        spinBox_2->setObjectName(QString::fromUtf8("spinBox_2"));
+
+        horizontalLayout_15->addWidget(spinBox_2);
+
+        horizontalSpacer_14 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_15->addItem(horizontalSpacer_14);
+
+
+        verticalLayout_19->addLayout(horizontalLayout_15);
+
+        horizontalLayout_16 = new QHBoxLayout();
+        horizontalLayout_16->setSpacing(6);
+        horizontalLayout_16->setObjectName(QString::fromUtf8("horizontalLayout_16"));
+        label_41 = new QLabel(groupBox_22);
+        label_41->setObjectName(QString::fromUtf8("label_41"));
+
+        horizontalLayout_16->addWidget(label_41);
+
+        spinBox_3 = new QSpinBox(groupBox_22);
+        spinBox_3->setObjectName(QString::fromUtf8("spinBox_3"));
+
+        horizontalLayout_16->addWidget(spinBox_3);
+
+        label_45 = new QLabel(groupBox_22);
+        label_45->setObjectName(QString::fromUtf8("label_45"));
+
+        horizontalLayout_16->addWidget(label_45);
+
+        spinBox_4 = new QSpinBox(groupBox_22);
+        spinBox_4->setObjectName(QString::fromUtf8("spinBox_4"));
+
+        horizontalLayout_16->addWidget(spinBox_4);
+
+        horizontalSpacer_17 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_16->addItem(horizontalSpacer_17);
+
+
+        verticalLayout_19->addLayout(horizontalLayout_16);
+
+
+        verticalLayout_8->addWidget(groupBox_22);
+
+        groupBox_25 = new QGroupBox(groupBox_12);
+        groupBox_25->setObjectName(QString::fromUtf8("groupBox_25"));
+        groupBox_25->setFlat(true);
+        verticalLayout_22 = new QVBoxLayout(groupBox_25);
+        verticalLayout_22->setSpacing(6);
+        verticalLayout_22->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_22->setObjectName(QString::fromUtf8("verticalLayout_22"));
+        horizontalLayout_17 = new QHBoxLayout();
+        horizontalLayout_17->setSpacing(6);
+        horizontalLayout_17->setObjectName(QString::fromUtf8("horizontalLayout_17"));
+        label_46 = new QLabel(groupBox_25);
+        label_46->setObjectName(QString::fromUtf8("label_46"));
+
+        horizontalLayout_17->addWidget(label_46);
+
+        spinBox_6 = new QSpinBox(groupBox_25);
+        spinBox_6->setObjectName(QString::fromUtf8("spinBox_6"));
+
+        horizontalLayout_17->addWidget(spinBox_6);
+
+        label_47 = new QLabel(groupBox_25);
+        label_47->setObjectName(QString::fromUtf8("label_47"));
+
+        horizontalLayout_17->addWidget(label_47);
+
+        spinBox_5 = new QSpinBox(groupBox_25);
+        spinBox_5->setObjectName(QString::fromUtf8("spinBox_5"));
+
+        horizontalLayout_17->addWidget(spinBox_5);
+
+        horizontalSpacer_36 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_17->addItem(horizontalSpacer_36);
+
+
+        verticalLayout_22->addLayout(horizontalLayout_17);
+
+        horizontalLayout_21 = new QHBoxLayout();
+        horizontalLayout_21->setSpacing(6);
+        horizontalLayout_21->setObjectName(QString::fromUtf8("horizontalLayout_21"));
+        label_48 = new QLabel(groupBox_25);
+        label_48->setObjectName(QString::fromUtf8("label_48"));
+
+        horizontalLayout_21->addWidget(label_48);
+
+        spinBox_7 = new QSpinBox(groupBox_25);
+        spinBox_7->setObjectName(QString::fromUtf8("spinBox_7"));
+
+        horizontalLayout_21->addWidget(spinBox_7);
+
+        label_49 = new QLabel(groupBox_25);
+        label_49->setObjectName(QString::fromUtf8("label_49"));
+
+        horizontalLayout_21->addWidget(label_49);
+
+        spinBox_8 = new QSpinBox(groupBox_25);
+        spinBox_8->setObjectName(QString::fromUtf8("spinBox_8"));
+
+        horizontalLayout_21->addWidget(spinBox_8);
+
+        label_50 = new QLabel(groupBox_25);
+        label_50->setObjectName(QString::fromUtf8("label_50"));
+
+        horizontalLayout_21->addWidget(label_50);
+
+        horizontalSpacer_37 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_21->addItem(horizontalSpacer_37);
+
+
+        verticalLayout_22->addLayout(horizontalLayout_21);
+
+
+        verticalLayout_8->addWidget(groupBox_25);
+
+        groupBox_29 = new QGroupBox(groupBox_12);
+        groupBox_29->setObjectName(QString::fromUtf8("groupBox_29"));
+        groupBox_29->setFlat(true);
+        verticalLayout_32 = new QVBoxLayout(groupBox_29);
+        verticalLayout_32->setSpacing(6);
+        verticalLayout_32->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_32->setObjectName(QString::fromUtf8("verticalLayout_32"));
+        horizontalLayout_34 = new QHBoxLayout();
+        horizontalLayout_34->setSpacing(6);
+        horizontalLayout_34->setObjectName(QString::fromUtf8("horizontalLayout_34"));
+        label_51 = new QLabel(groupBox_29);
+        label_51->setObjectName(QString::fromUtf8("label_51"));
+
+        horizontalLayout_34->addWidget(label_51);
+
+        horizontalSpacer_39 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_34->addItem(horizontalSpacer_39);
+
+        spinBox_9 = new QSpinBox(groupBox_29);
+        spinBox_9->setObjectName(QString::fromUtf8("spinBox_9"));
+
+        horizontalLayout_34->addWidget(spinBox_9);
+
+
+        verticalLayout_32->addLayout(horizontalLayout_34);
+
+        horizontalLayout_35 = new QHBoxLayout();
+        horizontalLayout_35->setSpacing(6);
+        horizontalLayout_35->setObjectName(QString::fromUtf8("horizontalLayout_35"));
+        label_52 = new QLabel(groupBox_29);
+        label_52->setObjectName(QString::fromUtf8("label_52"));
+
+        horizontalLayout_35->addWidget(label_52);
+
+        spinBox_11 = new QSpinBox(groupBox_29);
+        spinBox_11->setObjectName(QString::fromUtf8("spinBox_11"));
+
+        horizontalLayout_35->addWidget(spinBox_11);
+
+        label_54 = new QLabel(groupBox_29);
+        label_54->setObjectName(QString::fromUtf8("label_54"));
+
+        horizontalLayout_35->addWidget(label_54);
+
+        spinBox_10 = new QSpinBox(groupBox_29);
+        spinBox_10->setObjectName(QString::fromUtf8("spinBox_10"));
+
+        horizontalLayout_35->addWidget(spinBox_10);
+
+        label_55 = new QLabel(groupBox_29);
+        label_55->setObjectName(QString::fromUtf8("label_55"));
+
+        horizontalLayout_35->addWidget(label_55);
+
+        horizontalSpacer_42 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_35->addItem(horizontalSpacer_42);
+
+
+        verticalLayout_32->addLayout(horizontalLayout_35);
+
+        horizontalLayout_40 = new QHBoxLayout();
+        horizontalLayout_40->setSpacing(6);
+        horizontalLayout_40->setObjectName(QString::fromUtf8("horizontalLayout_40"));
+        label_57 = new QLabel(groupBox_29);
+        label_57->setObjectName(QString::fromUtf8("label_57"));
+
+        horizontalLayout_40->addWidget(label_57);
+
+        spinBox_13 = new QSpinBox(groupBox_29);
+        spinBox_13->setObjectName(QString::fromUtf8("spinBox_13"));
+
+        horizontalLayout_40->addWidget(spinBox_13);
+
+        label_58 = new QLabel(groupBox_29);
+        label_58->setObjectName(QString::fromUtf8("label_58"));
+
+        horizontalLayout_40->addWidget(label_58);
+
+        spinBox_12 = new QSpinBox(groupBox_29);
+        spinBox_12->setObjectName(QString::fromUtf8("spinBox_12"));
+
+        horizontalLayout_40->addWidget(spinBox_12);
+
+        label_64 = new QLabel(groupBox_29);
+        label_64->setObjectName(QString::fromUtf8("label_64"));
+
+        horizontalLayout_40->addWidget(label_64);
+
+        horizontalSpacer_48 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_40->addItem(horizontalSpacer_48);
+
+
+        verticalLayout_32->addLayout(horizontalLayout_40);
+
+
+        verticalLayout_8->addWidget(groupBox_29);
+
+        groupBox_30 = new QGroupBox(groupBox_12);
+        groupBox_30->setObjectName(QString::fromUtf8("groupBox_30"));
+        groupBox_30->setFlat(true);
+        verticalLayout_33 = new QVBoxLayout(groupBox_30);
+        verticalLayout_33->setSpacing(6);
+        verticalLayout_33->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_33->setObjectName(QString::fromUtf8("verticalLayout_33"));
+        horizontalLayout_41 = new QHBoxLayout();
+        horizontalLayout_41->setSpacing(6);
+        horizontalLayout_41->setObjectName(QString::fromUtf8("horizontalLayout_41"));
+        label_67 = new QLabel(groupBox_30);
+        label_67->setObjectName(QString::fromUtf8("label_67"));
+
+        horizontalLayout_41->addWidget(label_67);
+
+        horizontalSpacer_49 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_41->addItem(horizontalSpacer_49);
+
+        spinBox_14 = new QSpinBox(groupBox_30);
+        spinBox_14->setObjectName(QString::fromUtf8("spinBox_14"));
+
+        horizontalLayout_41->addWidget(spinBox_14);
+
+
+        verticalLayout_33->addLayout(horizontalLayout_41);
+
+        horizontalLayout_42 = new QHBoxLayout();
+        horizontalLayout_42->setSpacing(6);
+        horizontalLayout_42->setObjectName(QString::fromUtf8("horizontalLayout_42"));
+        label_68 = new QLabel(groupBox_30);
+        label_68->setObjectName(QString::fromUtf8("label_68"));
+
+        horizontalLayout_42->addWidget(label_68);
+
+        horizontalSpacer_50 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_42->addItem(horizontalSpacer_50);
+
+        spinBox_15 = new QSpinBox(groupBox_30);
+        spinBox_15->setObjectName(QString::fromUtf8("spinBox_15"));
+
+        horizontalLayout_42->addWidget(spinBox_15);
+
+
+        verticalLayout_33->addLayout(horizontalLayout_42);
+
+        verticalSpacer_11 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_33->addItem(verticalSpacer_11);
+
+
+        verticalLayout_8->addWidget(groupBox_30);
+
+
+        gridLayout_5->addWidget(groupBox_12, 0, 0, 1, 1);
+
+        mOptionsStackedWidget->addWidget(page_2);
 
         verticalLayout->addWidget(mOptionsStackedWidget);
 
@@ -2873,7 +3495,7 @@ public:
         QObject::connect(mAdvancedSettingsEnableButton, SIGNAL(clicked()), mAdvancedSettingsEditor, SLOT(show()));
         QObject::connect(mAdvancedSettingsEnableButton, SIGNAL(clicked()), mAdvancedSettingsWarning, SLOT(hide()));
 
-        mOptionsStackedWidget->setCurrentIndex(9);
+        mOptionsStackedWidget->setCurrentIndex(11);
         cmbScanZipInBrowser->setCurrentIndex(-1);
 
 
@@ -2938,6 +3560,10 @@ public:
 #endif // QT_NO_TOOLTIP
         QListWidgetItem *___qlistwidgetitem10 = mOptionsListWidget->item(10);
         ___qlistwidgetitem10->setText(QApplication::translate("QgsOptionsBase", "Advanced", 0, QApplication::UnicodeUTF8));
+        QListWidgetItem *___qlistwidgetitem11 = mOptionsListWidget->item(11);
+        ___qlistwidgetitem11->setText(QApplication::translate("QgsOptionsBase", "\345\275\261\345\203\217\351\242\204\345\244\204\347\220\206", 0, QApplication::UnicodeUTF8));
+        QListWidgetItem *___qlistwidgetitem12 = mOptionsListWidget->item(12);
+        ___qlistwidgetitem12->setText(QApplication::translate("QgsOptionsBase", "\351\243\236\350\241\214\350\264\250\351\207\217\345\217\202\346\225\260", 0, QApplication::UnicodeUTF8));
         mOptionsListWidget->setSortingEnabled(__sortingEnabled);
 
         groupBox->setTitle(QApplication::translate("QgsOptionsBase", "Application", 0, QApplication::UnicodeUTF8));
@@ -3206,6 +3832,42 @@ public:
         groupBox_26->setTitle(QApplication::translate("QgsOptionsBase", "Advanced Settings Editor", 0, QApplication::UnicodeUTF8));
         label_44->setText(QApplication::translate("QgsOptionsBase", "<html><head/><body><p>Changes on this page are dangerous and can break your QGIS installation in various ways. Any change you make is applied immediately, without clicking the <span style=\" font-style:italic;\">ok</span> button.</p></body></html>", 0, QApplication::UnicodeUTF8));
         mAdvancedSettingsEnableButton->setText(QApplication::translate("QgsOptionsBase", "I will be careful, I promise!", 0, QApplication::UnicodeUTF8));
+        groupBox_31->setTitle(QApplication::translate("QgsOptionsBase", "\351\242\204\345\244\204\347\220\206\350\256\276\347\275\256", 0, QApplication::UnicodeUTF8));
+        groupBox_20->setTitle(QApplication::translate("QgsOptionsBase", "\346\265\213\345\214\272\345\217\202\346\225\260", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("QgsOptionsBase", "\345\235\220\346\240\207\345\217\202\347\205\247\347\263\273", 0, QApplication::UnicodeUTF8));
+        label_11->setText(QApplication::translate("QgsOptionsBase", "\346\265\213\345\214\272\345\271\263\345\235\207\351\253\230\347\250\213\357\274\210m\357\274\211", 0, QApplication::UnicodeUTF8));
+        groupBox_4->setTitle(QApplication::translate("QgsOptionsBase", "\347\233\270\346\234\272\345\217\202\346\225\260", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("QgsOptionsBase", "\347\233\270\345\271\205\345\244\247\345\260\217\357\274\210\351\253\230\345\256\275\357\274\211", 0, QApplication::UnicodeUTF8));
+        label_7->setText(QApplication::translate("QgsOptionsBase", "\347\233\270\346\234\272\347\204\246\350\267\235\357\274\210mm\357\274\211", 0, QApplication::UnicodeUTF8));
+        label_9->setText(QApplication::translate("QgsOptionsBase", "\345\203\217\345\205\203\345\244\247\345\260\217\357\274\210um\357\274\211 ", 0, QApplication::UnicodeUTF8));
+        groupBox_2->setTitle(QApplication::translate("QgsOptionsBase", "\346\233\235\345\205\211\347\202\271\344\270\200\351\224\256\345\244\204\347\220\206", 0, QApplication::UnicodeUTF8));
+        chkTransform->setText(QApplication::translate("QgsOptionsBase", "\350\275\254\346\215\242\345\235\220\346\240\207", 0, QApplication::UnicodeUTF8));
+        chkSketchMap->setText(QApplication::translate("QgsOptionsBase", "\347\224\237\346\210\220\347\225\245\345\233\276", 0, QApplication::UnicodeUTF8));
+        chkLinkPhoto->setText(QApplication::translate("QgsOptionsBase", "\345\212\250\346\200\201\350\201\224\345\212\250", 0, QApplication::UnicodeUTF8));
+        label_31->setText(QApplication::translate("QgsOptionsBase", "\347\233\270\347\211\207\346\226\207\344\273\266\345\244\271\351\273\230\350\256\244\346\220\234\347\264\242\345\220\215\347\247\260", 0, QApplication::UnicodeUTF8));
+        groupBox_12->setTitle(QApplication::translate("QgsOptionsBase", "\350\210\252\351\243\236\345\217\202\346\225\260", 0, QApplication::UnicodeUTF8));
+        groupBox_22->setTitle(QApplication::translate("QgsOptionsBase", "\345\203\217\347\211\207\351\207\215\345\217\240\345\272\246", 0, QApplication::UnicodeUTF8));
+        label_32->setText(QApplication::translate("QgsOptionsBase", "\350\210\252\345\220\221\351\207\215\345\217\240\345\272\246(%)", 0, QApplication::UnicodeUTF8));
+        label_33->setText(QApplication::translate("QgsOptionsBase", "-", 0, QApplication::UnicodeUTF8));
+        label_41->setText(QApplication::translate("QgsOptionsBase", "\346\227\201\345\220\221\351\207\215\345\217\240\345\272\246(%)", 0, QApplication::UnicodeUTF8));
+        label_45->setText(QApplication::translate("QgsOptionsBase", "-", 0, QApplication::UnicodeUTF8));
+        groupBox_25->setTitle(QApplication::translate("QgsOptionsBase", "\345\203\217\347\211\207\345\200\276\350\247\222", 0, QApplication::UnicodeUTF8));
+        label_46->setText(QApplication::translate("QgsOptionsBase", "\345\203\217\347\211\207\345\200\276\350\247\222(\302\260)", 0, QApplication::UnicodeUTF8));
+        label_47->setText(QApplication::translate("QgsOptionsBase", "-", 0, QApplication::UnicodeUTF8));
+        label_48->setText(QApplication::translate("QgsOptionsBase", "\350\266\205\350\277\207", 0, QApplication::UnicodeUTF8));
+        label_49->setText(QApplication::translate("QgsOptionsBase", "\302\260\347\232\204\347\211\207\346\225\260\351\207\217\344\270\215\345\244\232\344\272\216\346\200\273\346\225\260", 0, QApplication::UnicodeUTF8));
+        label_50->setText(QApplication::translate("QgsOptionsBase", "%", 0, QApplication::UnicodeUTF8));
+        groupBox_29->setTitle(QApplication::translate("QgsOptionsBase", "\345\203\217\347\211\207\346\227\213\350\247\222", 0, QApplication::UnicodeUTF8));
+        label_51->setText(QApplication::translate("QgsOptionsBase", "\345\203\217\347\211\207\346\227\213\350\247\222\344\270\215\350\266\205\350\277\207(\302\260)", 0, QApplication::UnicodeUTF8));
+        label_52->setText(QApplication::translate("QgsOptionsBase", "\345\220\214\344\270\200\350\210\252\347\272\277\350\266\205\350\277\207", 0, QApplication::UnicodeUTF8));
+        label_54->setText(QApplication::translate("QgsOptionsBase", "\302\260\346\227\213\350\247\222\347\232\204\347\211\207\346\225\260\351\207\217\344\270\215\350\266\205\350\277\207", 0, QApplication::UnicodeUTF8));
+        label_55->setText(QApplication::translate("QgsOptionsBase", "\347\211\207", 0, QApplication::UnicodeUTF8));
+        label_57->setText(QApplication::translate("QgsOptionsBase", "\350\266\205\350\277\207", 0, QApplication::UnicodeUTF8));
+        label_58->setText(QApplication::translate("QgsOptionsBase", "\302\260\346\227\213\350\247\222\347\232\204\347\211\207\346\225\260\351\207\217\344\270\215\345\244\232\344\272\216\346\200\273\346\225\260", 0, QApplication::UnicodeUTF8));
+        label_64->setText(QApplication::translate("QgsOptionsBase", "%", 0, QApplication::UnicodeUTF8));
+        groupBox_30->setTitle(QApplication::translate("QgsOptionsBase", "\350\241\214\351\253\230\344\277\235\346\214\201", 0, QApplication::UnicodeUTF8));
+        label_67->setText(QApplication::translate("QgsOptionsBase", "\345\220\214\344\270\200\350\210\252\347\272\277\347\233\270\351\202\273\345\203\217\347\211\207\351\253\230\345\267\256\344\270\215\350\266\205\350\277\207(\347\261\263)", 0, QApplication::UnicodeUTF8));
+        label_68->setText(QApplication::translate("QgsOptionsBase", "\346\234\200\345\244\247\350\241\214\351\253\230\344\270\216\346\234\200\345\260\217\350\241\214\351\253\230\344\271\213\345\267\256\344\270\215\350\266\205\350\277\207(\347\261\263)", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

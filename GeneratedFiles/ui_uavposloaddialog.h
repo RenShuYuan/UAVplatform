@@ -26,6 +26,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
+#include <QtGui/QTableWidget>
 #include <QtGui/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
@@ -83,14 +84,14 @@ public:
     QComboBox *cmb_6;
     QComboBox *cmb_7;
     QComboBox *cmb_8;
-    QSpacerItem *verticalSpacer;
+    QTableWidget *tableWidget;
     QDialogButtonBox *buttonBox;
 
     void setupUi(QDialog *uavposdialog)
     {
         if (uavposdialog->objectName().isEmpty())
             uavposdialog->setObjectName(QString::fromUtf8("uavposdialog"));
-        uavposdialog->resize(793, 413);
+        uavposdialog->resize(793, 442);
         verticalLayout_2 = new QVBoxLayout(uavposdialog);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         groupBox = new QGroupBox(uavposdialog);
@@ -347,12 +348,13 @@ public:
 
         verticalLayout_4->addLayout(horizontalLayout_6);
 
+        tableWidget = new QTableWidget(groupBox_2);
+        tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
+
+        verticalLayout_4->addWidget(tableWidget);
+
 
         verticalLayout_2->addWidget(groupBox_2);
-
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout_2->addItem(verticalSpacer);
 
         buttonBox = new QDialogButtonBox(uavposdialog);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));

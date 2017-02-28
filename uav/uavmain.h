@@ -397,13 +397,14 @@ private slots:
 
 	//! 自定义
 	void openPosFile();
-	void posFormat();
 	bool posTransform();
 	void posLinkPhoto();
 	void posSketchMap();
 	void posOneButton();
 	void posExport();
 	void posSettings();
+
+	void ppMatchPosName();
 
 signals:
 	/** 当图层使用另存为这个信号被发射
@@ -492,13 +493,21 @@ private:
 
 	//! 曝光点动作
 	QAction *mOpenPosFile;
-	QAction *mPosFormat;
 	QAction *mPosTransform;
-	QAction *mPosLinkPhoto;
 	QAction *mPosSketchMap;
 	QAction *mPosOneButton;
 	QAction *mPosExport;
 	QAction *mPosSettings;
+
+	//! 动态联动
+	QAction *mPosLinkPhoto;
+	QAction *mMatchPosName;
+
+	//! 数据分析
+	QAction *mAnalysisOverlapping;
+	QAction *mAnalysisOmega;
+	QAction *mAnalysisPhi;
+	QAction *mAnalysisKappa;
 
 	QToolBar *mFileToolBar;
 	QToolBar *mLayerToolBar;

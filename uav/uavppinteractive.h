@@ -25,7 +25,7 @@ public:
 	//};
 
 	uavPPInteractive(QObject *parent);
-	uavPPInteractive(QObject *parent, QgsVectorLayer* layer, QList< QStringList >* fieldsList);
+	uavPPInteractive(QObject *parent, QgsVectorLayer* layer, QStringList* noFields);
 	~uavPPInteractive();
 
 	/**
@@ -52,43 +52,27 @@ public:
 	void setVectorLayer(QgsVectorLayer* layer);
 
 	/**
-    * @brief            设置曝光点文件列表
+    * @brief            赋值曝光点相片名称列表的指针
     * @author           YuanLong
-    * @param layer 		指向有效的曝光点文件列表
+    * @param fieldsList 指向有效的曝光点文件名称列表
     * @return
     */
-	void setFieldsList(QList< QStringList >* fieldsList);
+	//void setNoFieldsList(QStringList* fieldsList);
 
 	/**
-    * @brief            创建POS与Photo联动关系
+    * @brief            更新曝光点与相片已关联的符号
     * @author           YuanLong
     * @warning			POS需要提前使用对应函数设置好，Photo文件
     *					路径将自动从设置中读取，创建成功后将会调用
     *					upDataLinkedSymbol()更新QgsVectorLayer符号
     *					，并更新isLinked。
-    * @return
-    */
-	void createPPlinkage();
-
-	/**
-    * @brief            断开POS与Photo联动关系
-    * @author           YuanLong
-    * @warning			调用upDataUnLinkedSymbol()更新QgsVectorLayer，
-    *					符号并更新isLinked。
-    * @return
-    */
-	void unPPlinkage();
-
-	/**
-    * @brief            更新曝光点与相片已关联的符号
-    * @author           YuanLong
-    * @warning			使用图层的分类样式符号渲染器更新已关联符号
+    *					使用图层的分类样式符号渲染器更新已关联符号
     * @return
     */
 	void upDataLinkedSymbol();
-	
+
 	/**
-    * @brief            更新曝光点与相片未关联的符号
+    * @brief            断开POS与Photo联动关系
     * @author           YuanLong
     * @warning			使用图层的分类样式符号渲染器更新未关联符号
     * @return
@@ -102,12 +86,12 @@ public:
     *					的匹配规则将曝光点名称与相片名称修改为一致
     * @return			当成功匹配则返回true
     */
-	void matchPosName(const QStringList& photoList, QStringList& posList);
+	void matchPosName();
 
-	void addChangedItem(const QString& item);
+	void addChangedItem(const QString& item, QgsSymbolV2*);
 	void clearAllChangedItem();
 
-	void updata(QgsSymbolV2* v2);
+	void updata();
 signals:
 	/**
     * @brief            向主窗口发送信号更新繁忙进度条状态
@@ -140,10 +124,8 @@ private:
 	QMap<QString, QString> mPhotoMap;
 	// 关联图层指针
 	QgsVectorLayer* mLayer;
-	// 关联POS列表指针
-	QList< QStringList >* mFieldsList;
-	// save changed item
-	QList< QString > mChangeList;
+	// 保存需要更新的符号项
+	QMap< QString, QgsSymbolV2* > mChangeList;
 
 	QColor cLinked;			// 已关联的符号颜色
 	QColor cUnlinked;		// 未关联符号颜色
@@ -152,6 +134,10 @@ private:
 
 	QgsSymbolV2* mLinkedSymbolV2;	// 已关联的符号类
 	QgsSymbolV2* mUnlinkedSymbolV2;	// 未关联的符号类
+
+	QStringList photosList;		// 用于保存搜索到的相片路径
+	QStringList* mNoFields;		// 关联POS列表指针
+
 };
 
 #endif // PPINTERACTIVE_H

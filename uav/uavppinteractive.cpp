@@ -13,7 +13,7 @@
 uavPPInteractive::uavPPInteractive(QObject *parent)
 	: QObject(parent),
 	mLayer(nullptr),
-	mFieldsList(nullptr),
+	mNoFields(nullptr),
 	mLinkedSymbolV2(nullptr),
 	mUnlinkedSymbolV2(nullptr)
 {
@@ -29,10 +29,10 @@ uavPPInteractive::uavPPInteractive(QObject *parent)
 	definitionUnLinkedSymbolV2();
 }
 
-uavPPInteractive::uavPPInteractive(QObject *parent, QgsVectorLayer* layer, QList< QStringList >* fieldsList)
+uavPPInteractive::uavPPInteractive(QObject *parent, QgsVectorLayer* layer, QStringList* noFields)
 	: QObject(parent),
 	mLayer(layer),
-	mFieldsList(fieldsList),
+	mNoFields(noFields),
 	mLinkedSymbolV2(nullptr),
 	mUnlinkedSymbolV2(nullptr)
 {
@@ -51,10 +51,13 @@ uavPPInteractive::~uavPPInteractive()
 
 }
 
-void uavPPInteractive::createPPlinkage()
+void uavPPInteractive::upDataLinkedSymbol()
 {
-	if (mFieldsList->isEmpty())
+	if (mNoFields->isEmpty())
+	{
+		isLinked = false;
 		return;
+	}
 
 	QSettings mSetting;
 	QString phtotPath = mSetting.value("/Uav/pos/lePosFile", "").toString();
@@ -66,60 +69,52 @@ void uavPPInteractive::createPPlinkage()
 		UavMain::instance()->messageBar()->pushMessage( "PP动态联动", 
 			QString("%1 未指定正确的相片路径, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)), 
 			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
-		QgsMessageLog::logMessage(QString("PP动态联动 : \t%1 未指定正确的相片路径, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)));
+		QgsMessageLog::logMessage(QString("\t%1 未指定正确的相片路径, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)));
 		isLinked = false;
 		return;
 	}
 
 	emit startProcess();
-	QStringList list = uavCore::searchFiles(phtotPath, QStringList() << "*.tif" << "*.jpg");
+	photosList.clear();
+	photosList = uavCore::searchFiles(phtotPath, QStringList() << "*.tif" << "*.jpg");
 	emit stopProcess();
 
-	if (list.isEmpty())
+	if (photosList.isEmpty())
 	{
 		UavMain::instance()->messageBar()->pushMessage( "PP动态联动", 
 			QString("\t%1 路径下未搜索到tif、jpg格式的航飞相片, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)), 
 			QgsMessageBar::CRITICAL, UavMain::instance()->messageTimeout() );
-		QgsMessageLog::logMessage(QString("PP动态联动 : \t%1 路径下未搜索到tif、jpg格式的航飞相片, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)));
+		QgsMessageLog::logMessage(QString("\t%1 路径下未搜索到tif、jpg格式的航飞相片, 创建联动关系失败...").arg(QDir::toNativeSeparators(phtotPath)));
 		isLinked = false;
 		return;
 	}
 	else
-		QgsMessageLog::logMessage(QString("PP动态联动 : \t%1 路径下搜索到%2张相片.").arg(QDir::toNativeSeparators(phtotPath)).arg(list.size()));
-
-	// 从POS中提取曝光点名称
-	QStringList basePos;
-	foreach (QStringList subList, *mFieldsList)
-		basePos.append(subList.at(0));
+		QgsMessageLog::logMessage(QString("\t%1 路径下搜索到%2张相片.").arg(QDir::toNativeSeparators(phtotPath)).arg(photosList.size()));
 
 	//matchPosName(list, basePos);
 
 	// 填充mPhotoMap, mPhotoMap[001] = "D:\测试数据\平台处理\photo\001.tif"
-	foreach (QString str, list)
+	foreach (QString str, photosList)
 		mPhotoMap[QFileInfo(str).baseName()] = str;
 	
 	QMap<QString, QString>::iterator it = mPhotoMap.begin();
 	while (it != mPhotoMap.end())
 	{
 		QString key = it.key();
-		if (!basePos.contains(key))
+		if (!mNoFields->contains(key))
 		{
-			QgsMessageLog::logMessage(QString("PP动态联动 : \t||--> 相片:%1在曝光点文件中未找到对应记录.").arg(key));
+			QgsMessageLog::logMessage(QString("\t||--> 相片:%1在曝光点文件中未找到对应记录.").arg(key));
 			it = mPhotoMap.erase(it);
 		}
 		else
+		{
+			addChangedItem(key, linkedSymbolV2());
 			++it;
+		}
 	}
 
-	QgsMessageLog::logMessage(QString("PP动态联动 : \t成功创建PP联动关系..."));
 	isLinked = true;
-}
-
-void uavPPInteractive::unPPlinkage()
-{
-	upDataUnLinkedSymbol();
-	mPhotoMap.clear();
-	isLinked = false;
+	updata();
 }
 
 void uavPPInteractive::initLayerCategorizedSymbolRendererV2()
@@ -136,65 +131,19 @@ void uavPPInteractive::initLayerCategorizedSymbolRendererV2()
 	UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());
 }
 
-void uavPPInteractive::upDataLinkedSymbol()
-{
-	// 获得目前图层的分类样式符号渲染器
-	QgsCategorizedSymbolRendererV2* cRenderer;
-	cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
-	if (!cRenderer)
-	{
-		initLayerCategorizedSymbolRendererV2();
-		cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
-	}
-
-	QMap<QString, QString>::iterator it = mPhotoMap.begin();
-	while (it != mPhotoMap.end())
-	{
-		// 在渲染器中查找是否有更新列表中的相片编号
-		int index = cRenderer->categoryIndexForValue(QVariant(it.key()));
-
-		// 根据查找结果进行更新
-		 if (-1 != index)
-		{
-			cRenderer->deleteCategory(index);
-			cRenderer->addCategory(QgsRendererCategoryV2(QVariant(it.key()), linkedSymbolV2(), it.key()));
-		}
-		++it;
-	}
-
-	cRenderer->sortByValue();
-	UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());
-	UavMain::instance()->refreshMapCanvas();
-}
-
 void uavPPInteractive::upDataUnLinkedSymbol()
 {
-	// 获得目前图层的分类样式符号渲染器
-	//QgsCategorizedSymbolRendererV2* cRenderer;
-	//cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
-	//if (!cRenderer)
-	//{
-	//	initLayerCategorizedSymbolRendererV2();
-	//	cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
-	//}
-
-	//QgsCategoryList cgList = cRenderer->categories();
-	//for (int i=0; i<cgList.size(); i++)
-	//{
-	//	cRenderer->updateCategorySymbol(i, unlinkedSymbolV2());
-	//}
-
-	//UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());
-	//UavMain::instance()->refreshMapCanvas();
-	// 
 	QMap<QString, QString>::iterator it = mPhotoMap.begin();
 	while (it != mPhotoMap.end())
 	{
-		addChangedItem(it.key());
+		addChangedItem(it.key(), unlinkedSymbolV2());
 		++it;
 	}
 
-	updata(unlinkedSymbolV2());
+	mPhotoMap.clear();
+	isLinked = false;
+
+	updata();
 }
 
 void uavPPInteractive::definitionLinkedSymbolV2()
@@ -229,11 +178,11 @@ QgsSymbolV2* uavPPInteractive::unlinkedSymbolV2()
 
 bool uavPPInteractive::isValid()
 {
-	if (!mLayer || !mFieldsList)
+	if (!mLayer || !mNoFields)
 	{
 		return false;
 	}
-	if (!mLayer->isValid() || mFieldsList->isEmpty())
+	if (!mLayer->isValid() || mNoFields->isEmpty())
 	{
 		return false;
 	}
@@ -247,31 +196,31 @@ void uavPPInteractive::setVectorLayer( QgsVectorLayer* layer )
 	mLayer = layer;
 }
 
-void uavPPInteractive::setFieldsList( QList< QStringList >* fieldsList )
-{
-	if (!fieldsList)
-		return;
-	mFieldsList = fieldsList;
-}
+//void uavPPInteractive::setNoFieldsList(QStringList* fieldsList)
+//{
+//	if (!fieldsList)
+//		return;
+//	mNoFields = fieldsList;
+//}
 
-void uavPPInteractive::matchPosName(const QStringList& photoList, QStringList& posList)
+void uavPPInteractive::matchPosName()
 {
 	QString photoName;
-	QStringList tmpPosList;
+	QStringList* tmpPosList;
 	QStringList photoNameList;
-	foreach (QString photoPath, photoList)
+	foreach (QString photoPath, photosList)
 		photoNameList.append(QFileInfo(photoPath).baseName());
 	if (photoNameList.isEmpty())
 		return;
 
-	tmpPosList = posList;
+	tmpPosList = mNoFields;
 
 	QgsMessageLog::logMessage(QString("匹配曝光点名称 : \t开始匹配曝光点与相片名称..."));
 
-	for (int i=0; i<tmpPosList.size(); ++i)
+	for (int i=0; i<tmpPosList->size(); ++i)
 	{
 		int count = 0;
-		QString posName = tmpPosList.at(i);
+		QString posName = tmpPosList->at(i);
 		foreach (const QString tmpPhotoName, photoNameList)
 		{
 			if (tmpPhotoName.contains(posName, Qt::CaseInsensitive))
@@ -296,30 +245,32 @@ void uavPPInteractive::matchPosName(const QStringList& photoList, QStringList& p
 				}
 				++i;
 			}
-			tmpPosList[i] = posName;
+			(*tmpPosList)[i] = posName;
 			--i;
 		}
 		else if (count==1) // 匹配到一个
 		{
-			QgsMessageLog::logMessage(QString("\t\t匹配到曝光点: %1与相片名称: %2符合规则, 已自动更新曝光点名称.").arg(posList.at(i)).arg(photoName));
-			posList[i] = photoName;
+			QgsMessageLog::logMessage(QString("\t\t匹配到曝光点: %1与相片名称: %2符合规则, 已自动更新曝光点名称.").arg(mNoFields->at(i)).arg(photoName));
+			(*mNoFields)[i] = photoName;
 		}
 		else				// 匹配到多个
 		{
 			if (posName.size() < photoName.size())
 			{
-				tmpPosList[i] = posName.insert(0, '0');
+				(*tmpPosList)[i] = posName.insert(0, '0');
 				--i;
 			}
 			else
-				QgsMessageLog::logMessage(QString("\t\t未匹配到曝光点: %1.").arg(posList.at(i)));
+				QgsMessageLog::logMessage(QString("\t\t未匹配到曝光点: %1.").arg(mNoFields->at(i)));
 		}
 	}
+
+	// 
 }
 
-void uavPPInteractive::addChangedItem( const QString& item )
+void uavPPInteractive::addChangedItem( const QString& item, QgsSymbolV2* v2 )
 {
-	mChangeList.append(item);
+	mChangeList[item] = v2;
 }
 
 void uavPPInteractive::clearAllChangedItem()
@@ -327,7 +278,7 @@ void uavPPInteractive::clearAllChangedItem()
 	mChangeList.clear();
 }
 
-void uavPPInteractive::updata(QgsSymbolV2* v2)
+void uavPPInteractive::updata()
 {
 	// 获得目前图层的分类样式符号渲染器
 	QgsCategorizedSymbolRendererV2* cRenderer;
@@ -338,13 +289,15 @@ void uavPPInteractive::updata(QgsSymbolV2* v2)
 		cRenderer = dynamic_cast< QgsCategorizedSymbolRendererV2* >( mLayer->rendererV2() );
 	}
 
-	foreach (QString str, mChangeList)
+	QMap< QString, QgsSymbolV2* >::iterator it = mChangeList.begin();
+	while (it != mChangeList.end())
 	{
-		int index = cRenderer->categoryIndexForValue(QVariant(str));
+		int index = cRenderer->categoryIndexForValue(QVariant(it.key()));
 		if (index != -1)
 		{
-			cRenderer->updateCategorySymbol(index, v2);
+			cRenderer->updateCategorySymbol(index, it.value());
 		}
+		++it;
 	}
 
 	UavMain::instance()->layerTreeView()->refreshLayerSymbology(mLayer->id());

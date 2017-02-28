@@ -52,12 +52,12 @@
      <string>曝光点预处理(&amp;P)</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_D">
+   <widget class="QMenu" name="mInteractiveMenu">
     <property name="title">
      <string>动态联动(&amp;D)</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_F">
+   <widget class="QMenu" name="mAnalysisMenu">
     <property name="title">
      <string>数据分析(&amp;A)</string>
     </property>
@@ -66,8 +66,8 @@
    <addaction name="mViewMenu"/>
    <addaction name="mLayerMenu"/>
    <addaction name="mPosMenu"/>
-   <addaction name="menu_D"/>
-   <addaction name="menu_F"/>
+   <addaction name="mInteractiveMenu"/>
+   <addaction name="mAnalysisMenu"/>
    <addaction name="mSettingsMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
