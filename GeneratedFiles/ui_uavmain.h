@@ -38,6 +38,8 @@ public:
     QMenu *mLayerMenu;
     QMenu *mSettingsMenu;
     QMenu *mPosMenu;
+    QMenu *mInteractiveMenu;
+    QMenu *mAnalysisMenu;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *UAVplatformClass)
@@ -94,6 +96,10 @@ public:
         mSettingsMenu->setObjectName(QString::fromUtf8("mSettingsMenu"));
         mPosMenu = new QMenu(menuBar);
         mPosMenu->setObjectName(QString::fromUtf8("mPosMenu"));
+        mInteractiveMenu = new QMenu(menuBar);
+        mInteractiveMenu->setObjectName(QString::fromUtf8("mInteractiveMenu"));
+        mAnalysisMenu = new QMenu(menuBar);
+        mAnalysisMenu->setObjectName(QString::fromUtf8("mAnalysisMenu"));
         UAVplatformClass->setMenuBar(menuBar);
         statusBar = new QStatusBar(UAVplatformClass);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
@@ -103,6 +109,8 @@ public:
         menuBar->addAction(mViewMenu->menuAction());
         menuBar->addAction(mLayerMenu->menuAction());
         menuBar->addAction(mPosMenu->menuAction());
+        menuBar->addAction(mInteractiveMenu->menuAction());
+        menuBar->addAction(mAnalysisMenu->menuAction());
         menuBar->addAction(mSettingsMenu->menuAction());
 
         retranslateUi(UAVplatformClass);
@@ -112,7 +120,7 @@ public:
 
     void retranslateUi(QMainWindow *UAVplatformClass)
     {
-        UAVplatformClass->setWindowTitle(QApplication::translate("UAVplatformClass", "UAVplatform", 0, QApplication::UnicodeUTF8));
+        UAVplatformClass->setWindowTitle(QApplication::translate("UAVplatformClass", "\346\227\240\344\272\272\346\234\272\350\210\252\347\251\272\345\275\261\345\203\217\345\215\217\345\220\214\344\274\230\345\214\226\350\275\257\344\273\266", 0, QApplication::UnicodeUTF8));
         mActionCustomProjection->setText(QApplication::translate("UAVplatformClass", "\350\207\252\345\256\232\344\271\211\345\235\220\346\240\207\345\217\202\347\205\247\347\263\273(&P)...", 0, QApplication::UnicodeUTF8));
         mActionOptions->setText(QApplication::translate("UAVplatformClass", "\351\200\211\351\241\271(&O)...", 0, QApplication::UnicodeUTF8));
         mActionNewProject->setText(QApplication::translate("UAVplatformClass", "\346\226\260\345\273\272(&N)", 0, QApplication::UnicodeUTF8));
@@ -126,6 +134,8 @@ public:
         mLayerMenu->setTitle(QApplication::translate("UAVplatformClass", "\345\233\276\345\261\202(&L)", 0, QApplication::UnicodeUTF8));
         mSettingsMenu->setTitle(QApplication::translate("UAVplatformClass", "\350\256\276\347\275\256(&S)", 0, QApplication::UnicodeUTF8));
         mPosMenu->setTitle(QApplication::translate("UAVplatformClass", "\346\233\235\345\205\211\347\202\271\351\242\204\345\244\204\347\220\206(&P)", 0, QApplication::UnicodeUTF8));
+        mInteractiveMenu->setTitle(QApplication::translate("UAVplatformClass", "\345\212\250\346\200\201\350\201\224\345\212\250(&D)", 0, QApplication::UnicodeUTF8));
+        mAnalysisMenu->setTitle(QApplication::translate("UAVplatformClass", "\346\225\260\346\215\256\345\210\206\346\236\220(&A)", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

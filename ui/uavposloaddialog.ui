@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>887</width>
-    <height>413</height>
+    <width>793</width>
+    <height>442</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -55,129 +55,6 @@
         <property name="horizontalSpacing">
          <number>7</number>
         </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>相片编号</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_15">
-          <property name="text">
-           <string>记录选项</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_11">
-          <property name="text">
-           <string>字段选项</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="2">
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
-          <item>
-           <widget class="QCheckBox" name="chkClipSpace">
-            <property name="text">
-             <string>裁剪字段前后的空格</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="cbxSkipEmptyFields">
-            <property name="text">
-             <string>忽略空字段</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="chkDMSformat">
-            <property name="text">
-             <string>度分秒格式坐标</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item row="3" column="1" colspan="2">
-         <layout class="QHBoxLayout" name="horizontalLayout_9"/>
-        </item>
-        <item row="0" column="1" colspan="2">
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QCheckBox" name="chkComma">
-            <property name="text">
-             <string>逗号</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="chkTab">
-            <property name="text">
-             <string>制表符</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="chkSpace">
-            <property name="text">
-             <string>空格</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="chkColon">
-            <property name="text">
-             <string>冒号</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="chkSemicolon">
-            <property name="text">
-             <string>分号</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
         <item row="1" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <property name="rightMargin">
@@ -264,6 +141,126 @@
           </item>
          </layout>
         </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>相片编号</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_15">
+          <property name="text">
+           <string>记录选项</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>字段选项</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1" colspan="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QCheckBox" name="chkClipSpace">
+            <property name="text">
+             <string>裁剪字段前后的空格</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cbxSkipEmptyFields">
+            <property name="text">
+             <string>忽略空字段</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkDMSformat">
+            <property name="text">
+             <string>度分秒格式坐标</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="1" colspan="2">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QCheckBox" name="chkComma">
+            <property name="text">
+             <string>逗号</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkTab">
+            <property name="text">
+             <string>制表符</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkSpace">
+            <property name="text">
+             <string>空格</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkColon">
+            <property name="text">
+             <string>冒号</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chkSemicolon">
+            <property name="text">
+             <string>分号</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
        </layout>
       </item>
      </layout>
@@ -310,7 +307,7 @@
         <item>
          <widget class="QLabel" name="label_8">
           <property name="text">
-           <string>相对行高</string>
+           <string>绝对行高</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -341,16 +338,6 @@
          <widget class="QLabel" name="label_7">
           <property name="text">
            <string>Kappa</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>绝对行高</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -395,26 +382,13 @@
         <item>
          <widget class="QComboBox" name="cmb_8"/>
         </item>
-        <item>
-         <widget class="QComboBox" name="cmb_9"/>
-        </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QTableWidget" name="tableWidget"/>
       </item>
      </layout>
     </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -428,6 +402,29 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lePosFile</tabstop>
+  <tabstop>btnOpenPos</tabstop>
+  <tabstop>chkComma</tabstop>
+  <tabstop>chkTab</tabstop>
+  <tabstop>chkSpace</tabstop>
+  <tabstop>chkColon</tabstop>
+  <tabstop>chkSemicolon</tabstop>
+  <tabstop>rowCounter</tabstop>
+  <tabstop>cbxUseHeader</tabstop>
+  <tabstop>chkClipSpace</tabstop>
+  <tabstop>cbxSkipEmptyFields</tabstop>
+  <tabstop>chkDMSformat</tabstop>
+  <tabstop>cmb_1</tabstop>
+  <tabstop>cmb_2</tabstop>
+  <tabstop>cmb_3</tabstop>
+  <tabstop>cmb_4</tabstop>
+  <tabstop>cmb_5</tabstop>
+  <tabstop>cmb_6</tabstop>
+  <tabstop>cmb_7</tabstop>
+  <tabstop>cmb_8</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

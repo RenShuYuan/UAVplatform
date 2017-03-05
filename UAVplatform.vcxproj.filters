@@ -473,17 +473,8 @@
     <ClCompile Include="GeneratedFiles\Release\moc_uavcore.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="uav\uavpossettingdialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="uav\uavstatusbarcoordinateswidget.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_uavpossettingdialog.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_uavpossettingdialog.cpp">
-      <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_uavstatusbarcoordinateswidget.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -500,14 +491,26 @@
     <ClCompile Include="uav\uavposloaddialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_uavcalculatesdemvalue.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_uavinquiredemvalue.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_uavcalculatesdemvalue.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_uavinquiredemvalue.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="uav\uavcalculatesdemvalue.cpp">
+    <ClCompile Include="uav\uavinquiredemvalue.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="uav\uavogr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="uav\uavdataanalysis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_uavdataanalysis.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_uavdataanalysis.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -838,9 +841,6 @@
     <CustomBuild Include="ui\qgsdatumtransformdialogbase.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="ui\uavpossettingdialog.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="ui\qgsunitselectionwidget.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
@@ -859,9 +859,6 @@
     <CustomBuild Include="uav\uavcore.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="uav\uavpossettingdialog.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="uav\uavstatusbarcoordinateswidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -874,7 +871,10 @@
     <CustomBuild Include="ui\uavmain.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="uav\uavcalculatesdemvalue.h">
+    <CustomBuild Include="uav\uavinquiredemvalue.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="uav\uavdataanalysis.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -1098,9 +1098,6 @@
     <ClInclude Include="GeneratedFiles\ui_qgsdatumtransformdialogbase.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_uavpossettingdialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="uav\uavprj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1109,6 +1106,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_uavmain.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="uav\uavogr.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

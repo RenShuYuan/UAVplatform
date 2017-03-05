@@ -82,7 +82,6 @@
 #include "uavposloaddialog.h"
 #include "uavposdataprocessing.h"
 #include "uavppinteractive.h"
-#include "uavpossettingdialog.h"
 
 UavMain *UavMain::smInstance = nullptr;
 
@@ -184,12 +183,12 @@ UavMain::UavMain(QWidget *parent, Qt::WFlags flags)
 	mRasterFileFilter = QgsProviderRegistry::instance()->fileRasterFilters();
 
 	mMapTipsVisible = false;
+
 }
 
 UavMain::~UavMain()
 {
 	QSettings settings;
-	settings.setValue("/Uav/pos/lePosFile", "");
 
 	mMapCanvas->stopRendering();
 
@@ -621,20 +620,10 @@ void UavMain::createActions()
 	mOpenPosFile->setIcon(uavCore::getThemeIcon("mActionCapturePoint.png"));
 	connect( mOpenPosFile, SIGNAL( triggered() ), this, SLOT( openPosFile() ) );
 
-	mPosFormat = new QAction("曝光点格式整理", this);
-	mPosFormat->setStatusTip("曝光点格式整理");
-	mPosFormat->setIcon(uavCore::getThemeIcon("relation.svg"));
-	connect( mPosFormat, SIGNAL( triggered() ), this, SLOT( posFormat() ) );
-
 	mPosTransform = new QAction("曝光点坐标转换", this);
 	mPosTransform->setStatusTip("曝光点坐标转换");
 	mPosTransform->setIcon(uavCore::getThemeIcon("mIconAtlas.svg"));
 	connect( mPosTransform, SIGNAL( triggered() ), this, SLOT( posTransform() ) );
-
-	mPosLinkPhoto = new QAction("PP动态联动", this);
-	mPosLinkPhoto->setStatusTip("PP动态联动");
-	mPosLinkPhoto->setIcon(uavCore::getThemeIcon("mActionLink.svg"));
-	connect( mPosLinkPhoto, SIGNAL( triggered() ), this, SLOT( posLinkPhoto() ) );
 
 	mPosSketchMap = new QAction("创建航飞略图", this);
 	mPosSketchMap->setStatusTip("创建航飞略图");
@@ -646,10 +635,37 @@ void UavMain::createActions()
 	mPosOneButton->setIcon(uavCore::getThemeIcon("mActionSelect.svg"));
 	connect( mPosOneButton, SIGNAL( triggered() ), this, SLOT( posOneButton() ) );
 
-	mPosSettings = new QAction("参数设置", this);
-	mPosSettings->setStatusTip("参数设置");
-	mPosSettings->setIcon(uavCore::getThemeIcon("mActionAtlasSettings.svg"));
-	connect( mPosSettings, SIGNAL( triggered() ), this, SLOT( posSettings() ) );
+	mPosExport = new QAction("导出曝光点文件", this);
+	mPosExport->setStatusTip("导出曝光点文件");
+	mPosExport->setIcon(uavCore::getThemeIcon("mActionSharingExport.svg"));
+	connect( mPosExport, SIGNAL( triggered() ), this, SLOT( posExport() ) );
+
+	// 动态联动
+	mPosLinkPhoto = new QAction("PP动态联动", this);
+	mPosLinkPhoto->setStatusTip("PP动态联动");
+	mPosLinkPhoto->setIcon(uavCore::getThemeIcon("mActionLink.svg"));
+	connect( mPosLinkPhoto, SIGNAL( triggered() ), this, SLOT( posLinkPhoto() ) );
+
+	mMatchPosName = new QAction("PP名称自动匹配", this);
+	mMatchPosName->setStatusTip("PP名称自动匹配");
+	mMatchPosName->setIcon(uavCore::getThemeIcon("mActionExportMapServer.png"));
+	connect( mMatchPosName, SIGNAL( triggered() ), this, SLOT( ppMatchPosName() ) );	// 未完成
+
+	// 数据分析
+	mAnalysisOverlapping = new QAction("相片重叠度分析", this);
+	mAnalysisOverlapping->setStatusTip("相片重叠度分析");
+	mAnalysisOverlapping->setIcon(uavCore::getThemeIcon("mActionMoveItemsToTop.png"));
+	connect( mAnalysisOverlapping, SIGNAL( triggered() ), this, SLOT(  ) );
+
+	mAnalysisOmega = new QAction("旋片角分析", this);
+	mAnalysisOmega->setStatusTip("旋片角分析");
+	mAnalysisOmega->setIcon(uavCore::getThemeIcon("mActionInvertSelection.png"));
+	connect( mAnalysisOmega, SIGNAL( triggered() ), this, SLOT(  ) );
+
+	mAnalysisPhi = new QAction("倾斜角分析", this);
+	mAnalysisPhi->setStatusTip("倾斜角分析");
+	mAnalysisPhi->setIcon(uavCore::getThemeIcon("mActionNodeTool.png"));
+	connect( mAnalysisPhi, SIGNAL( triggered() ), this, SLOT(  ) );
 }
 
 void UavMain::createMenus()
@@ -737,12 +753,19 @@ void UavMain::createMenus()
 	ui.mPosMenu->addAction(mOpenPosFile);
 	ui.mPosMenu->addAction(mPosOneButton);
 	ui.mPosMenu->addSeparator();
-	ui.mPosMenu->addAction(mPosFormat);
 	ui.mPosMenu->addAction(mPosTransform);
-	ui.mPosMenu->addAction(mPosLinkPhoto);
 	ui.mPosMenu->addAction(mPosSketchMap);
 	ui.mPosMenu->addSeparator();
-	ui.mPosMenu->addAction(mPosSettings);
+	ui.mPosMenu->addAction(mPosExport);
+	ui.mPosMenu->addSeparator();
+	
+	//! 动态联动菜单
+	ui.mInteractiveMenu->addAction(mPosLinkPhoto);
+	
+	//! 数据分析菜单
+	ui.mAnalysisMenu->addAction(mAnalysisOverlapping);
+	ui.mAnalysisMenu->addAction(mAnalysisOmega);
+	ui.mAnalysisMenu->addAction(mAnalysisPhi);
 
 	//! 设置菜单
 	ui.mSettingsMenu->addAction(mActionCustomProjection);
@@ -4043,54 +4066,72 @@ void UavMain::upDataPosActions()
 {
 	if ( posdp->isValid() )
 	{
-		mPosFormat->setEnabled(true);
 		mPosTransform->setEnabled(true);
 		mPosLinkPhoto->setEnabled(true);
 		mPosSketchMap->setEnabled(true);
 		mPosOneButton->setEnabled(true);
+		mPosExport->setEnabled(true);
 	}
 	else
 	{
-		mPosFormat->setEnabled(false);
 		mPosTransform->setEnabled(false);
 		mPosLinkPhoto->setEnabled(false);
 		mPosSketchMap->setEnabled(false);
 		mPosOneButton->setEnabled(false);
+		mPosExport->setEnabled(false);
 	}
 }
 
 void UavMain::openPosFile()
 {
 	uavPosLoadDialog *posDialog = new uavPosLoadDialog(this);
-	connect( posDialog, SIGNAL( getFieldsList( QList< QStringList > &) ), posdp, SLOT( setFieldsList( QList< QStringList > &) ) );
+	connect( posDialog, SIGNAL( readFieldsList( QString & ) ), posdp, SLOT( readFieldsList( QString & ) ) );
 	posDialog->exec();
-	delete posDialog;
 
 	upDataPosActions();
 	openMessageLog();
-	QgsMessageLog::logMessage(QString("\n"));
+	QgsMessageLog::logMessage("\n");
+
+	const QStringList errList = posdp->checkPosSettings();
+	if (!errList.isEmpty())
+	{
+		QString err;
+		foreach (QString str, errList)
+			err += str + "、";
+
+		messageBar()->pushMessage( "曝光点相关参数检查", 
+			QString("程序检测到%1参数设置可能不正确，请确认参数是否已正确初始化。").arg(err), 
+			QgsMessageBar::WARNING, messageTimeout() );
+	}
+
+	delete posDialog;
 }
 
-void UavMain::posFormat()
+bool UavMain::posTransform()
 {
-	posdp->autoPosFormat();
-}
-
-void UavMain::posTransform()
-{
-	posdp->autoPosTransform();
+	return posdp->autoPosTransform();
 }
 
 void UavMain::posLinkPhoto()
 {
+	QgsMessageLog::logMessage("PP动态联动 :");
+
 	if (!ppInter)
+	{
+		messageBar()->pushMessage( "PP动态联动", 
+			"必须在航飞略图成功创建后才能启动联动功能, 联动功能启动失败...",
+			QgsMessageBar::CRITICAL, messageTimeout() );
+		QgsMessageLog::logMessage(QString("\t必须在航飞略图成功创建后才能启动联动功能, 联动功能启动失败..."));
 		return;
+	}
 
 	if (ppInter->islinked())
 	{
 		// 断开连接并更改QAction
-		ppInter->unPPlinkage();
-		QgsMessageLog::logMessage(QString("PP动态联动 : \t 已成功断开连接..."));
+		ppInter->upDataUnLinkedSymbol();
+
+		QgsMessageLog::logMessage("\t已成功断开连接.");
+		messageBar()->pushMessage( "PP动态联动", "成功断开联动关系.",QgsMessageBar::SUCCESS, messageTimeout() );
 
 		mPosLinkPhoto->setText("PP动态联动");
 		mPosLinkPhoto->setStatusTip("PP动态联动");
@@ -4100,19 +4141,21 @@ void UavMain::posLinkPhoto()
 	{
 		if (!ppInter->isValid())
 		{
-			QgsMessageLog::logMessage(QString("PP动态联动 : \t 必须在曝光点文件解析成功与航飞略图成功创建时才能启动联动功能, 联动功能启动失败..."));
+			messageBar()->pushMessage( "PP动态联动", 
+				"必须在曝光点文件解析成功后才能启动联动功能, 联动功能启动失败...",
+				QgsMessageBar::CRITICAL, messageTimeout() );
+			QgsMessageLog::logMessage(QString("\t必须在曝光点文件解析成功后才能启动联动功能, 联动功能启动失败..."));
 			return;
 		}
 
 		// 创建联动关系
-		ppInter->createPPlinkage();
+		ppInter->upDataLinkedSymbol();
 
 		if (!ppInter->islinked())
 			return;
 
-		// 更新略图符号
-		ppInter->upDataLinkedSymbol();
-		QgsMessageLog::logMessage(QString("PP动态联动 : \t OK..."));
+		QgsMessageLog::logMessage(QString("\t成功创建联动关系."));
+		messageBar()->pushMessage( "PP动态联动", "成功创建联动关系.",QgsMessageBar::SUCCESS, messageTimeout() );
 
 		mPosLinkPhoto->setText("断开PP动态联动");
 		mPosLinkPhoto->setStatusTip("断开PP动态联动");
@@ -4123,18 +4166,52 @@ void UavMain::posLinkPhoto()
 void UavMain::posSketchMap()
 {
 	QgsVectorLayer* layer = posdp->autoSketchMap();
-	ppInter = new uavPPInteractive(this, layer, posdp->fieldsList());
+	if (!layer)
+		return;
+	ppInter = new uavPPInteractive(this, layer, posdp->noList());
+	addAllToOverview();
 }
 
 void UavMain::posOneButton()
 {
+	const QStringList errList = posdp->checkPosSettings();
+	if (!errList.isEmpty())
+	{
+		QString err;
+		foreach (QString str, errList)
+			err += str + "、";
 
+		messageBar()->pushMessage( "曝光点相关参数检查", 
+			QString("程序检测到%1参数设置可能不正确，请确认参数是否已正确初始化。").arg(err), 
+			QgsMessageBar::WARNING, messageTimeout() );
+	}
+
+	QgsMessageLog::logMessage("曝光文件一键处理 : \t开始...");
+
+	QSettings mSettings;
+	if (mSettings.value("/Uav/pos/options/chkTransform", true).toBool()) // 坐标转换
+	{
+		if (!posTransform())
+			return;
+	}
+	if (mSettings.value("/Uav/pos/options/chkSketchMap", true).toBool()) // 创建略图
+	{
+		posSketchMap();
+	}
+	if (mSettings.value("/Uav/pos/options/chkLinkPhoto", true).toBool()) // PP联动
+	{
+		posLinkPhoto();
+	}
 }
 
-void UavMain::posSettings()
+void UavMain::posExport()
 {
-	uavpossettingdialog dialog(this);
-	dialog.exec();
+	posdp->posExport();
+}
+
+void UavMain::ppMatchPosName()
+{
+	//ppInter->matchPosName();
 }
 
 void UavMain::toggleLogMessageIcon( bool hasLogMessage )

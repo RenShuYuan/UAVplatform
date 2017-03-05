@@ -122,10 +122,13 @@
     <ClCompile Include="app\qgsvariantdelegate.cpp" />
     <ClCompile Include="app\qgsvectorlayerproperties.cpp" />
     <ClCompile Include="app\qgsvisibilitypresets.cpp" />
-    <ClCompile Include="GeneratedFiles\Debug\moc_uavcalculatesdemvalue.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_uavcore.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_uavcore.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_uavdataanalysis.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_uavinquiredemvalue.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_uavmain.cpp">
@@ -137,19 +140,19 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_uavposloaddialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_uavpossettingdialog.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_uavppinteractive.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_uavstatusbarcoordinateswidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_uavcalculatesdemvalue.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_uavcore.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_uavcore.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_uavdataanalysis.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_uavinquiredemvalue.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_uavmain.cpp">
@@ -159,9 +162,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_uavposloaddialog.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_uavpossettingdialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_uavppinteractive.cpp">
@@ -431,12 +431,13 @@
     </ClCompile>
     <ClCompile Include="gui\qgsattributetabledialog.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="uav\uavcalculatesdemvalue.cpp" />
+    <ClCompile Include="uav\uavdataanalysis.cpp" />
+    <ClCompile Include="uav\uavinquiredemvalue.cpp" />
     <ClCompile Include="uav\uavcore.cpp" />
     <ClCompile Include="uav\uavmain.cpp" />
+    <ClCompile Include="uav\uavogr.cpp" />
     <ClCompile Include="uav\uavposdataprocessing.cpp" />
     <ClCompile Include="uav\uavposloaddialog.cpp" />
-    <ClCompile Include="uav\uavpossettingdialog.cpp" />
     <ClCompile Include="uav\uavppinteractive.cpp" />
     <ClCompile Include="uav\uavprj.cpp" />
     <ClCompile Include="uav\uavstatusbarcoordinateswidget.cpp" />
@@ -475,28 +476,29 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DNOMINMAX -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DWITH_QTWEBKIT -DGUI_EXPORT=_declspec(dllimport) -DANALYSIS_EXPORT=_declspec(dllimport) -DCORE_EXPORT=__declspec(dllimport) -DAPP_EXPORT=__declspec(dllexport) -DPYTHON_EXPORT=__declspec(dllimport)  "-IC:\OSGeo4W\include" "-IC:\Qt\4.8.6\include\QtNetwork" "-IC:\OSGeo4W\include\qwt" "-IC:\qgis-2.14.4\dev\include" "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtXml" "-I.\app\customize" "-I.\uav"</Command>
     </CustomBuild>
-    <CustomBuild Include="uav\uavpossettingdialog.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing uavpossettingdialog.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DGUI_EXPORT=_declspec(dllimport) -DANALYSIS_EXPORT=_declspec(dllimport) -DCORE_EXPORT=_declspec(dllimport)  "-IC:\OSGeo4W\include" "-IC:\Qt\4.8.6\include\QtNetwork" "-IC:\OSGeo4W\include\qwt" "-IC:\qgis-2.14.4\dev\include" "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtXml" "-I.\app\customize" "-I.\uav"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing uavpossettingdialog.h...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DNOMINMAX -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DWITH_QTWEBKIT -DGUI_EXPORT=_declspec(dllimport) -DANALYSIS_EXPORT=_declspec(dllimport) -DCORE_EXPORT=__declspec(dllimport) -DAPP_EXPORT=__declspec(dllexport) -DPYTHON_EXPORT=__declspec(dllimport)  "-IC:\OSGeo4W\include" "-IC:\Qt\4.8.6\include\QtNetwork" "-IC:\OSGeo4W\include\qwt" "-IC:\qgis-2.14.4\dev\include" "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtXml" "-I.\app\customize" "-I.\uav"</Command>
-    </CustomBuild>
     <ClInclude Include="GeneratedFiles\ui_uavmain.h" />
     <ClInclude Include="GeneratedFiles\ui_uavposloaddialog.h" />
-    <CustomBuild Include="uav\uavcalculatesdemvalue.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing uavcalculatesdemvalue.h...</Message>
+    <CustomBuild Include="uav\uavinquiredemvalue.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing uavinquiredemvalue.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DGUI_EXPORT=_declspec(dllimport) -DANALYSIS_EXPORT=_declspec(dllimport) -DCORE_EXPORT=_declspec(dllimport) "-IC:\OSGeo4W\include" "-IC:\Qt\4.8.6\include\QtNetwork" "-IC:\OSGeo4W\include\qwt" "-IC:\qgis-2.14.4\dev\include" "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtXml" "-I.\app\customize" "-I.\uav"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing uavcalculatesdemvalue.h...</Message>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing uavinquiredemvalue.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DNOMINMAX -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DWITH_QTWEBKIT -DGUI_EXPORT=_declspec(dllimport) -DANALYSIS_EXPORT=_declspec(dllimport) -DCORE_EXPORT=__declspec(dllimport) -DAPP_EXPORT=__declspec(dllexport) -DPYTHON_EXPORT=__declspec(dllimport) "-IC:\OSGeo4W\include" "-IC:\Qt\4.8.6\include\QtNetwork" "-IC:\OSGeo4W\include\qwt" "-IC:\qgis-2.14.4\dev\include" "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtXml" "-I.\app\customize" "-I.\uav"</Command>
     </CustomBuild>
+    <CustomBuild Include="uav\uavdataanalysis.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing uavdataanalysis.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DGUI_EXPORT=_declspec(dllimport) -DANALYSIS_EXPORT=_declspec(dllimport) -DCORE_EXPORT=_declspec(dllimport) "-IC:\OSGeo4W\include" "-IC:\Qt\4.8.6\include\QtNetwork" "-IC:\OSGeo4W\include\qwt" "-IC:\qgis-2.14.4\dev\include" "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtXml" "-I.\app\customize" "-I.\uav"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing uavdataanalysis.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DNOMINMAX -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DWITH_QTWEBKIT -DGUI_EXPORT=_declspec(dllimport) -DANALYSIS_EXPORT=_declspec(dllimport) -DCORE_EXPORT=__declspec(dllimport) -DAPP_EXPORT=__declspec(dllexport) -DPYTHON_EXPORT=__declspec(dllimport) "-IC:\OSGeo4W\include" "-IC:\Qt\4.8.6\include\QtNetwork" "-IC:\OSGeo4W\include\qwt" "-IC:\qgis-2.14.4\dev\include" "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtXml" "-I.\app\customize" "-I.\uav"</Command>
+    </CustomBuild>
+    <ClInclude Include="uav\uavogr.h" />
     <ClInclude Include="uav\uavprj.h" />
     <CustomBuild Include="uav\uavcore.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -551,7 +553,6 @@
     <ClInclude Include="GeneratedFiles\ui_qgsdatumtransformdialogbase.h" />
     <ClInclude Include="GeneratedFiles\ui_qgsextentgroupboxwidget.h" />
     <ClInclude Include="GeneratedFiles\ui_qgsvectorlayersaveasdialogbase.h" />
-    <ClInclude Include="GeneratedFiles\ui_uavpossettingdialog.h" />
     <ClInclude Include="resource.h" />
     <CustomBuild Include="app\qgsfieldcalculator.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -1915,17 +1916,6 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
     <CustomBuild Include="ui\qgsdatumtransformdialogbase.ui">
-      <FileType>Document</FileType>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Uic%27ing %(Identity)...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
-    </CustomBuild>
-    <CustomBuild Include="ui\uavpossettingdialog.ui">
       <FileType>Document</FileType>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Uic%27ing %(Identity)...</Message>

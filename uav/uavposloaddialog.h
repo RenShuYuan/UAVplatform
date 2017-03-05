@@ -17,7 +17,7 @@ public:
 	~uavPosLoadDialog();
 
 signals:
-	void getFieldsList( QList< QStringList >& );
+	void readFieldsList(QString &);
 
 private slots:
 	void on_buttonBox_accepted();
@@ -31,9 +31,6 @@ private slots:
 	// 更新字段列表
 	void updateFieldLists();
 
-	// 读字段列表到内存
-	void writeFieldsToMemory();
-
 private:
 	// 选择POS文件
 	void getOpenFileName();
@@ -44,20 +41,16 @@ private:
 	// 返回选择的分隔符
 	QString selectedChars();
 
-	// 将内存中POS文件内容输出到原文件
-	bool writePos();
-
-	// 关联相片
-	void linkPhoto();
-
-	// 创建略图
-	void SketchMap();
+	void loadSettings();
+	void saveSettings();
 
 private:
 	Ui::uavposdialog ui;
 	QgsDelimitedTextFile *mFile;
 	QSettings *mSettings;
-	QList< QStringList > mFields;
+
+	int mExampleRowCount;
+	int mBadRowCount;
 };
 
 #endif // UAVPOSDIALOG_H

@@ -26,6 +26,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
+#include <QtGui/QTableWidget>
 #include <QtGui/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
@@ -43,6 +44,11 @@ public:
     QGroupBox *groupBox_4;
     QHBoxLayout *horizontalLayout_10;
     QGridLayout *gridLayout;
+    QHBoxLayout *horizontalLayout_4;
+    QLabel *label_16;
+    QSpinBox *rowCounter;
+    QCheckBox *cbxUseHeader;
+    QSpacerItem *horizontalSpacer_4;
     QLabel *label_10;
     QLabel *label_15;
     QLabel *label_11;
@@ -51,7 +57,6 @@ public:
     QCheckBox *cbxSkipEmptyFields;
     QCheckBox *chkDMSformat;
     QSpacerItem *horizontalSpacer_2;
-    QHBoxLayout *horizontalLayout_9;
     QHBoxLayout *horizontalLayout_3;
     QCheckBox *chkComma;
     QCheckBox *chkTab;
@@ -59,11 +64,6 @@ public:
     QCheckBox *chkColon;
     QCheckBox *chkSemicolon;
     QSpacerItem *horizontalSpacer;
-    QHBoxLayout *horizontalLayout_4;
-    QLabel *label_16;
-    QSpinBox *rowCounter;
-    QCheckBox *cbxUseHeader;
-    QSpacerItem *horizontalSpacer_4;
     QGroupBox *groupBox_2;
     QVBoxLayout *verticalLayout_4;
     QHBoxLayout *horizontalLayout_5;
@@ -74,7 +74,6 @@ public:
     QLabel *label_5;
     QLabel *label_6;
     QLabel *label_7;
-    QLabel *label_12;
     QLabel *label_13;
     QHBoxLayout *horizontalLayout_6;
     QComboBox *cmb_1;
@@ -85,15 +84,14 @@ public:
     QComboBox *cmb_6;
     QComboBox *cmb_7;
     QComboBox *cmb_8;
-    QComboBox *cmb_9;
-    QSpacerItem *verticalSpacer;
+    QTableWidget *tableWidget;
     QDialogButtonBox *buttonBox;
 
     void setupUi(QDialog *uavposdialog)
     {
         if (uavposdialog->objectName().isEmpty())
             uavposdialog->setObjectName(QString::fromUtf8("uavposdialog"));
-        uavposdialog->resize(887, 413);
+        uavposdialog->resize(793, 442);
         verticalLayout_2 = new QVBoxLayout(uavposdialog);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         groupBox = new QGroupBox(uavposdialog);
@@ -130,6 +128,42 @@ public:
         gridLayout = new QGridLayout();
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setHorizontalSpacing(7);
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        horizontalLayout_4->setContentsMargins(-1, -1, 9, -1);
+        label_16 = new QLabel(groupBox_4);
+        label_16->setObjectName(QString::fromUtf8("label_16"));
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(label_16->sizePolicy().hasHeightForWidth());
+        label_16->setSizePolicy(sizePolicy);
+
+        horizontalLayout_4->addWidget(label_16);
+
+        rowCounter = new QSpinBox(groupBox_4);
+        rowCounter->setObjectName(QString::fromUtf8("rowCounter"));
+        rowCounter->setMinimumSize(QSize(0, 0));
+        rowCounter->setMaximumSize(QSize(16777215, 16777215));
+        rowCounter->setWrapping(false);
+        rowCounter->setMaximum(9999);
+        rowCounter->setValue(0);
+
+        horizontalLayout_4->addWidget(rowCounter);
+
+        cbxUseHeader = new QCheckBox(groupBox_4);
+        cbxUseHeader->setObjectName(QString::fromUtf8("cbxUseHeader"));
+        cbxUseHeader->setChecked(true);
+
+        horizontalLayout_4->addWidget(cbxUseHeader);
+
+        horizontalSpacer_4 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer_4);
+
+
+        gridLayout->addLayout(horizontalLayout_4, 1, 1, 1, 1);
+
         label_10 = new QLabel(groupBox_4);
         label_10->setObjectName(QString::fromUtf8("label_10"));
         label_10->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
@@ -172,11 +206,6 @@ public:
 
         gridLayout->addLayout(horizontalLayout_8, 2, 1, 1, 2);
 
-        horizontalLayout_9 = new QHBoxLayout();
-        horizontalLayout_9->setObjectName(QString::fromUtf8("horizontalLayout_9"));
-
-        gridLayout->addLayout(horizontalLayout_9, 3, 1, 1, 2);
-
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         chkComma = new QCheckBox(groupBox_4);
@@ -210,42 +239,6 @@ public:
 
 
         gridLayout->addLayout(horizontalLayout_3, 0, 1, 1, 2);
-
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
-        horizontalLayout_4->setContentsMargins(-1, -1, 9, -1);
-        label_16 = new QLabel(groupBox_4);
-        label_16->setObjectName(QString::fromUtf8("label_16"));
-        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(label_16->sizePolicy().hasHeightForWidth());
-        label_16->setSizePolicy(sizePolicy);
-
-        horizontalLayout_4->addWidget(label_16);
-
-        rowCounter = new QSpinBox(groupBox_4);
-        rowCounter->setObjectName(QString::fromUtf8("rowCounter"));
-        rowCounter->setMinimumSize(QSize(0, 0));
-        rowCounter->setMaximumSize(QSize(16777215, 16777215));
-        rowCounter->setWrapping(false);
-        rowCounter->setMaximum(9999);
-        rowCounter->setValue(0);
-
-        horizontalLayout_4->addWidget(rowCounter);
-
-        cbxUseHeader = new QCheckBox(groupBox_4);
-        cbxUseHeader->setObjectName(QString::fromUtf8("cbxUseHeader"));
-        cbxUseHeader->setChecked(true);
-
-        horizontalLayout_4->addWidget(cbxUseHeader);
-
-        horizontalSpacer_4 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_4->addItem(horizontalSpacer_4);
-
-
-        gridLayout->addLayout(horizontalLayout_4, 1, 1, 1, 1);
 
 
         horizontalLayout_10->addLayout(gridLayout);
@@ -301,12 +294,6 @@ public:
 
         horizontalLayout_5->addWidget(label_7);
 
-        label_12 = new QLabel(groupBox_2);
-        label_12->setObjectName(QString::fromUtf8("label_12"));
-        label_12->setAlignment(Qt::AlignCenter);
-
-        horizontalLayout_5->addWidget(label_12);
-
         label_13 = new QLabel(groupBox_2);
         label_13->setObjectName(QString::fromUtf8("label_13"));
         label_13->setAlignment(Qt::AlignCenter);
@@ -358,20 +345,16 @@ public:
 
         horizontalLayout_6->addWidget(cmb_8);
 
-        cmb_9 = new QComboBox(groupBox_2);
-        cmb_9->setObjectName(QString::fromUtf8("cmb_9"));
-
-        horizontalLayout_6->addWidget(cmb_9);
-
 
         verticalLayout_4->addLayout(horizontalLayout_6);
 
+        tableWidget = new QTableWidget(groupBox_2);
+        tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
+
+        verticalLayout_4->addWidget(tableWidget);
+
 
         verticalLayout_2->addWidget(groupBox_2);
-
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout_2->addItem(verticalSpacer);
 
         buttonBox = new QDialogButtonBox(uavposdialog);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
@@ -380,6 +363,26 @@ public:
 
         verticalLayout_2->addWidget(buttonBox);
 
+        QWidget::setTabOrder(lePosFile, btnOpenPos);
+        QWidget::setTabOrder(btnOpenPos, chkComma);
+        QWidget::setTabOrder(chkComma, chkTab);
+        QWidget::setTabOrder(chkTab, chkSpace);
+        QWidget::setTabOrder(chkSpace, chkColon);
+        QWidget::setTabOrder(chkColon, chkSemicolon);
+        QWidget::setTabOrder(chkSemicolon, rowCounter);
+        QWidget::setTabOrder(rowCounter, cbxUseHeader);
+        QWidget::setTabOrder(cbxUseHeader, chkClipSpace);
+        QWidget::setTabOrder(chkClipSpace, cbxSkipEmptyFields);
+        QWidget::setTabOrder(cbxSkipEmptyFields, chkDMSformat);
+        QWidget::setTabOrder(chkDMSformat, cmb_1);
+        QWidget::setTabOrder(cmb_1, cmb_2);
+        QWidget::setTabOrder(cmb_2, cmb_3);
+        QWidget::setTabOrder(cmb_3, cmb_4);
+        QWidget::setTabOrder(cmb_4, cmb_5);
+        QWidget::setTabOrder(cmb_5, cmb_6);
+        QWidget::setTabOrder(cmb_6, cmb_7);
+        QWidget::setTabOrder(cmb_7, cmb_8);
+        QWidget::setTabOrder(cmb_8, buttonBox);
 
         retranslateUi(uavposdialog);
         QObject::connect(buttonBox, SIGNAL(accepted()), uavposdialog, SLOT(accept()));
@@ -395,17 +398,6 @@ public:
         label->setText(QApplication::translate("uavposdialog", "\350\275\275\345\205\245\346\233\235\345\205\211\347\202\271\346\226\207\344\273\266", 0, QApplication::UnicodeUTF8));
         btnOpenPos->setText(QApplication::translate("uavposdialog", "\346\265\217\350\247\210...", 0, QApplication::UnicodeUTF8));
         groupBox_4->setTitle(QApplication::translate("uavposdialog", "\346\226\207\344\273\266\346\240\274\345\274\217", 0, QApplication::UnicodeUTF8));
-        label_10->setText(QApplication::translate("uavposdialog", "\347\233\270\347\211\207\347\274\226\345\217\267", 0, QApplication::UnicodeUTF8));
-        label_15->setText(QApplication::translate("uavposdialog", "\350\256\260\345\275\225\351\200\211\351\241\271", 0, QApplication::UnicodeUTF8));
-        label_11->setText(QApplication::translate("uavposdialog", "\345\255\227\346\256\265\351\200\211\351\241\271", 0, QApplication::UnicodeUTF8));
-        chkClipSpace->setText(QApplication::translate("uavposdialog", "\350\243\201\345\211\252\345\255\227\346\256\265\345\211\215\345\220\216\347\232\204\347\251\272\346\240\274", 0, QApplication::UnicodeUTF8));
-        cbxSkipEmptyFields->setText(QApplication::translate("uavposdialog", "\345\277\275\347\225\245\347\251\272\345\255\227\346\256\265", 0, QApplication::UnicodeUTF8));
-        chkDMSformat->setText(QApplication::translate("uavposdialog", "\345\272\246\345\210\206\347\247\222\346\240\274\345\274\217\345\235\220\346\240\207", 0, QApplication::UnicodeUTF8));
-        chkComma->setText(QApplication::translate("uavposdialog", "\351\200\227\345\217\267", 0, QApplication::UnicodeUTF8));
-        chkTab->setText(QApplication::translate("uavposdialog", "\345\210\266\350\241\250\347\254\246", 0, QApplication::UnicodeUTF8));
-        chkSpace->setText(QApplication::translate("uavposdialog", "\347\251\272\346\240\274", 0, QApplication::UnicodeUTF8));
-        chkColon->setText(QApplication::translate("uavposdialog", "\345\206\222\345\217\267", 0, QApplication::UnicodeUTF8));
-        chkSemicolon->setText(QApplication::translate("uavposdialog", "\345\210\206\345\217\267", 0, QApplication::UnicodeUTF8));
         label_16->setText(QApplication::translate("uavposdialog", "\344\273\216\346\226\207\344\273\266\345\274\200\345\244\264\350\265\267\345\277\275\347\225\245\347\232\204\350\241\214\346\225\260", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         rowCounter->setToolTip(QApplication::translate("uavposdialog", "The number of lines to discard from the beginning of the file", 0, QApplication::UnicodeUTF8));
@@ -426,15 +418,25 @@ public:
         cbxUseHeader->setWhatsThis(QApplication::translate("uavposdialog", "Field names are read from the first record. If not selected then fields are numbered", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_WHATSTHIS
         cbxUseHeader->setText(QApplication::translate("uavposdialog", "\351\246\226\350\241\214\345\214\205\345\220\253\345\255\227\346\256\265\345\220\215\347\247\260", 0, QApplication::UnicodeUTF8));
+        label_10->setText(QApplication::translate("uavposdialog", "\347\233\270\347\211\207\347\274\226\345\217\267", 0, QApplication::UnicodeUTF8));
+        label_15->setText(QApplication::translate("uavposdialog", "\350\256\260\345\275\225\351\200\211\351\241\271", 0, QApplication::UnicodeUTF8));
+        label_11->setText(QApplication::translate("uavposdialog", "\345\255\227\346\256\265\351\200\211\351\241\271", 0, QApplication::UnicodeUTF8));
+        chkClipSpace->setText(QApplication::translate("uavposdialog", "\350\243\201\345\211\252\345\255\227\346\256\265\345\211\215\345\220\216\347\232\204\347\251\272\346\240\274", 0, QApplication::UnicodeUTF8));
+        cbxSkipEmptyFields->setText(QApplication::translate("uavposdialog", "\345\277\275\347\225\245\347\251\272\345\255\227\346\256\265", 0, QApplication::UnicodeUTF8));
+        chkDMSformat->setText(QApplication::translate("uavposdialog", "\345\272\246\345\210\206\347\247\222\346\240\274\345\274\217\345\235\220\346\240\207", 0, QApplication::UnicodeUTF8));
+        chkComma->setText(QApplication::translate("uavposdialog", "\351\200\227\345\217\267", 0, QApplication::UnicodeUTF8));
+        chkTab->setText(QApplication::translate("uavposdialog", "\345\210\266\350\241\250\347\254\246", 0, QApplication::UnicodeUTF8));
+        chkSpace->setText(QApplication::translate("uavposdialog", "\347\251\272\346\240\274", 0, QApplication::UnicodeUTF8));
+        chkColon->setText(QApplication::translate("uavposdialog", "\345\206\222\345\217\267", 0, QApplication::UnicodeUTF8));
+        chkSemicolon->setText(QApplication::translate("uavposdialog", "\345\210\206\345\217\267", 0, QApplication::UnicodeUTF8));
         groupBox_2->setTitle(QApplication::translate("uavposdialog", "\346\240\274\345\274\217\345\256\232\344\271\211", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("uavposdialog", "\347\233\270\347\211\207\347\274\226\345\217\267", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("uavposdialog", "\346\250\252\345\235\220\346\240\207", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("uavposdialog", "\347\272\265\345\235\220\346\240\207", 0, QApplication::UnicodeUTF8));
-        label_8->setText(QApplication::translate("uavposdialog", "\347\233\270\345\257\271\350\241\214\351\253\230", 0, QApplication::UnicodeUTF8));
+        label_8->setText(QApplication::translate("uavposdialog", "\347\273\235\345\257\271\350\241\214\351\253\230", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("uavposdialog", "Omega", 0, QApplication::UnicodeUTF8));
         label_6->setText(QApplication::translate("uavposdialog", "Phi", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("uavposdialog", "Kappa", 0, QApplication::UnicodeUTF8));
-        label_12->setText(QApplication::translate("uavposdialog", "\347\273\235\345\257\271\350\241\214\351\253\230", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("uavposdialog", "\347\233\270\346\234\272\346\240\207\350\257\206", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

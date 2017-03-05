@@ -210,6 +210,7 @@ private:
 	void upDataPosActions();
 
 private slots:
+
 	void displayMessage( const QString& title, const QString& message, QgsMessageBar::MessageLevel level );
 	
 	//! 返回活动图层的指针
@@ -397,12 +398,13 @@ private slots:
 
 	//! 自定义
 	void openPosFile();
-	void posFormat();
-	void posTransform();
+	bool posTransform();
 	void posLinkPhoto();
 	void posSketchMap();
 	void posOneButton();
-	void posSettings();
+	void posExport();
+
+	void ppMatchPosName();
 
 signals:
 	/** 当图层使用另存为这个信号被发射
@@ -491,12 +493,20 @@ private:
 
 	//! 曝光点动作
 	QAction *mOpenPosFile;
-	QAction *mPosFormat;
 	QAction *mPosTransform;
-	QAction *mPosLinkPhoto;
 	QAction *mPosSketchMap;
 	QAction *mPosOneButton;
-	QAction *mPosSettings;
+	QAction *mPosExport;
+
+	//! 动态联动
+	QAction *mPosLinkPhoto;
+	QAction *mMatchPosName;
+
+	//! 数据分析
+	QAction *mAnalysisOverlapping;
+	QAction *mAnalysisOmega;
+	QAction *mAnalysisPhi;
+	QAction *mAnalysisKappa;
 
 	QToolBar *mFileToolBar;
 	QToolBar *mLayerToolBar;

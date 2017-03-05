@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>UAVplatform</string>
+   <string>无人机航空影像协同优化软件</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -52,10 +52,22 @@
      <string>曝光点预处理(&amp;P)</string>
     </property>
    </widget>
+   <widget class="QMenu" name="mInteractiveMenu">
+    <property name="title">
+     <string>动态联动(&amp;D)</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="mAnalysisMenu">
+    <property name="title">
+     <string>数据分析(&amp;A)</string>
+    </property>
+   </widget>
    <addaction name="mProjectMenu"/>
    <addaction name="mViewMenu"/>
    <addaction name="mLayerMenu"/>
    <addaction name="mPosMenu"/>
+   <addaction name="mInteractiveMenu"/>
+   <addaction name="mAnalysisMenu"/>
    <addaction name="mSettingsMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>

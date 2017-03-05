@@ -14,6 +14,7 @@ class uavPrj
 {
 public:
     uavPrj();
+	~uavPrj();
 
     //返回指定的地理坐标系名称
     const QString getGCSDatum(const QString gcsEPSG);
@@ -37,13 +38,13 @@ public:
 	static QString createWktBeijing1954Gcs(const int cm);
 
 	// 输入中央经线，返回PROJ4格式的CGCS2000高斯投影字符串
-	static QString createProj4Cgcs2000Gcs(const int cm);
+	static QString createProj4Cgcs2000Gcs(const double cm);
 	// 输入中央经线，返回PROJ4格式的WGS 84高斯投影字符串
-	static QString createProj4Wgs84Gcs(const int cm);
+	static QString createProj4Wgs84Gcs(const double cm);
 	// 输入中央经线，返回PROJ4格式的Xian1980高斯投影字符串
-	static QString createProj4Xian1980Gcs(const int cm);
+	static QString createProj4Xian1980Gcs(const double cm);
 	// 输入中央经线，返回PROJ4格式的Beijing1954高斯投影字符串
-	static QString createProj4Beijing1954Gcs(const int cm);
+	static QString createProj4Beijing1954Gcs(const double cm);
 
     // 坐标变换
     bool transformation(QPointF &point, OGRSpatialReference *oSourceSRS, OGRSpatialReference oTargetSRS);
