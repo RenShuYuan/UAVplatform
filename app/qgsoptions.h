@@ -58,6 +58,7 @@ class APP_EXPORT QgsOptions : public QgsOptionsDialogBase, private Ui::QgsOption
     void on_pbnProjectDefaultSetCurrent_clicked();
     //! Slot called when user chooses to change the project wide projection.
     void on_leProjectGlobalCrs_crsChanged( const QgsCoordinateReferenceSystem& crs );
+	void crsChanged( const QgsCoordinateReferenceSystem& crs );
     //! Slot called when user chooses to change the default 'on the fly' projection.
     void on_leLayerGlobalCrs_crsChanged( const QgsCoordinateReferenceSystem& crs );
     void on_lstGdalDrivers_itemDoubleClicked( QTreeWidgetItem * item, int column );
@@ -159,6 +160,7 @@ class APP_EXPORT QgsOptions : public QgsOptionsDialogBase, private Ui::QgsOption
     void saveContrastEnhancement( QComboBox *cbox, const QString& name );
     QgsCoordinateReferenceSystem mDefaultCrs;
     QgsCoordinateReferenceSystem mLayerDefaultCrs;
+	QgsProjectionSelectionWidget* leUavLayerGlobalCrs;
     bool mLoadedGdalDriverList;
 
     void saveDefaultDatumTransformations();

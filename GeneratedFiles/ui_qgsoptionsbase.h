@@ -516,29 +516,27 @@ public:
     QVBoxLayout *verticalLayout_19;
     QHBoxLayout *horizontalLayout_15;
     QLabel *label_32;
-    QSpinBox *spinBox;
+    QSpinBox *sbHeadingOverlapMin;
     QLabel *label_33;
-    QSpinBox *spinBox_2;
+    QSpinBox *sbHeadingOverlapMax;
     QSpacerItem *horizontalSpacer_14;
     QHBoxLayout *horizontalLayout_16;
     QLabel *label_41;
-    QSpinBox *spinBox_3;
+    QSpinBox *sbSideOverlapMin;
     QLabel *label_45;
-    QSpinBox *spinBox_4;
+    QSpinBox *sbSideOverlapMax;
     QSpacerItem *horizontalSpacer_17;
     QGroupBox *groupBox_25;
     QVBoxLayout *verticalLayout_22;
     QHBoxLayout *horizontalLayout_17;
     QLabel *label_46;
-    QSpinBox *spinBox_6;
-    QLabel *label_47;
-    QSpinBox *spinBox_5;
     QSpacerItem *horizontalSpacer_36;
+    QSpinBox *sbInclination;
     QHBoxLayout *horizontalLayout_21;
     QLabel *label_48;
-    QSpinBox *spinBox_7;
+    QSpinBox *sbInclinationDegree;
     QLabel *label_49;
-    QSpinBox *spinBox_8;
+    QSpinBox *sbInclinationCount;
     QLabel *label_50;
     QSpacerItem *horizontalSpacer_37;
     QGroupBox *groupBox_29;
@@ -546,19 +544,19 @@ public:
     QHBoxLayout *horizontalLayout_34;
     QLabel *label_51;
     QSpacerItem *horizontalSpacer_39;
-    QSpinBox *spinBox_9;
+    QSpinBox *sbRotationAngle;
     QHBoxLayout *horizontalLayout_35;
     QLabel *label_52;
-    QSpinBox *spinBox_11;
+    QSpinBox *sbRotationAngleLineDegree;
     QLabel *label_54;
-    QSpinBox *spinBox_10;
+    QSpinBox *sbRotationAngleLineCount;
     QLabel *label_55;
     QSpacerItem *horizontalSpacer_42;
     QHBoxLayout *horizontalLayout_40;
     QLabel *label_57;
-    QSpinBox *spinBox_13;
+    QSpinBox *sbRotationAngleDegree;
     QLabel *label_58;
-    QSpinBox *spinBox_12;
+    QSpinBox *sbRotationAngleCount;
     QLabel *label_64;
     QSpacerItem *horizontalSpacer_48;
     QGroupBox *groupBox_30;
@@ -566,11 +564,11 @@ public:
     QHBoxLayout *horizontalLayout_41;
     QLabel *label_67;
     QSpacerItem *horizontalSpacer_49;
-    QSpinBox *spinBox_14;
+    QSpinBox *sbHeightDifferenceLine;
     QHBoxLayout *horizontalLayout_42;
     QLabel *label_68;
     QSpacerItem *horizontalSpacer_50;
-    QSpinBox *spinBox_15;
+    QSpinBox *sbHeightDifference;
     QSpacerItem *verticalSpacer_11;
     QFrame *mButtonBoxFrame;
     QHBoxLayout *horizontalLayout;
@@ -3038,20 +3036,20 @@ public:
 
         horizontalLayout_15->addWidget(label_32);
 
-        spinBox = new QSpinBox(groupBox_22);
-        spinBox->setObjectName(QString::fromUtf8("spinBox"));
+        sbHeadingOverlapMin = new QSpinBox(groupBox_22);
+        sbHeadingOverlapMin->setObjectName(QString::fromUtf8("sbHeadingOverlapMin"));
 
-        horizontalLayout_15->addWidget(spinBox);
+        horizontalLayout_15->addWidget(sbHeadingOverlapMin);
 
         label_33 = new QLabel(groupBox_22);
         label_33->setObjectName(QString::fromUtf8("label_33"));
 
         horizontalLayout_15->addWidget(label_33);
 
-        spinBox_2 = new QSpinBox(groupBox_22);
-        spinBox_2->setObjectName(QString::fromUtf8("spinBox_2"));
+        sbHeadingOverlapMax = new QSpinBox(groupBox_22);
+        sbHeadingOverlapMax->setObjectName(QString::fromUtf8("sbHeadingOverlapMax"));
 
-        horizontalLayout_15->addWidget(spinBox_2);
+        horizontalLayout_15->addWidget(sbHeadingOverlapMax);
 
         horizontalSpacer_14 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -3068,20 +3066,20 @@ public:
 
         horizontalLayout_16->addWidget(label_41);
 
-        spinBox_3 = new QSpinBox(groupBox_22);
-        spinBox_3->setObjectName(QString::fromUtf8("spinBox_3"));
+        sbSideOverlapMin = new QSpinBox(groupBox_22);
+        sbSideOverlapMin->setObjectName(QString::fromUtf8("sbSideOverlapMin"));
 
-        horizontalLayout_16->addWidget(spinBox_3);
+        horizontalLayout_16->addWidget(sbSideOverlapMin);
 
         label_45 = new QLabel(groupBox_22);
         label_45->setObjectName(QString::fromUtf8("label_45"));
 
         horizontalLayout_16->addWidget(label_45);
 
-        spinBox_4 = new QSpinBox(groupBox_22);
-        spinBox_4->setObjectName(QString::fromUtf8("spinBox_4"));
+        sbSideOverlapMax = new QSpinBox(groupBox_22);
+        sbSideOverlapMax->setObjectName(QString::fromUtf8("sbSideOverlapMax"));
 
-        horizontalLayout_16->addWidget(spinBox_4);
+        horizontalLayout_16->addWidget(sbSideOverlapMax);
 
         horizontalSpacer_17 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -3108,24 +3106,14 @@ public:
 
         horizontalLayout_17->addWidget(label_46);
 
-        spinBox_6 = new QSpinBox(groupBox_25);
-        spinBox_6->setObjectName(QString::fromUtf8("spinBox_6"));
-
-        horizontalLayout_17->addWidget(spinBox_6);
-
-        label_47 = new QLabel(groupBox_25);
-        label_47->setObjectName(QString::fromUtf8("label_47"));
-
-        horizontalLayout_17->addWidget(label_47);
-
-        spinBox_5 = new QSpinBox(groupBox_25);
-        spinBox_5->setObjectName(QString::fromUtf8("spinBox_5"));
-
-        horizontalLayout_17->addWidget(spinBox_5);
-
         horizontalSpacer_36 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_17->addItem(horizontalSpacer_36);
+
+        sbInclination = new QSpinBox(groupBox_25);
+        sbInclination->setObjectName(QString::fromUtf8("sbInclination"));
+
+        horizontalLayout_17->addWidget(sbInclination);
 
 
         verticalLayout_22->addLayout(horizontalLayout_17);
@@ -3138,20 +3126,20 @@ public:
 
         horizontalLayout_21->addWidget(label_48);
 
-        spinBox_7 = new QSpinBox(groupBox_25);
-        spinBox_7->setObjectName(QString::fromUtf8("spinBox_7"));
+        sbInclinationDegree = new QSpinBox(groupBox_25);
+        sbInclinationDegree->setObjectName(QString::fromUtf8("sbInclinationDegree"));
 
-        horizontalLayout_21->addWidget(spinBox_7);
+        horizontalLayout_21->addWidget(sbInclinationDegree);
 
         label_49 = new QLabel(groupBox_25);
         label_49->setObjectName(QString::fromUtf8("label_49"));
 
         horizontalLayout_21->addWidget(label_49);
 
-        spinBox_8 = new QSpinBox(groupBox_25);
-        spinBox_8->setObjectName(QString::fromUtf8("spinBox_8"));
+        sbInclinationCount = new QSpinBox(groupBox_25);
+        sbInclinationCount->setObjectName(QString::fromUtf8("sbInclinationCount"));
 
-        horizontalLayout_21->addWidget(spinBox_8);
+        horizontalLayout_21->addWidget(sbInclinationCount);
 
         label_50 = new QLabel(groupBox_25);
         label_50->setObjectName(QString::fromUtf8("label_50"));
@@ -3187,10 +3175,10 @@ public:
 
         horizontalLayout_34->addItem(horizontalSpacer_39);
 
-        spinBox_9 = new QSpinBox(groupBox_29);
-        spinBox_9->setObjectName(QString::fromUtf8("spinBox_9"));
+        sbRotationAngle = new QSpinBox(groupBox_29);
+        sbRotationAngle->setObjectName(QString::fromUtf8("sbRotationAngle"));
 
-        horizontalLayout_34->addWidget(spinBox_9);
+        horizontalLayout_34->addWidget(sbRotationAngle);
 
 
         verticalLayout_32->addLayout(horizontalLayout_34);
@@ -3203,20 +3191,20 @@ public:
 
         horizontalLayout_35->addWidget(label_52);
 
-        spinBox_11 = new QSpinBox(groupBox_29);
-        spinBox_11->setObjectName(QString::fromUtf8("spinBox_11"));
+        sbRotationAngleLineDegree = new QSpinBox(groupBox_29);
+        sbRotationAngleLineDegree->setObjectName(QString::fromUtf8("sbRotationAngleLineDegree"));
 
-        horizontalLayout_35->addWidget(spinBox_11);
+        horizontalLayout_35->addWidget(sbRotationAngleLineDegree);
 
         label_54 = new QLabel(groupBox_29);
         label_54->setObjectName(QString::fromUtf8("label_54"));
 
         horizontalLayout_35->addWidget(label_54);
 
-        spinBox_10 = new QSpinBox(groupBox_29);
-        spinBox_10->setObjectName(QString::fromUtf8("spinBox_10"));
+        sbRotationAngleLineCount = new QSpinBox(groupBox_29);
+        sbRotationAngleLineCount->setObjectName(QString::fromUtf8("sbRotationAngleLineCount"));
 
-        horizontalLayout_35->addWidget(spinBox_10);
+        horizontalLayout_35->addWidget(sbRotationAngleLineCount);
 
         label_55 = new QLabel(groupBox_29);
         label_55->setObjectName(QString::fromUtf8("label_55"));
@@ -3238,20 +3226,20 @@ public:
 
         horizontalLayout_40->addWidget(label_57);
 
-        spinBox_13 = new QSpinBox(groupBox_29);
-        spinBox_13->setObjectName(QString::fromUtf8("spinBox_13"));
+        sbRotationAngleDegree = new QSpinBox(groupBox_29);
+        sbRotationAngleDegree->setObjectName(QString::fromUtf8("sbRotationAngleDegree"));
 
-        horizontalLayout_40->addWidget(spinBox_13);
+        horizontalLayout_40->addWidget(sbRotationAngleDegree);
 
         label_58 = new QLabel(groupBox_29);
         label_58->setObjectName(QString::fromUtf8("label_58"));
 
         horizontalLayout_40->addWidget(label_58);
 
-        spinBox_12 = new QSpinBox(groupBox_29);
-        spinBox_12->setObjectName(QString::fromUtf8("spinBox_12"));
+        sbRotationAngleCount = new QSpinBox(groupBox_29);
+        sbRotationAngleCount->setObjectName(QString::fromUtf8("sbRotationAngleCount"));
 
-        horizontalLayout_40->addWidget(spinBox_12);
+        horizontalLayout_40->addWidget(sbRotationAngleCount);
 
         label_64 = new QLabel(groupBox_29);
         label_64->setObjectName(QString::fromUtf8("label_64"));
@@ -3287,10 +3275,10 @@ public:
 
         horizontalLayout_41->addItem(horizontalSpacer_49);
 
-        spinBox_14 = new QSpinBox(groupBox_30);
-        spinBox_14->setObjectName(QString::fromUtf8("spinBox_14"));
+        sbHeightDifferenceLine = new QSpinBox(groupBox_30);
+        sbHeightDifferenceLine->setObjectName(QString::fromUtf8("sbHeightDifferenceLine"));
 
-        horizontalLayout_41->addWidget(spinBox_14);
+        horizontalLayout_41->addWidget(sbHeightDifferenceLine);
 
 
         verticalLayout_33->addLayout(horizontalLayout_41);
@@ -3307,10 +3295,10 @@ public:
 
         horizontalLayout_42->addItem(horizontalSpacer_50);
 
-        spinBox_15 = new QSpinBox(groupBox_30);
-        spinBox_15->setObjectName(QString::fromUtf8("spinBox_15"));
+        sbHeightDifference = new QSpinBox(groupBox_30);
+        sbHeightDifference->setObjectName(QString::fromUtf8("sbHeightDifference"));
 
-        horizontalLayout_42->addWidget(spinBox_15);
+        horizontalLayout_42->addWidget(sbHeightDifference);
 
 
         verticalLayout_33->addLayout(horizontalLayout_42);
@@ -3495,7 +3483,7 @@ public:
         QObject::connect(mAdvancedSettingsEnableButton, SIGNAL(clicked()), mAdvancedSettingsEditor, SLOT(show()));
         QObject::connect(mAdvancedSettingsEnableButton, SIGNAL(clicked()), mAdvancedSettingsWarning, SLOT(hide()));
 
-        mOptionsStackedWidget->setCurrentIndex(11);
+        mOptionsStackedWidget->setCurrentIndex(12);
         cmbScanZipInBrowser->setCurrentIndex(-1);
 
 
@@ -3853,7 +3841,6 @@ public:
         label_45->setText(QApplication::translate("QgsOptionsBase", "-", 0, QApplication::UnicodeUTF8));
         groupBox_25->setTitle(QApplication::translate("QgsOptionsBase", "\345\203\217\347\211\207\345\200\276\350\247\222", 0, QApplication::UnicodeUTF8));
         label_46->setText(QApplication::translate("QgsOptionsBase", "\345\203\217\347\211\207\345\200\276\350\247\222(\302\260)", 0, QApplication::UnicodeUTF8));
-        label_47->setText(QApplication::translate("QgsOptionsBase", "-", 0, QApplication::UnicodeUTF8));
         label_48->setText(QApplication::translate("QgsOptionsBase", "\350\266\205\350\277\207", 0, QApplication::UnicodeUTF8));
         label_49->setText(QApplication::translate("QgsOptionsBase", "\302\260\347\232\204\347\211\207\346\225\260\351\207\217\344\270\215\345\244\232\344\272\216\346\200\273\346\225\260", 0, QApplication::UnicodeUTF8));
         label_50->setText(QApplication::translate("QgsOptionsBase", "%", 0, QApplication::UnicodeUTF8));

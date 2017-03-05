@@ -125,42 +125,40 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   double highlightMinWidth = mSettings->value( "/Map/highlight/minWidth", QGis::DEFAULT_HIGHLIGHT_MIN_WIDTH_MM ).toDouble();
   mIdentifyHighlightMinWidthSpinBox->setValue( highlightMinWidth );
 
-  // ***影像预处理***/
-  // 添加参照坐标系选择小组件
-  leProjectGlobalCrs = new QgsProjectionSelectionWidget(this);
-  QString myDefaultCrs_my = mSettings->value( "/Uav/pos/options/projectDefaultCrs", GEO_EPSG_CRS_AUTHID ).toString();
-  mDefaultCrs.createFromOgcWmsCrs( myDefaultCrs_my );
-  leProjectGlobalCrs->setCrs( mDefaultCrs );
-  leProjectGlobalCrs->setOptionVisible( QgsProjectionSelectionWidget::DefaultCrs, false );
-  gridLayout_2->addWidget(leProjectGlobalCrs, 0, 1, 1, 2);
-  connect( leProjectGlobalCrs, SIGNAL( crsChanged(const QgsCoordinateReferenceSystem&) ), this, SLOT( crsChanged(const QgsCoordinateReferenceSystem&) ) );
-  
-  // 参数设置
+  // *********影像预处理*********
   QString strText;
   double tmpDouble = 0.0;
   int tmpInt = 0;
-  tmpDouble = mSettings->value("/Uav/pos/options/leFocal", "").toDouble();
+  bool blchk = false;
+
+  // 添加参照坐标系选择小组件
+  leUavLayerGlobalCrs = new QgsProjectionSelectionWidget(this);
+  QString mylayerDefaultCrs = mSettings->value( "/Projections/layerDefaultCrs", GEO_EPSG_CRS_AUTHID ).toString();
+  mLayerDefaultCrs.createFromOgcWmsCrs( mylayerDefaultCrs );
+  leUavLayerGlobalCrs->setCrs( mLayerDefaultCrs );
+  leUavLayerGlobalCrs->setOptionVisible( QgsProjectionSelectionWidget::DefaultCrs, false );
+  gridLayout_2->addWidget(leUavLayerGlobalCrs, 0, 1, 1, 2);
+  connect( leUavLayerGlobalCrs, SIGNAL( crsChanged(const QgsCoordinateReferenceSystem&) ), this, SLOT( crsChanged(const QgsCoordinateReferenceSystem&) ) );
+  // 相机参数 初始化
+  tmpDouble = mSettings->value("/Uav/options/imagePreprocessing/leFocal", 0.0).toDouble();
   lineEdit_2->setText(QString::number(tmpDouble, 'f', 9));
-  tmpDouble = mSettings->value("/Uav/pos/options/lePixelSize", "").toDouble();
+  tmpDouble = mSettings->value("/Uav/options/imagePreprocessing/lePixelSize", 0.0).toDouble();
   lineEdit_3->setText(QString::number(tmpDouble, 'f', 3));
-  tmpInt = mSettings->value("/Uav/pos/options/leHeight", "").toInt();
+  tmpInt = mSettings->value("/Uav/options/imagePreprocessing/leHeight", 0).toInt();
   lineEdit_4->setText(QString::number(tmpInt));
-  tmpInt = mSettings->value("/Uav/pos/options/leWidth", "").toInt();
+  tmpInt = mSettings->value("/Uav/options/imagePreprocessing/leWidth", 0).toInt();
   lineEdit_5->setText(QString::number(tmpInt));
-  tmpDouble = mSettings->value("/Uav/pos/options/leAverageEle", "0").toDouble();
+  tmpDouble = mSettings->value("/Uav/options/imagePreprocessing/leAverageEle", 0.0).toDouble();
   lineEdit_6->setText(QString::number(tmpDouble, 'f', 2));
-
   // 曝光点一键处理 初始化
-  bool blchk;
-  blchk = mSettings->value("/Uav/pos/options/chkTransform", true).toBool();
+  blchk = mSettings->value("/Uav/options/imagePreprocessing/chkTransform", true).toBool();
   chkTransform->setChecked(blchk);
-  blchk = mSettings->value("/Uav/pos/options/chkSketchMap", true).toBool();
+  blchk = mSettings->value("/Uav/options/imagePreprocessing/chkSketchMap", true).toBool();
   chkSketchMap->setChecked(blchk);
-
   // 动态联动 初始化
-  blchk = mSettings->value("/Uav/pos/options/chkLinkPhoto", true).toBool();
+  blchk = mSettings->value("/Uav/options/imagePreprocessing/chkLinkPhoto", true).toBool();
   chkLinkPhoto->setChecked(blchk);
-  QString strPhotoName = mSettings->value("/Uav/pos/options/lePhotoFolder", "photo").toString();
+  QString strPhotoName = mSettings->value("/Uav/options/imagePreprocessing/lePhotoFolder", "photo").toString();
   lepPhotoName->setText(strPhotoName);
   label_14->setEnabled(chkLinkPhoto->isChecked());
   lepPhotoName->setEnabled(chkLinkPhoto->isChecked());
@@ -168,7 +166,39 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl ) :
   connect(chkLinkPhoto, SIGNAL(toggled (bool) ), label_14, SLOT( setEnabled (bool) ));
   connect(chkLinkPhoto, SIGNAL(toggled (bool) ), lepPhotoName, SLOT( setEnabled (bool) ));
 
-  // 飞行质量参数
+  // *********飞行质量参数*********
+  // 像片重叠度 初始化
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbHeadingOverlapMin", 0).toInt();
+  sbHeadingOverlapMin->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbHeadingOverlapMax", 0).toInt();
+  sbHeadingOverlapMax->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbSideOverlapMin", 0).toInt();
+  sbSideOverlapMin->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbSideOverlapMax", 0).toInt();
+  sbSideOverlapMax->setValue(tmpInt);
+  // 像片倾角 初始化
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbInclination", 0).toInt();
+  sbInclination->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbInclinationDegree", 0).toInt();
+  sbInclinationDegree->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbInclinationCount", 0).toInt();
+  sbInclinationCount->setValue(tmpInt);
+  // 像片旋角 初始化
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbRotationAngle", 0).toInt();
+  sbRotationAngle->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbRotationAngleLineDegree", 0).toInt();
+  sbRotationAngleLineDegree->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbRotationAngleLineCount", 0).toInt();
+  sbRotationAngleLineCount->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbRotationAngleDegree", 0).toInt();
+  sbRotationAngleDegree->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbRotationAngleCount", 0).toInt();
+  sbRotationAngleCount->setValue(tmpInt);
+  // 行高保持 初始化
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbHeightDifferenceLine", 0).toInt();
+  sbHeightDifferenceLine->setValue(tmpInt);
+  tmpInt = mSettings->value("/Uav/options/flightQuality/sbHeightDifference", 0).toInt();
+  sbHeightDifference->setValue(tmpInt);
 
   // 自定义环境变量(系统)
   //bool useCustomVars = mSettings->value( "qgis/customEnvVarsUse", QVariant( false ) ).toBool();
@@ -1016,6 +1046,37 @@ void QgsOptions::saveOptions()
   mSettings->setValue( "/qgis/capitaliseLayerName", capitaliseCheckBox->isChecked() );
   QgsMapCanvas::enableRotation( cbxCanvasRotation->isChecked() );
 
+  // 影像预处理
+  mSettings->setValue( "/Uav/options/imagePreprocessing/leFocal", lineEdit_2->text().toDouble() );
+  mSettings->setValue( "/Uav/options/imagePreprocessing/lePixelSize", lineEdit_3->text().toDouble() );
+  mSettings->setValue( "/Uav/options/imagePreprocessing/leHeight", lineEdit_4->text().toInt() );
+  mSettings->setValue( "/Uav/options/imagePreprocessing/leWidth", lineEdit_5->text().toInt() );
+  mSettings->setValue( "/Uav/options/imagePreprocessing/leAverageEle", lineEdit_6->text().toDouble() );
+
+  mSettings->setValue("/Uav/options/imagePreprocessing/chkTransform", chkTransform->isChecked());
+  mSettings->setValue("/Uav/options/imagePreprocessing/chkSketchMap", chkSketchMap->isChecked());
+  mSettings->setValue("/Uav/options/imagePreprocessing/chkLinkPhoto", chkLinkPhoto->isChecked());
+  mSettings->setValue("/Uav/options/imagePreprocessing/lePhotoFolder", lepPhotoName->text());
+
+  // 飞行质量参数
+  mSettings->setValue("/Uav/options/flightQuality/sbHeadingOverlapMin", sbHeadingOverlapMin->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbHeadingOverlapMax", sbHeadingOverlapMax->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbSideOverlapMin", sbSideOverlapMin->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbSideOverlapMax", sbSideOverlapMax->value());
+
+  mSettings->setValue("/Uav/options/flightQuality/sbInclination", sbInclination->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbInclinationDegree", sbInclinationDegree->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbInclinationCount", sbInclinationCount->value());
+
+  mSettings->setValue("/Uav/options/flightQuality/sbRotationAngle", sbRotationAngle->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbRotationAngleLineDegree", sbRotationAngleLineDegree->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbRotationAngleLineCount", sbRotationAngleLineCount->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbRotationAngleDegree", sbRotationAngleDegree->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbRotationAngleCount", sbRotationAngleCount->value());
+
+  mSettings->setValue("/Uav/options/flightQuality/sbHeightDifferenceLine", sbHeightDifferenceLine->value());
+  mSettings->setValue("/Uav/options/flightQuality/sbHeightDifference", sbHeightDifference->value());
+
   // 默认简化图纸配置
   QgsVectorSimplifyMethod::SimplifyHints simplifyHints = QgsVectorSimplifyMethod::NoSimplification;
   if ( mSimplifyDrawingGroupBox->isChecked() )
@@ -1305,6 +1366,11 @@ void QgsOptions::on_mCustomGroupBoxChkBx_clicked( bool chkd )
 void QgsOptions::on_leProjectGlobalCrs_crsChanged( const QgsCoordinateReferenceSystem& crs )
 {
   mDefaultCrs = crs;
+}
+
+void QgsOptions::crsChanged( const QgsCoordinateReferenceSystem& crs )
+{
+	mLayerDefaultCrs = crs;
 }
 
 void QgsOptions::on_leLayerGlobalCrs_crsChanged( const QgsCoordinateReferenceSystem& crs )

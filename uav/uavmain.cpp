@@ -82,7 +82,6 @@
 #include "uavposloaddialog.h"
 #include "uavposdataprocessing.h"
 #include "uavppinteractive.h"
-#include "uavpossettingdialog.h"
 
 UavMain *UavMain::smInstance = nullptr;
 
@@ -184,6 +183,7 @@ UavMain::UavMain(QWidget *parent, Qt::WFlags flags)
 	mRasterFileFilter = QgsProviderRegistry::instance()->fileRasterFilters();
 
 	mMapTipsVisible = false;
+
 }
 
 UavMain::~UavMain()
@@ -640,11 +640,6 @@ void UavMain::createActions()
 	mPosExport->setIcon(uavCore::getThemeIcon("mActionSharingExport.svg"));
 	connect( mPosExport, SIGNAL( triggered() ), this, SLOT( posExport() ) );
 
-	mPosSettings = new QAction("参数设置", this);
-	mPosSettings->setStatusTip("参数设置");
-	mPosSettings->setIcon(uavCore::getThemeIcon("mActionAtlasSettings.svg"));
-	connect( mPosSettings, SIGNAL( triggered() ), this, SLOT( posSettings() ) );
-
 	// 动态联动
 	mPosLinkPhoto = new QAction("PP动态联动", this);
 	mPosLinkPhoto->setStatusTip("PP动态联动");
@@ -763,7 +758,6 @@ void UavMain::createMenus()
 	ui.mPosMenu->addSeparator();
 	ui.mPosMenu->addAction(mPosExport);
 	ui.mPosMenu->addSeparator();
-	ui.mPosMenu->addAction(mPosSettings);
 	
 	//! 动态联动菜单
 	ui.mInteractiveMenu->addAction(mPosLinkPhoto);
@@ -4213,12 +4207,6 @@ void UavMain::posOneButton()
 void UavMain::posExport()
 {
 	posdp->posExport();
-}
-
-void UavMain::posSettings()
-{
-	uavpossettingdialog dialog(this);
-	dialog.exec();
 }
 
 void UavMain::ppMatchPosName()

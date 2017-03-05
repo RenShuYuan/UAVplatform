@@ -246,7 +246,7 @@
        <item>
         <widget class="QStackedWidget" name="mOptionsStackedWidget">
          <property name="currentIndex">
-          <number>11</number>
+          <number>12</number>
          </property>
          <widget class="QWidget" name="mOptionsPageGeneral">
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -3957,7 +3957,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox"/>
+                    <widget class="QSpinBox" name="sbHeadingOverlapMin"/>
                    </item>
                    <item>
                     <widget class="QLabel" name="label_33">
@@ -3967,7 +3967,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_2"/>
+                    <widget class="QSpinBox" name="sbHeadingOverlapMax"/>
                    </item>
                    <item>
                     <spacer name="horizontalSpacer_14">
@@ -3994,7 +3994,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_3"/>
+                    <widget class="QSpinBox" name="sbSideOverlapMin"/>
                    </item>
                    <item>
                     <widget class="QLabel" name="label_45">
@@ -4004,7 +4004,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_4"/>
+                    <widget class="QSpinBox" name="sbSideOverlapMax"/>
                    </item>
                    <item>
                     <spacer name="horizontalSpacer_17">
@@ -4043,19 +4043,6 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_6"/>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_47">
-                     <property name="text">
-                      <string>-</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QSpinBox" name="spinBox_5"/>
-                   </item>
-                   <item>
                     <spacer name="horizontalSpacer_36">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
@@ -4067,6 +4054,9 @@
                       </size>
                      </property>
                     </spacer>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="sbInclination"/>
                    </item>
                   </layout>
                  </item>
@@ -4080,7 +4070,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_7"/>
+                    <widget class="QSpinBox" name="sbInclinationDegree"/>
                    </item>
                    <item>
                     <widget class="QLabel" name="label_49">
@@ -4090,7 +4080,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_8"/>
+                    <widget class="QSpinBox" name="sbInclinationCount"/>
                    </item>
                    <item>
                     <widget class="QLabel" name="label_50">
@@ -4149,7 +4139,7 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_9"/>
+                    <widget class="QSpinBox" name="sbRotationAngle"/>
                    </item>
                   </layout>
                  </item>
@@ -4163,7 +4153,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_11"/>
+                    <widget class="QSpinBox" name="sbRotationAngleLineDegree"/>
                    </item>
                    <item>
                     <widget class="QLabel" name="label_54">
@@ -4173,7 +4163,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_10"/>
+                    <widget class="QSpinBox" name="sbRotationAngleLineCount"/>
                    </item>
                    <item>
                     <widget class="QLabel" name="label_55">
@@ -4207,7 +4197,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_13"/>
+                    <widget class="QSpinBox" name="sbRotationAngleDegree"/>
                    </item>
                    <item>
                     <widget class="QLabel" name="label_58">
@@ -4217,7 +4207,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_12"/>
+                    <widget class="QSpinBox" name="sbRotationAngleCount"/>
                    </item>
                    <item>
                     <widget class="QLabel" name="label_64">
@@ -4276,7 +4266,7 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_14"/>
+                    <widget class="QSpinBox" name="sbHeightDifferenceLine"/>
                    </item>
                   </layout>
                  </item>
@@ -4303,7 +4293,7 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QSpinBox" name="spinBox_15"/>
+                    <widget class="QSpinBox" name="sbHeightDifference"/>
                    </item>
                   </layout>
                  </item>

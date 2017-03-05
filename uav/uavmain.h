@@ -210,6 +210,7 @@ private:
 	void upDataPosActions();
 
 private slots:
+
 	void displayMessage( const QString& title, const QString& message, QgsMessageBar::MessageLevel level );
 	
 	//! 返回活动图层的指针
@@ -402,7 +403,6 @@ private slots:
 	void posSketchMap();
 	void posOneButton();
 	void posExport();
-	void posSettings();
 
 	void ppMatchPosName();
 
@@ -497,7 +497,6 @@ private:
 	QAction *mPosSketchMap;
 	QAction *mPosOneButton;
 	QAction *mPosExport;
-	QAction *mPosSettings;
 
 	//! 动态联动
 	QAction *mPosLinkPhoto;
